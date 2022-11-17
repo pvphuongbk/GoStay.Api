@@ -6,6 +6,7 @@ using GoStay.DataAccess.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GoStay.Services.Hotels
 {
@@ -28,6 +29,7 @@ namespace GoStay.Services.Hotels
 											|| (x.CheckOutDate < now || x.CheckInDate == null)))
 											.Where(x => x.HotelRooms.Any(x => (x.CheckInDate > now || x.CheckInDate == null)
 											|| (x.CheckOutDate < now || x.CheckInDate == null)))
+											.Include(x => x.Pictures.Skip(5).Take(5))
 									     .ToList();
 			List<HotelHomePageDto> hotelDtos = new List<HotelHomePageDto>();
 			foreach(var hotel in hotels)
@@ -42,6 +44,7 @@ namespace GoStay.Services.Hotels
 					Rating = hotel.Rating,
 					Review_score = (hotel.ReviewScore == null || hotel.NumberReviewers == null) ? -1 :
 									(double)(hotel.ReviewScore / hotel.NumberReviewers),
+					Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList()
 				};
 
 				var room = hotel.HotelRooms.Where(x => x.PriceValue != null).MinBy(x => CommonFunction.CalculateRoomPrice(x));
@@ -59,8 +62,15 @@ namespace GoStay.Services.Hotels
 
 		public List<RoomByHotelDto> GetListRoomByHotel(int hotelId)
 		{
-			var rooms = _hotelRoomRepository.FindAll(x => x.Deleted != 1 && x.Idhotel == hotelId);
+			var rooms = _hotelRoomRepository.FindAll(x => x.Deleted != 1 && x.Idhotel == hotelId)
+												.Include(x => x.Pictures.Skip(5).Take(5));
 			var items = _mapper.Map<List<RoomByHotelDto>>(rooms.ToList());
+			foreach(var room in rooms)
+			{
+				var item = items.Where(x => x.Id == room.Id).FirstOrDefault();
+				if(item != null)
+					item.Pictures = room.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList();
+			}
 
 			return items;
 		}
@@ -77,6 +87,7 @@ namespace GoStay.Services.Hotels
 											.Where(x => x.HotelRooms.Any(x => (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
 											&& ((x.CheckInDate > now || x.CheckInDate == null)
 											|| (x.CheckOutDate < now || x.CheckInDate == null))))
+											.Include(x => x.Pictures.Skip(5).Take(5))
 										 .ToList();
 			List<HotelHomePageDto> hotelDtos = new List<HotelHomePageDto>();
 			foreach (var hotel in hotels)
@@ -91,6 +102,7 @@ namespace GoStay.Services.Hotels
 					Rating = hotel.Rating,
 					Review_score = (hotel.ReviewScore == null || hotel.NumberReviewers == null) ? -1 :
 									(double)(hotel.ReviewScore / hotel.NumberReviewers),
+					Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList()
 				};
 
 				var room = hotel.HotelRooms.Where(x => x.PriceValue != null).MinBy(x => CommonFunction.CalculateRoomPrice(x));

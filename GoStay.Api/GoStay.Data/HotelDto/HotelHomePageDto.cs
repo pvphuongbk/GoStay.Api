@@ -12,5 +12,6 @@
 		public double? Discount { get; set; }
 		public decimal? OriginalPrice { get; set; }
 		public decimal? ActualPrice { get; set; }
+		public List<string?> Pictures { get; set; } = new List<string?>();
 	}
 }

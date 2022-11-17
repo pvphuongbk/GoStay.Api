@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class TbKv
+    public partial class KhuVuc
     {
         public int IdKv { get; set; }
         public int? IdQ { get; set; }

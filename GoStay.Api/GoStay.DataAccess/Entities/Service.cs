@@ -1,11 +1,9 @@
-﻿using GoStay.DataAccess.Base;
-using GoStay.DataAccess.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class Service : BaseEntity
+    public partial class Service
     {
         public Service()
         {

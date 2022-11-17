@@ -1,19 +1,20 @@
-﻿using GoStay.DataAccess.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class Hotel : BaseEntity
+    public partial class Hotel
     {
         public Hotel()
         {
+            Albums = new HashSet<Album>();
             HotelMamenitis = new HashSet<HotelMameniti>();
             HotelReviews = new HashSet<HotelReview>();
             HotelRooms = new HashSet<HotelRoom>();
+            Pictures = new HashSet<Picture>();
         }
 
-
+        public int Id { get; set; }
         public string? Name { get; set; }
         public string? NameSeo { get; set; }
         public string? CodeCountry { get; set; }
@@ -35,13 +36,22 @@ namespace GoStay.DataAccess.Entities
         public decimal? RoomsScore { get; set; }
         public double? LatMap { get; set; }
         public double? LonMap { get; set; }
-
+        public int? Deleted { get; set; }
         public int? NumberReviewers { get; set; }
+        public long? IntDate { get; set; }
+        public int IdPhuong { get; set; }
+        public int IdQuan { get; set; }
+        public int IdTinhThanh { get; set; }
 
+        public virtual Phuong IdPhuongNavigation { get; set; } = null!;
         public virtual PriceRange? IdPriceRangeNavigation { get; set; }
+        public virtual Quan IdQuanNavigation { get; set; } = null!;
+        public virtual TinhThanh IdTinhThanhNavigation { get; set; } = null!;
         public virtual TypeHotel? TypeNavigation { get; set; }
+        public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<HotelMameniti> HotelMamenitis { get; set; }
         public virtual ICollection<HotelReview> HotelReviews { get; set; }
         public virtual ICollection<HotelRoom> HotelRooms { get; set; }
+        public virtual ICollection<Picture> Pictures { get; set; }
     }
 }
