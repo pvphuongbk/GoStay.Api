@@ -1,11 +1,12 @@
-﻿using GoStay.Data.HotelDto;
+﻿using GoStay.Data.Base;
+using GoStay.Data.HotelDto;
 
 namespace GoStay.Services.Hotels
 {
 	public interface IHotelService
 	{
-		List<HotelHomePageDto> GetListHotelForHomePage();
-		List<RoomByHotelDto> GetListRoomByHotel(int hotelId);
-		List<HotelHomePageDto> GetListHotelForSearching(HotelSearchRequest filter);
+		ResponseBase GetListHotelForHomePage();
+		ResponseBase GetListRoomByHotel(int hotelId);
+		ResponseBase GetListHotelForSearching(HotelSearchRequest filter);
 	}
 }

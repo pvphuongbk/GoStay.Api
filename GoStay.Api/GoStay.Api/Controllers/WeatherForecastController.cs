@@ -1,3 +1,4 @@
+using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
@@ -26,7 +27,7 @@ namespace GoStay.Api.Controllers
 		}
 
 		[HttpGet(Name = "GetWeatherForecast")]
-		public IEnumerable<HotelHomePageDto> Get()
+		public ResponseBase Get()
 		{
 			var h = _hotelService.GetListHotelForHomePage();
 
