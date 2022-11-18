@@ -1,6 +1,6 @@
 ﻿namespace GoStay.Data.Base
 {
-	public class ResponseBase
+	public class ResponseBase<T>
 	{
 		public ResponseBase()
 		{
@@ -13,6 +13,6 @@
 
 		public bool IsSuccessful => Code == ErrorCodeMessage.Success.Key;
 
-		public object Data { get; set; }
+		public T Data { get; set; }
 	}
 }

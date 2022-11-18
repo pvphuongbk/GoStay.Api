@@ -27,7 +27,7 @@ namespace GoStay.Api.Controllers
 		}
 
 		[HttpGet(Name = "GetWeatherForecast")]
-		public ResponseBase Get()
+		public ResponseBase<List<HotelHomePageDto>> Get()
 		{
 			var h = _hotelService.GetListHotelForHomePage();
 

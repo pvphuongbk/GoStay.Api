@@ -18,7 +18,7 @@ namespace GoStay.Api.Controllers
 		}
 
 		[HttpGet("hotel-home-page")]
-		public ResponseBase GetListHotelForHomePage()
+		public ResponseBase<List<HotelHomePageDto>> GetListHotelForHomePage()
 		{
 			var items = _hotelService.GetListHotelForHomePage();
 
@@ -26,7 +26,7 @@ namespace GoStay.Api.Controllers
 		}
 
 		[HttpGet("room-by-hotel/{id}")]
-		public ResponseBase GetListRoomByHotel(int id)
+		public ResponseBase<List<RoomByHotelDto>> GetListRoomByHotel(int id)
 		{
 			var items = _hotelService.GetListRoomByHotel(id);
 
@@ -34,7 +34,7 @@ namespace GoStay.Api.Controllers
 		}
 
 		[HttpPost("hotel-searching")]
-		public ResponseBase GetListHotelForSearching(HotelSearchRequest filter)
+		public ResponseBase<List<HotelHomePageDto>> GetListHotelForSearching(HotelSearchRequest filter)
 		{
 			var items = _hotelService.GetListHotelForSearching(filter);
 

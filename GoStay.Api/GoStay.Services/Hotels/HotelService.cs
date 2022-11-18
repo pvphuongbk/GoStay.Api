@@ -22,9 +22,9 @@ namespace GoStay.Services.Hotels
 			_hotelRoomRepository = hotelRoomRepository;
 			_mapper = mapper;
 		}
-		public ResponseBase GetListHotelForHomePage()
+		public ResponseBase<List<HotelHomePageDto>> GetListHotelForHomePage()
 		{
-			ResponseBase responseBase = new ResponseBase();
+			ResponseBase<List<HotelHomePageDto>> responseBase = new ResponseBase<List<HotelHomePageDto>>();
 			try
 			{
 				var now = DateTime.Now;
@@ -72,9 +72,9 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-		public ResponseBase GetListRoomByHotel(int hotelId)
+		public ResponseBase<List<RoomByHotelDto>> GetListRoomByHotel(int hotelId)
 		{
-			ResponseBase responseBase = new ResponseBase();
+			ResponseBase<List<RoomByHotelDto>> responseBase = new ResponseBase<List<RoomByHotelDto>>();
 			try
 			{
 				var rooms = _hotelRoomRepository.FindAll(x => x.Deleted != 1 && x.Idhotel == hotelId)
@@ -97,9 +97,9 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-		public ResponseBase GetListHotelForSearching(HotelSearchRequest filter)
+		public ResponseBase<List<HotelHomePageDto>> GetListHotelForSearching(HotelSearchRequest filter)
 		{
-			ResponseBase responseBase = new ResponseBase();
+			ResponseBase<List<HotelHomePageDto>> responseBase = new ResponseBase<List<HotelHomePageDto>>();
 			try
 			{
 				var now = DateTime.Now;
