@@ -44,8 +44,30 @@ namespace GoStay.Services.Hotels
 				return responseBase;
 			}
 		}
+        public ResponseBase GetListHotelForHotelPage()
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var now = DateTime.Now;
+                var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
+                                                .Include(x => x.Pictures.Skip(5).Take(5))
+                                                .Include(x => x.HotelRooms.Where(x =>x.Status==1))
+                                                .OrderBy(x => x.HotelRooms.Max(x=>x.IntDate))
+												.ToList();
+                var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
+                responseBase.Data = hotelDtos;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
 
-		public ResponseBase GetListRoomByHotel(int hotelId)
+        public ResponseBase GetListRoomByHotel(int hotelId)
 		{
 			ResponseBase responseBase = new ResponseBase();
 			try
@@ -136,5 +158,6 @@ namespace GoStay.Services.Hotels
 				return responseBase;
 			}
 		}
+
 	}
 }
