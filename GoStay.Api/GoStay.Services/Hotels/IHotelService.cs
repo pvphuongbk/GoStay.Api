@@ -9,5 +9,7 @@ namespace GoStay.Services.Hotels
 		ResponseBase GetListRoomByHotel(int hotelId);
 		ResponseBase GetListHotelForSearching(HotelSearchRequest filter);
 		ResponseBase GetListForSearchHotel(HotelSearchingRequest filter);
-	}
+		public ResponseBase GetListHotelForHotelPage();
+
+    }
 }
