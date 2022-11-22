@@ -31,8 +31,9 @@ namespace GoStay.Services.Hotels
 												.Include(x => x.HotelRooms.Where(x => (x.CheckInDate > now || x.CheckInDate == null)))
 												//|| (x.CheckOutDate < now || x.CheckInDate == null)))
 												.Where(x => x.HotelRooms.Any(x => (x.CheckInDate > now || x.CheckInDate == null)))
-												//|| (x.CheckOutDate < now || x.CheckInDate == null)))
-											 .ToList();
+                                                .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
+                                             //|| (x.CheckOutDate < now || x.CheckInDate == null)))
+                                             .ToList();
 				var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
 				responseBase.Data = hotelDtos;
 				return responseBase;
@@ -53,7 +54,7 @@ namespace GoStay.Services.Hotels
                 var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
                                                 .Include(x => x.Pictures.Skip(5).Take(5))
                                                 .Include(x => x.HotelRooms.Where(x =>x.Status==1))
-                                                .OrderBy(x => x.HotelRooms.Max(x=>x.IntDate))
+                                                .OrderByDescending(x => x.HotelRooms.Max(x=>x.IntDate))
 												.ToList();
                 var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
                 responseBase.Data = hotelDtos;

@@ -30,17 +30,22 @@ namespace GoStay.Common.Helpers
 					Rating = hotel.Rating,
 					Review_score = (hotel.ReviewScore == null || hotel.NumberReviewers == null) ? -1 :
 									(double)(hotel.ReviewScore / hotel.NumberReviewers),
-					Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList()
-				};
+					Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList(),
 
-				var room = hotel.HotelRooms.Where(x => x.PriceValue != null).MinBy(x => CommonFunction.CalculateRoomPrice(x));
+
+					NumberReviewers = hotel.NumberReviewers
+                };
+
+				var room = hotel.HotelRooms.Where(x => x.Discount != null).MaxBy(x =>x.Discount);
 				if (room != null)
 				{
 					dto.Discount = room.Discount;
 					dto.OriginalPrice = room.PriceValue;
 					var actualPrice = CalculateRoomPrice(room);
 					dto.ActualPrice = actualPrice;
-				}
+					dto.PalletbedRoom = room.Palletbed;
+
+                }
 
 				hotelDtos.Add(dto);
 			}
