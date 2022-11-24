@@ -14,6 +14,7 @@
     <ProjectReference Include="..\GoStay.Common\GoStay.Common.csproj" />
     <ProjectReference Include="..\GoStay.DataAccess\GoStay.DataAccess.csproj" />
     <ProjectReference Include="..\GoStay.Data\GoStay.Data.csproj" />
+    <ProjectReference Include="..\GoStay.Repository\GoStay.Repository.csproj" />
   </ItemGroup>
 
 </Project>
