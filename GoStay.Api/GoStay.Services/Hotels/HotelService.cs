@@ -128,7 +128,7 @@ namespace GoStay.Services.Hotels
 			ResponseBase responseBase = new ResponseBase();
 			try
 			{
-				var hotelQueryables = HotelRepository.GetListHotelForHomePage(filter);
+				responseBase.Data = HotelRepository.GetListHotelForHomePage(filter);
 				return responseBase;
 			}
 			catch (Exception e)
