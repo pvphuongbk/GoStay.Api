@@ -15,8 +15,20 @@
         public decimal ActualPrice { get; set; }
         public int? NumberReviewers { get; set; }
         public int? PalletbedRoom { get; set; }
+        private string Urls 
+        {
+            set
+            {
+				if (string.IsNullOrEmpty(value))
+					Pictures = new List<string>();
+				else
+				{
+					Pictures = value.Split(';').ToList();
 
+				}
+			}
+        }
         public List<string> Pictures { get; set; } = new List<string>();
-    }
+	}
 
 }
