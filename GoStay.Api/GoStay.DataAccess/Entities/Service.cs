@@ -13,6 +13,7 @@ namespace GoStay.DataAccess.Entities
 
         public int Id { get; set; }
         public string? Name { get; set; }
+        public byte? AdvantageLevel { get; set; }
         public int? Deleted { get; set; }
         public int? IdStyle { get; set; }
         public string? Icon { get; set; }

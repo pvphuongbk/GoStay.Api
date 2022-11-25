@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using GoStay.Common.Helpers;
+using GoStay.Common.Helpers.Hotels;
 using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
+using GoStay.Data.ServiceDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.Repository.Repositories;
@@ -14,12 +16,15 @@ namespace GoStay.Services.Hotels
 	{
 		private readonly ICommonRepository<Hotel> _hotelRepository;
 		private readonly ICommonRepository<HotelRoom> _hotelRoomRepository;
-		private readonly IMapper _mapper;
-		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper)
+        private readonly ICommonRepository<Service> _serviceRepository;
+
+        private readonly IMapper _mapper;
+		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper, ICommonRepository<Service> serviceRepository)
 		{
 			_hotelRepository = hotelRepository;
 			_hotelRoomRepository = hotelRoomRepository;
 			_mapper = mapper;
+			_serviceRepository = serviceRepository;
 		}
 		public ResponseBase GetListHotelForHomePage()
 		{
@@ -29,6 +34,8 @@ namespace GoStay.Services.Hotels
 				var now = DateTime.Now;
 				var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
 												.Include(x => x.Pictures.Skip(5).Take(5))
+												.Include(x=>x.IdTinhThanhNavigation)
+												.Include(x=>x.IdQuanNavigation)
 												.Include(x => x.HotelRooms.Where(x => (x.CheckInDate > now || x.CheckInDate == null)))
 												//|| (x.CheckOutDate < now || x.CheckInDate == null)))
 												.Where(x => x.HotelRooms.Any(x => (x.CheckInDate > now || x.CheckInDate == null)))
@@ -54,6 +61,8 @@ namespace GoStay.Services.Hotels
                 var now = DateTime.Now;
                 var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
                                                 .Include(x => x.Pictures.Skip(5).Take(5))
+                                                .Include(x => x.IdTinhThanhNavigation)
+                                                .Include(x => x.IdQuanNavigation)
                                                 .Include(x => x.HotelRooms.Where(x =>x.Status==1))
                                                 .OrderByDescending(x => x.HotelRooms.Max(x=>x.IntDate))
 												.ToList();
@@ -138,5 +147,38 @@ namespace GoStay.Services.Hotels
 				return responseBase;
 			}
 		}
+
+		public ResponseBase GetHotelDetail(int hotelId)
+		{
+			IHotelFunction hotelFunction= new HotelFunction(_mapper) ;
+			ResponseBase responseBase = new ResponseBase();
+			try
+			{
+				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
+					.Include(x=>x.HotelRooms)
+					.Include(x=>x.Pictures.Where(x=>x.Deleted==0))
+					.Include(x=>x.HotelMamenitis)
+					.FirstOrDefault();
+                List<Service> sv = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 0)
+                                                .Where(x => x.HotelMamenitis.Any(x => x.Idhotel == hotelId))
+                                                .OrderBy(x => x.Name).ToList();
+                if (hotel==null)
+				{
+                    responseBase.Message= ErrorCodeMessage.Exception.Value;
+                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    return responseBase;
+				}
+				var hotelDetailDto = hotelFunction.CreateHotelDetailDto(hotel);
+				hotelDetailDto.Services = _mapper.Map<List<Service>,List<ServiceDetailHotelDto>>(sv);
+                responseBase.Data = hotelDetailDto;
+                return responseBase;
+            }
+			catch
+			{
+                var hotelDetailDto = new HotelDetailDto();
+                responseBase.Data = hotelDetailDto;
+                return responseBase;
+            }
+        }
 	}
 }
