@@ -4,6 +4,7 @@ using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
@@ -127,29 +128,7 @@ namespace GoStay.Services.Hotels
 			ResponseBase responseBase = new ResponseBase();
 			try
 			{
-				var hotelQueryables = _hotelRepository.FindAll(x => x.Deleted != 1)
-												.Include(x => x.HotelMamenitis)
-												.Include(x => x.HotelRooms)
-												.Include(x => x.Pictures.Skip(5).Take(5))
-												.Where(x => x.HotelRooms.Any())
-												.AsQueryable();
-				if (filter.Ratings != null && filter.Ratings.Count > 0)
-					hotelQueryables = hotelQueryables.Where(x => filter.Ratings.Contains(x.Rating));
-				if (filter.IdQuans != null && filter.IdQuans.Count > 0)
-					hotelQueryables = hotelQueryables.Where(x => filter.IdQuans.Contains(x.IdQuan));
-				if (filter.IdPhuong != null && filter.IdPhuong.Count > 0)
-					hotelQueryables = hotelQueryables.Where(x => filter.IdPhuong.Contains(x.IdPhuong));
-				if (filter.Types != null && filter.Types.Count > 0)
-					hotelQueryables = hotelQueryables.Where(x => filter.Types.Contains(x.Type));
-				if (filter.ReviewScore != null)
-					hotelQueryables = hotelQueryables.Where(x => x.ReviewScore >= filter.ReviewScore);
-				if (filter.Services != null && filter.Services.Count > 0)
-					hotelQueryables = hotelQueryables.Where(x => x.HotelMamenitis.Select(y => y.Idservices).Any(z => filter.Services.Contains(z)));
-				var hotels = hotelQueryables.ToList();
-				if (filter.Price != null)
-					hotels = hotels.Where(x => x.HotelRooms.Any(x => CommonFunction.CalculateRoomPrice(x) <= filter.Price)).ToList();
-				var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
-				responseBase.Data = hotelDtos;
+				responseBase.Data = HotelRepository.GetListHotelForHomePage(filter);
 				return responseBase;
 			}
 			catch (Exception e)
