@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GoStay.DataAccess\GoStay.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

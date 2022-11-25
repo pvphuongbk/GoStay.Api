@@ -4,7 +4,8 @@
 	{
         public int Id { get; set; }
         public string HotelName { get; set; }
-        public string HotelAddress { get; set; }
+        public string TinhThanh { get; set; }
+        public string QuanHuyen { get; set; }
         public int? Rating { get; set; }
         public decimal? AvgNight { get; set; }
         public double Review_score { get; set; }
