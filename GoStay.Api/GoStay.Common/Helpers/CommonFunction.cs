@@ -1,11 +1,14 @@
-﻿using GoStay.Data.HotelDto;
+﻿using AutoMapper;
+using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataAccess.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GoStay.Common.Helpers
 {
 	public class CommonFunction
 	{
-		public static decimal CalculateRoomPrice(HotelRoom hotelRoom)
+        public static decimal CalculateRoomPrice(HotelRoom hotelRoom)
 		{
 			if (hotelRoom.PriceValue != null && hotelRoom.Discount == null)
 				return (decimal)hotelRoom.PriceValue;
@@ -23,7 +26,8 @@ namespace GoStay.Common.Helpers
 				var dto = new HotelHomePageDto
 				{
 					Id = hotel.Id,
-					HotelAddress = hotel.Address!,
+					TinhThanh = hotel.IdTinhThanhNavigation.TenTt,
+					QuanHuyen = hotel.IdQuanNavigation.Tenquan,
 					HotelName = hotel.Name!,
 					Lat_map = hotel.LatMap,
 					Lon_map = hotel.LonMap,
@@ -52,5 +56,7 @@ namespace GoStay.Common.Helpers
 
 			return hotelDtos;
 		}
-	}
+
+
+    }
 }

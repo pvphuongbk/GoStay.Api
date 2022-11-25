@@ -27,6 +27,7 @@ builder.Services.RegisterAssemblyTypesByName(typeof(IHotelService).Assembly,
 	 .AsImplementedInterfaces()
 	 .Bind();
 builder.Services.AddCommonServices();
+
 // Add services to the container.
 
 

@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GoStay.DataAccess.Entities
+namespace GoStay.Data.HotelDto
 {
-    public partial class HotelRoom
+    public class HotelRoomDto
     {
-        public HotelRoom()
-        {
-            Pictures = new HashSet<Picture>();
-            RoomMamenitis = new HashSet<RoomMameniti>();
-        }
-
-        public int Id { get; set; }
         public int? Idhotel { get; set; }
         public string? Name { get; set; }
         public decimal? RoomSize { get; set; }
         public string? Description { get; set; }
         public int? Status { get; set; }
         public byte? RemainNum { get; set; }
-        public decimal PriceValue { get; set; }
-        public int? Deleted { get; set; }
+        public decimal? PriceValue { get; set; }
         public double? Discount { get; set; }
         public decimal? NewPrice { get; set; }
         public byte? NumMature { get; set; }
@@ -28,11 +23,5 @@ namespace GoStay.DataAccess.Entities
         public int? ViewDirection { get; set; }
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
-        public long? IntDate { get; set; }
-
-        public virtual Hotel? IdhotelNavigation { get; set; }
-        public virtual ViewDirection? ViewDirectionNavigation { get; set; }
-        public virtual ICollection<Picture> Pictures { get; set; }
-        public virtual ICollection<RoomMameniti> RoomMamenitis { get; set; }
     }
 }

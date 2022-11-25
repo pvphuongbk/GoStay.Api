@@ -392,7 +392,9 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.IdTinhThanh).HasDefaultValueSql("((5))");
 
-				entity.Property(e => e.IntDate).HasColumnName("intDate");
+                entity.Property(e => e.IntDate)
+                    .HasColumnName("intDate")
+                    .HasDefaultValueSql("(datediff(second,'2022-1-1',getdate()))");
 
 				entity.Property(e => e.LatMap).HasColumnName("Lat_map");
 
@@ -618,15 +620,21 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
 
-				entity.Property(e => e.IntDate).HasColumnName("intDate");
+                entity.Property(e => e.IntDate)
+                    .HasColumnName("intDate")
+                    .HasDefaultValueSql("(datediff(second,'2022-1-1',getdate()))");
 
-				entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.NewPrice).HasColumnType("decimal(18, 0)");
 
 				entity.Property(e => e.PriceValue)
 					.HasColumnType("decimal(18, 0)")
 					.HasColumnName("Price_Value");
 
-				entity.Property(e => e.RoomSize).HasColumnType("decimal(5, 2)");
+                entity.Property(e => e.RemainNum).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.RoomSize).HasColumnType("decimal(5, 2)");
 
 				entity.HasOne(d => d.IdhotelNavigation)
 					.WithMany(p => p.HotelRooms)
