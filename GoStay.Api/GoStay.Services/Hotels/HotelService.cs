@@ -17,14 +17,20 @@ namespace GoStay.Services.Hotels
 		private readonly ICommonRepository<Hotel> _hotelRepository;
 		private readonly ICommonRepository<HotelRoom> _hotelRoomRepository;
         private readonly ICommonRepository<Service> _serviceRepository;
+        private readonly ICommonRepository<Picture> _pictureRepository;
+        private readonly ICommonRepository<ViewDirection> _viewRepository;
+
 
         private readonly IMapper _mapper;
-		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper, ICommonRepository<Service> serviceRepository)
+		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper,
+			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository)
 		{
 			_hotelRepository = hotelRepository;
 			_hotelRoomRepository = hotelRoomRepository;
 			_mapper = mapper;
 			_serviceRepository = serviceRepository;
+			_pictureRepository = pictureRepository;
+			_viewRepository = viewRepository;
 		}
 		public ResponseBase GetListHotelForHomePage()
 		{
@@ -155,21 +161,39 @@ namespace GoStay.Services.Hotels
 			try
 			{
 				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
-					.Include(x=>x.HotelRooms)
-					.Include(x=>x.Pictures.Where(x=>x.Deleted==0))
+					.Include(x=>x.HotelRooms.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
+					.Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
 					.Include(x=>x.HotelMamenitis)
 					.FirstOrDefault();
-                List<Service> sv = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 0)
+                List<Service> svhotel = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 0)
                                                 .Where(x => x.HotelMamenitis.Any(x => x.Idhotel == hotelId))
-                                                .OrderBy(x => x.Name).ToList();
+                                                .OrderBy(x => x.Name).OrderBy(x=>x.AdvantageLevel).Take(4).ToList();
+
+
+				var hotelRoom = _hotelRoomRepository.FindAll(x => x.Idhotel == hotelId)
+										.Include(x=>x.RoomMamenitis)
+										.Include(x=>x.ViewDirectionNavigation)
+										.Include(x=>x.Pictures.Take(4)).ToList();
                 if (hotel==null)
 				{
                     responseBase.Message= ErrorCodeMessage.Exception.Value;
                     responseBase.Code = ErrorCodeMessage.Exception.Key;
                     return responseBase;
 				}
-				var hotelDetailDto = hotelFunction.CreateHotelDetailDto(hotel);
-				hotelDetailDto.Services = _mapper.Map<List<Service>,List<ServiceDetailHotelDto>>(sv);
+
+                var hotelDetailDto = hotelFunction.CreateHotelDetailDto(hotel);
+				hotelDetailDto.Services = _mapper.Map<List<Service>,List<ServiceDetailHotelDto>>(svhotel);
+				
+                for (int i=0; i< hotelDetailDto.Rooms.Count;i++)
+                {
+					hotelDetailDto.Rooms[i].Pictures = hotelRoom[i].Pictures.Select(x=>x.Url).ToList();
+					hotelDetailDto.Rooms[i].Services = _mapper.Map<List<Service>, List<ServiceDetailHotelDto>>
+												(_serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 1)
+												.Where(x => x.RoomMamenitis.Any(x => x.Idroom == hotelDetailDto.Rooms[i].Id))
+												.OrderBy(x => x.Name).OrderBy(x => x.AdvantageLevel).Take(5).ToList());
+					hotelDetailDto.Rooms[i].ViewDirection = _viewRepository.GetById(hotelRoom[i].ViewDirection)?.ViewDirection1;
+                }
+
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
             }
