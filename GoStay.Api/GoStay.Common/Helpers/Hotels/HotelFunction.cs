@@ -39,11 +39,10 @@ namespace GoStay.Common.Helpers.Hotels
                 LocationScore = hotel.LocationScore,
                 RoomsScore = hotel.RoomsScore,
                 Content = hotel.Content,
-                Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).OrderBy(x=>x.Size).Select(x => x.Url).ToList(),
+                Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).OrderByDescending(x=>x.Size).Select(x => x.Url).ToList(),
 
                 Rooms = _mapper.Map<List<HotelRoom>, List<HotelRoomDto>>(hotel.HotelRooms.ToList()),
-                
-                //hotel.HotelRooms.Where(x=>x.Deleted!=1 && x.Status!=0).ToList(),
+
                 NumberReviewers = hotel.NumberReviewers
             };
             
