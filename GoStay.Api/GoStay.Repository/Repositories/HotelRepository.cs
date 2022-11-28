@@ -40,7 +40,7 @@ namespace GoStay.Repository.Repositories
             return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListForSearchHotelPaging, p).ToList();
         }
 
-        public static List<HotelHomePageDto> GetListTopHotelForHomePage(int number)
+        public static List<HotelHomePageDto> GetListHotelTopFlashSale(int number)
         {
             var p = new DynamicParameters();
             var filter = new HotelSearchingPaging();
