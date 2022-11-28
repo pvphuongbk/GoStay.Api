@@ -65,12 +65,12 @@ namespace GoStay.Services.Hotels
             try
             {
                 var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
-                                                .Include(x => x.Pictures.Skip(5).Take(5))
+                                                .Include(x => x.Pictures.Take(5))
                                                 .Include(x => x.IdTinhThanhNavigation)
                                                 .Include(x => x.IdQuanNavigation)
                                                 .Include(x => x.HotelRooms.Where(x => x.Status == 1))
                                                 .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
-												.Take(15)
+												.Take(number)
                                                 .ToList();
                 var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotels);
                 responseBase.Data = hotelDtos;
