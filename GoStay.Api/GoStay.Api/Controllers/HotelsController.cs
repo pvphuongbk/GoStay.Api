@@ -25,6 +25,22 @@ namespace GoStay.Api.Controllers
 			return items;
 		}
 
+        [HttpGet("hotel-top-home-page")]
+        public ResponseBase GetListTopHotelForHomePage(int number)
+        {
+            var items = _hotelService.GetListTopHotelForHomePage(number);
+
+            return items;
+        }
+
+        [HttpGet("hotel-page-paging")]
+        public ResponseBase GetListHotelForHotelPage(HotelSearchingPaging filter)
+        {
+            var items = _hotelService.GetListHotelForHotelPage();
+
+            return items;
+        }
+
         [HttpGet("hotel-page")]
         public ResponseBase GetListHotelForHotelPage()
         {
@@ -56,12 +72,29 @@ namespace GoStay.Api.Controllers
 
 			return items;
 		}
-		[HttpPost("hotel-search")]
+
+        [HttpPost("hotel-searching-paging")]
+        public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter)
+        {
+            var items = _hotelService.GetPagingListHotelForSearching(filter);
+
+            return items;
+        }
+
+        [HttpPost("hotel-search")]
 		public ResponseBase GetListForSearchHotel(HotelSearchingRequest filter)
 		{
 			var items = _hotelService.GetListForSearchHotel(filter);
 
 			return items;
 		}
-	}
+
+        [HttpPost("hotel-search-paging")]
+        public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter)
+        {
+            var items = _hotelService.GetPagingListForSearchHotel(filter);
+
+            return items;
+        }
+    }
 }

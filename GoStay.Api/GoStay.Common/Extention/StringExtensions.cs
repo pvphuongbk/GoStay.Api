@@ -4,7 +4,14 @@ namespace GoStay.Common.Extention
 {
 	public static class StringExtensions
 	{
-		public static string GetEnumDescription(this System.Enum enumValue)
+        public static string FirstCharToUpper(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+
+            return string.Concat(str[0].ToString().ToUpper(), str.AsSpan(1));
+        }
+        public static string GetEnumDescription(this System.Enum enumValue)
 		{
 			var fieldInfo = enumValue.GetType().GetField(enumValue.ToString());
 

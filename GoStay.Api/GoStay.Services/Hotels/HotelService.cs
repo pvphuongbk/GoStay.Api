@@ -59,6 +59,22 @@ namespace GoStay.Services.Hotels
 				return responseBase;
 			}
 		}
+        public ResponseBase GetListTopHotelForHomePage(int number)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                responseBase.Data = HotelRepository.GetListTopHotelForHomePage(number);
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
         public ResponseBase GetListHotelForHotelPage()
         {
             ResponseBase responseBase = new ResponseBase();
@@ -154,7 +170,39 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-		public ResponseBase GetHotelDetail(int hotelId)
+        public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+        public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+
+        public ResponseBase GetHotelDetail(int hotelId)
 		{
 			IHotelFunction hotelFunction= new HotelFunction(_mapper) ;
 			ResponseBase responseBase = new ResponseBase();
