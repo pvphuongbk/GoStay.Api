@@ -13,7 +13,7 @@ namespace GoStay.Services.Hotels
 		public ResponseBase GetHotelDetail(int hotelId);
 		public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter); 
         public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter);
-		public ResponseBase GetListTopHotelForHomePage(int number);
+		public ResponseBase GetListHotelTopFlashSale(int number);
 
     }
 }

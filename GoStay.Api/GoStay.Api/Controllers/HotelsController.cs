@@ -25,10 +25,10 @@ namespace GoStay.Api.Controllers
 			return items;
 		}
 
-        [HttpGet("hotel-top-home-page")]
-        public ResponseBase GetListTopHotelForHomePage(int number)
+        [HttpGet("hotel-top-flash-sale")]
+        public ResponseBase GetListHotelTopFlashSale(int number)
         {
-            var items = _hotelService.GetListTopHotelForHomePage(number);
+            var items = _hotelService.GetListHotelTopFlashSale(number);
 
             return items;
         }
