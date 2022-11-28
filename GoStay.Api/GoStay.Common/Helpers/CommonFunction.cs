@@ -57,6 +57,44 @@ namespace GoStay.Common.Helpers
 			return hotelDtos;
 		}
 
+        public static List<HotelHomePageDto> CreateHotelFlashSaleDto(List<Hotel> hotels)
+        {
+            List<HotelHomePageDto> hotelDtos = new List<HotelHomePageDto>();
+            foreach (var hotel in hotels)
+            {
+                var dto = new HotelHomePageDto
+                {
+                    Id = hotel.Id,
+                    TinhThanh = hotel.IdTinhThanhNavigation.TenTt,
+                    QuanHuyen = hotel.IdQuanNavigation.Tenquan,
+                    HotelName = hotel.Name!,
+                    Lat_map = hotel.LatMap,
+                    Lon_map = hotel.LonMap,
+                    Rating = hotel.Rating,
+                    Review_score = (hotel.ReviewScore == null || hotel.NumberReviewers == null) ? -1 :
+                                    (double)(hotel.ReviewScore / hotel.NumberReviewers),
+                    Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList(),
+
+
+                    NumberReviewers = hotel.NumberReviewers
+                };
+
+                var room = hotel.HotelRooms.Where(x => x.Discount != null).MaxBy(x => x.Discount);
+                if (room != null)
+                {
+                    dto.Discount = room.Discount;
+                    dto.OriginalPrice = room.PriceValue;
+                    var actualPrice = CalculateRoomPrice(room);
+                    dto.ActualPrice = actualPrice;
+                    dto.PalletbedRoom = room.Palletbed;
+
+                }
+
+                hotelDtos.Add(dto);
+            }
+
+            return hotelDtos;
+        }
 
     }
 }
