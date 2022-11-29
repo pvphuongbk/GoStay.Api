@@ -96,5 +96,19 @@ namespace GoStay.Api.Controllers
 
             return items;
         }
+        [HttpGet("location-dropdown/{search}")]
+        public ResponseBase GetPagingListForSearchHotel(string search)
+        {
+            var items = _hotelService.GetListLocationForDropdown(search);
+
+            return items;
+        }
+        [HttpPost("search-home-page")]
+        public ResponseBase GetListHotelForHomePageNew(SeachHomePageDto search)
+        {
+            var items = _hotelService.GetListHotelForHomePageNew(search);
+
+            return items;
+        }
     }
 }

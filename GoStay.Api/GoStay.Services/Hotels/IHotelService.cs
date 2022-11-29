@@ -14,6 +14,8 @@ namespace GoStay.Services.Hotels
 		public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter); 
         public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter);
 		public ResponseBase GetListHotelTopFlashSale(int number);
+		ResponseBase GetListLocationForDropdown(string searchText);
+		ResponseBase GetListHotelForHomePageNew(SeachHomePageDto search);
 
     }
 }
