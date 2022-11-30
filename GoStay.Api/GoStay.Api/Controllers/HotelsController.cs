@@ -33,14 +33,6 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
-        [HttpGet("hotel-page-paging")]
-        public ResponseBase GetListHotelForHotelPage(HotelSearchingPaging filter)
-        {
-            var items = _hotelService.GetListHotelForHotelPage();
-
-            return items;
-        }
-
         [HttpGet("hotel-page")]
         public ResponseBase GetListHotelForHotelPage()
         {
@@ -66,33 +58,33 @@ namespace GoStay.Api.Controllers
 		}
 
 		[HttpPost("hotel-searching")]
-		public ResponseBase GetListHotelForSearching(HotelSearchRequest filter)
+		public ResponseBase GetListHotelForSearching(HotelSearchingRequest filter)
 		{
 			var items = _hotelService.GetListHotelForSearching(filter);
 
 			return items;
 		}
 
-        [HttpPost("hotel-searching-paging")]
-        public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter)
-        {
-            var items = _hotelService.GetPagingListHotelForSearching(filter);
-
-            return items;
-        }
 
         [HttpPost("hotel-search")]
-		public ResponseBase GetListForSearchHotel(HotelSearchingRequest filter)
+		public ResponseBase GetListForSearchHotel(HotelSearchRequest filter)
 		{
 			var items = _hotelService.GetListForSearchHotel(filter);
 
 			return items;
 		}
 
-        [HttpPost("hotel-search-paging")]
-        public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter)
+        [HttpGet("location-dropdown/{search}")]
+        public ResponseBase GetPagingListForSearchHotel(string search)
         {
-            var items = _hotelService.GetPagingListForSearchHotel(filter);
+            var items = _hotelService.GetListLocationForDropdown(search);
+
+            return items;
+        }
+        [HttpPost("search-home-page")]
+        public ResponseBase GetListHotelForHomePageNew(SeachHomePageDto search)
+        {
+            var items = _hotelService.GetListHotelForHomePageNew(search);
 
             return items;
         }

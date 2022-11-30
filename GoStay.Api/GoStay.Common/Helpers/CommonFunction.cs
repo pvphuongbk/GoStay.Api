@@ -84,8 +84,7 @@ namespace GoStay.Common.Helpers
                 {
                     dto.Discount = room.Discount;
                     dto.OriginalPrice = room.PriceValue;
-                    var actualPrice = CalculateRoomPrice(room);
-                    dto.ActualPrice = actualPrice;
+                    dto.ActualPrice = (decimal)room.NewPrice;
                     dto.PalletbedRoom = room.Palletbed;
 
                 }

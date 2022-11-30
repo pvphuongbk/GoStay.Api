@@ -5,15 +5,14 @@ namespace GoStay.Services.Hotels
 {
 	public interface IHotelService
 	{
-		ResponseBase GetListHotelForHomePage();
-		ResponseBase GetListRoomByHotel(int hotelId);
-		ResponseBase GetListHotelForSearching(HotelSearchRequest filter);
-		ResponseBase GetListForSearchHotel(HotelSearchingRequest filter);
-		public ResponseBase GetListHotelForHotelPage();
-		public ResponseBase GetHotelDetail(int hotelId);
-		public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter); 
-        public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter);
-		public ResponseBase GetListHotelTopFlashSale(int number);
-
+        ResponseBase GetListHotelForHomePage();
+        ResponseBase GetListHotelTopFlashSale(int number);
+        ResponseBase GetListHotelForHotelPage();
+        ResponseBase GetListRoomByHotel(int hotelId);
+        ResponseBase GetListHotelForSearching(HotelSearchingRequest filter);
+        ResponseBase GetListForSearchHotel(HotelSearchRequest filter);
+        ResponseBase GetListLocationForDropdown(string searchText);
+        ResponseBase GetListHotelForHomePageNew(SeachHomePageDto search);
+        ResponseBase GetHotelDetail(int hotelId);
     }
 }
