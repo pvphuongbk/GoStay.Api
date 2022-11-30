@@ -94,9 +94,10 @@ namespace GoStay.Services.Hotels
                                                 .Include(x => x.Pictures.Skip(5).Take(5))
                                                 .Include(x => x.IdTinhThanhNavigation)
                                                 .Include(x => x.IdQuanNavigation)
-                                                .Include(x => x.HotelRooms.Where(x =>x.Status==1))
-                                                .OrderByDescending(x => x.HotelRooms.Max(x=>x.IntDate))
-												.ToList();
+                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1))
+                                                .OrderByDescending(x => x.HotelRooms.Max(x => x.IntDate))
+												.Take(20)
+                                                .ToList();
                 var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
                 responseBase.Data = hotelDtos;
                 return responseBase;
@@ -134,7 +135,7 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-		public ResponseBase GetListHotelForSearching(HotelSearchRequest filter)
+		public ResponseBase GetListHotelForSearching(HotelSearchingRequest filter)
 		{
 			ResponseBase responseBase = new ResponseBase();
 			try
@@ -143,13 +144,16 @@ namespace GoStay.Services.Hotels
 				var inDate = filter.CheckinDate == null ? now : (DateTime)filter.CheckinDate;
 				var outDate = filter.CheckOutDate == null ? now : (DateTime)filter.CheckOutDate;
 				var hotels = _hotelRepository.FindAll(x => x.Deleted != 1 && !string.IsNullOrEmpty(x.Address) && x.Address.ToLower().Replace(" ", "").Contains(filter.AddressSearch.ToLower().Replace(" ", "")))
-												.Include(x => x.HotelRooms.Where(x => (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
+												.Include(x => x.HotelRooms.Where(x=> x.Status==1 && (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
 												&& ((x.CheckInDate > now || x.CheckInDate == null)
 												|| (x.CheckOutDate < now || x.CheckInDate == null))))
-												.Include(x => x.Pictures.Skip(5).Take(5))
-												.Where(x => x.HotelRooms.Any(x => (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
+												.Include(x => x.Pictures.Take(5))
+                                                .Include(x => x.IdTinhThanhNavigation)
+                                                .Include(x => x.IdQuanNavigation)
+                                                .Where(x => x.HotelRooms.Any(x => (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
 												&& ((x.CheckInDate > now || x.CheckInDate == null)
 												|| (x.CheckOutDate < now || x.CheckInDate == null))))
+												.Take(20)
 											 .ToList();
 				var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
 				responseBase.Data = hotelDtos;
@@ -163,12 +167,12 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-		public ResponseBase GetListForSearchHotel(HotelSearchingRequest filter)
+		public ResponseBase GetListForSearchHotel(HotelSearchRequest filter)
 		{
 			ResponseBase responseBase = new ResponseBase();
 			try
 			{
-				responseBase.Data = HotelRepository.GetListHotelForHomePage(filter);
+				responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
 				return responseBase;
 			}
 			catch (Exception e)
@@ -211,37 +215,6 @@ namespace GoStay.Services.Hotels
             }
         }
 
-        public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter)
-        {
-            ResponseBase responseBase = new ResponseBase();
-            try
-            {
-                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-                return responseBase;
-            }
-            catch (Exception e)
-            {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
-                responseBase.Message = e.Message;
-                return responseBase;
-            }
-        }
-        public ResponseBase GetPagingListHotelForSearching(HotelSearchingPaging filter)
-        {
-            ResponseBase responseBase = new ResponseBase();
-            try
-            {
-                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-                return responseBase;
-            }
-            catch (Exception e)
-            {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
-                responseBase.Message = e.Message;
-                return responseBase;
-            }
-        }
-
 
         public ResponseBase GetHotelDetail(int hotelId)
 		{
@@ -252,6 +225,8 @@ namespace GoStay.Services.Hotels
 				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
 					.Include(x=>x.HotelRooms.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
 					.Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
+					.Include(x=>x.IdQuanNavigation)
+					.Include(x=>x.IdTinhThanhNavigation)
 					.Include(x=>x.HotelMamenitis)
 					.FirstOrDefault();
                 List<Service> svhotel = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 0)

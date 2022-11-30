@@ -8,7 +8,7 @@ namespace GoStay.Repository.Repositories
 {
 	public class HotelRepository
 	{
-		public static List<HotelHomePageDto> GetListHotelForHomePage(HotelSearchingRequest filter)
+		public static List<HotelHomePageDto> GetListHotelForHomePage(HotelSearchRequest filter)
 		{
 			var p = new DynamicParameters();
 
@@ -22,7 +22,7 @@ namespace GoStay.Repository.Repositories
 
 			return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListForSearchHotel, p).ToList();
 		}
-        public static List<HotelHomePageDto> GetPagingListHotelForHomePage(HotelSearchingPaging filter)
+        public static List<HotelHomePageDto> GetPagingListHotelForHomePage(HotelSearchRequest filter)
         {
             var p = new DynamicParameters();
 
@@ -59,7 +59,7 @@ namespace GoStay.Repository.Repositories
         public static List<HotelHomePageDto> GetListHotelTopFlashSale(int number)
         {
             var p = new DynamicParameters();
-            var filter = new HotelSearchingPaging();
+            var filter = new HotelSearchRequest();
             filter.PageIndex = 1;
             filter.PageSize = number;
             p.Add("@IdPhuongs", filter.IdPhuong == null ? null : string.Join(",", filter.IdPhuong), System.Data.DbType.String);
