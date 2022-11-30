@@ -24,6 +24,8 @@ namespace GoStay.Data.HotelDto
         public decimal? LocationScore { get; set; }
         public decimal? RoomsScore { get; set; }
         public string? Content { get; set; }
+        public string? TinhThanh { get; set; }
+        public string? QuanHuyen { get; set; }
 
         public double? Lat_map { get; set; }
         public double? Lon_map { get; set; }
