@@ -179,6 +179,38 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
+        public ResponseBase GetListLocationForDropdown(string searchText)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                responseBase.Data = HotelRepository.GetListLocationForDropdown(searchText);
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+        public ResponseBase GetListHotelForHomePageNew(SeachHomePageDto search)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                responseBase.Data = HotelRepository.GetListHotelForHomePageNew(search);
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
         public ResponseBase GetPagingListForSearchHotel(HotelSearchingPaging filter)
         {
             ResponseBase responseBase = new ResponseBase();
