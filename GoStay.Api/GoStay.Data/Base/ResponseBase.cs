@@ -10,7 +10,7 @@
 
 		public int Code { get; set; }
 		public string Message { get; set; }
-
+		public int Count { get; set; }
 		public bool IsSuccessful => Code == ErrorCodeMessage.Success.Key;
 
 		public object Data { get; set; }

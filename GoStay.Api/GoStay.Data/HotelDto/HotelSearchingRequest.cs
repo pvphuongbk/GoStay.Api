@@ -2,7 +2,8 @@
 {
     public class HotelSearchRequest
     {
-        public decimal? Price { get; set; }
+        public decimal? PriceMin { get; set; }
+        public decimal? PriceMax { get; set; }
         public List<int?>? Ratings { get; set; }
         public List<int>? IdQuans { get; set; }
         public List<int>? IdPhuong { get; set; }
