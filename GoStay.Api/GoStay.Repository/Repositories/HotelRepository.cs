@@ -17,7 +17,7 @@ namespace GoStay.Repository.Repositories
 			p.Add("@Rating", filter.Ratings == null ? null : string.Join(",", filter.Ratings), System.Data.DbType.String);
 			p.Add("@Types", filter.Types == null ? null : string.Join(",", filter.Types), System.Data.DbType.String);
 			p.Add("@IdServices", filter.Services == null ? null : string.Join(",", filter.Services), System.Data.DbType.String);
-			p.Add("@ActualPrice", filter.Price == null ? null : filter.Price.ToString(), System.Data.DbType.String);
+			p.Add("@ActualPrice", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
 			p.Add("@ReviewScore", filter.ReviewScore == null ? null : filter.ReviewScore.ToString(), System.Data.DbType.String);
 
 			return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListForSearchHotel, p).ToList();
@@ -31,7 +31,7 @@ namespace GoStay.Repository.Repositories
             p.Add("@Rating", filter.Ratings == null ? null : string.Join(",", filter.Ratings), System.Data.DbType.String);
             p.Add("@Types", filter.Types == null ? null : string.Join(",", filter.Types), System.Data.DbType.String);
             p.Add("@IdServices", filter.Services == null ? null : string.Join(",", filter.Services), System.Data.DbType.String);
-            p.Add("@ActualPrice", filter.Price == null ? null : filter.Price.ToString(), System.Data.DbType.String);
+            p.Add("@ActualPrice", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
             p.Add("@ReviewScore", filter.ReviewScore == null ? null : filter.ReviewScore.ToString(), System.Data.DbType.String);
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
@@ -67,7 +67,7 @@ namespace GoStay.Repository.Repositories
             p.Add("@Rating", filter.Ratings == null ? null : string.Join(",", filter.Ratings), System.Data.DbType.String);
             p.Add("@Types", filter.Types == null ? null : string.Join(",", filter.Types), System.Data.DbType.String);
             p.Add("@IdServices", filter.Services == null ? null : string.Join(",", filter.Services), System.Data.DbType.String);
-            p.Add("@ActualPrice", filter.Price == null ? null : filter.Price.ToString(), System.Data.DbType.String);
+            p.Add("@ActualPrice", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
             p.Add("@ReviewScore", filter.ReviewScore == null ? null : filter.ReviewScore.ToString(), System.Data.DbType.String);
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);

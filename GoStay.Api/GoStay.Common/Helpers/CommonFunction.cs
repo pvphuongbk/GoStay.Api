@@ -50,8 +50,10 @@ namespace GoStay.Common.Helpers
 					dto.PalletbedRoom = room.Palletbed;
 
                 }
-
-				hotelDtos.Add(dto);
+				if (hotel.HotelRooms.Count>0)
+				{
+					hotelDtos.Add(dto);
+				}
 			}
 
 			return hotelDtos;

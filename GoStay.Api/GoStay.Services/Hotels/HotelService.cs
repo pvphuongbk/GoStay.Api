@@ -173,7 +173,8 @@ namespace GoStay.Services.Hotels
 			try
 			{
 				responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-				return responseBase;
+
+                return responseBase;
 			}
 			catch (Exception e)
 			{
