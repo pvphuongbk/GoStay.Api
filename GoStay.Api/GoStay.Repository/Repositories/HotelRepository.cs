@@ -25,19 +25,20 @@ namespace GoStay.Repository.Repositories
         public static List<HotelHomePageDto> GetPagingListHotelForHomePage(HotelSearchRequest filter)
         {
             var p = new DynamicParameters();
-
+            p.Add("@IdTinhThanh", filter.IdTinhThanh == null ? null : string.Join(",", filter.IdTinhThanh), System.Data.DbType.String);
             p.Add("@IdPhuongs", filter.IdPhuong == null ? null : string.Join(",", filter.IdPhuong), System.Data.DbType.String);
             p.Add("@IdQuans", filter.IdQuans == null ? null : string.Join(",", filter.IdQuans), System.Data.DbType.String);
             p.Add("@Rating", filter.Ratings == null ? null : string.Join(",", filter.Ratings), System.Data.DbType.String);
             p.Add("@Types", filter.Types == null ? null : string.Join(",", filter.Types), System.Data.DbType.String);
             p.Add("@IdServices", filter.Services == null ? null : string.Join(",", filter.Services), System.Data.DbType.String);
-            p.Add("@ActualPrice", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
+            p.Add("@ActualPriceMin", filter.PriceMin == null ? null : filter.PriceMin.ToString(), System.Data.DbType.String);
+            p.Add("@ActualPriceMax", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
             p.Add("@ReviewScore", filter.ReviewScore == null ? null : filter.ReviewScore.ToString(), System.Data.DbType.String);
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
 
 
-            return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListForSearchHotelPaging, p).ToList();
+            return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListForSearchHotelPaging_beta, p).ToList();
         }
         public static List<HotelHomePageDto> GetListHotelForHomePageNew(SeachHomePageDto search)
         {
