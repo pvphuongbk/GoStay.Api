@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoStay.Common.Extention;
 using GoStay.Common.Helpers;
 using GoStay.Common.Helpers.Hotels;
 using GoStay.Data.Base;
@@ -188,6 +189,9 @@ namespace GoStay.Services.Hotels
             ResponseBase responseBase = new ResponseBase();
             try
             {
+				// Remove unicode
+				searchText = searchText.RemoveUnicode();
+				searchText = searchText.Replace(" ", string.Empty).ToLower();
                 responseBase.Data = HotelRepository.GetListLocationForDropdown(searchText);
                 return responseBase;
             }

@@ -4,6 +4,7 @@
     {
         Hotel = 1,
         Quan = 2,
-        TinhThanh = 3
+        TinhThanh = 3,
+        Phuong = 4
     }
 }
