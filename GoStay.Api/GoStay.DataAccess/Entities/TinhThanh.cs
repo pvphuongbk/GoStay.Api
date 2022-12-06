@@ -18,6 +18,9 @@ namespace GoStay.DataAccess.Entities
         public string? Locality { get; set; }
         public string? Tentt2 { get; set; }
         public int? Deleted { get; set; }
+        public int? Numrecord { get; set; }
+        public string? SanitizedName { get; set; }
+        public string? SearchKey { get; set; }
 
         public virtual ICollection<Hotel> Hotels { get; set; }
         public virtual ICollection<Quan> Quans { get; set; }
