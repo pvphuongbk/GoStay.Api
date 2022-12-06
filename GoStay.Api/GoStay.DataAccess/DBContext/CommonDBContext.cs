@@ -21,6 +21,7 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; } = null!;
 		public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
+        public virtual DbSet<Banner> Banners { get; set; } = null!;
 		public virtual DbSet<Course> Courses { get; set; } = null!;
 		public virtual DbSet<DmKenhTin> DmKenhTins { get; set; } = null!;
 		public virtual DbSet<DmMenuChinh> DmMenuChinhs { get; set; } = null!;
@@ -36,6 +37,8 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<HotelRoomComment> HotelRoomComments { get; set; } = null!;
 		public virtual DbSet<KhuVuc> KhuVucs { get; set; } = null!;
 		public virtual DbSet<MulltiKeyValue> MulltiKeyValues { get; set; } = null!;
+        public virtual DbSet<NearbyHotel> NearbyHotels { get; set; } = null!;
+        public virtual DbSet<OrderRoom> OrderRooms { get; set; } = null!;
 		public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
 		public virtual DbSet<Picture> Pictures { get; set; } = null!;
 		public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
@@ -220,6 +223,24 @@ namespace GoStay.DataAccess.DBContext
 				entity.Property(e => e.Name).HasMaxLength(128);
 			});
 
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.ToTable("Banner");
+
+                entity.Property(e => e.Description).HasMaxLength(250);
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Link)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
+
+                entity.Property(e => e.Title).HasMaxLength(50);
+            });
 			modelBuilder.Entity<Course>(entity =>
 			{
 				entity.HasNoKey();
@@ -412,13 +433,19 @@ namespace GoStay.DataAccess.DBContext
 					.HasMaxLength(50)
 					.HasColumnName("Name_seo");
 
-				entity.Property(e => e.Rating).HasDefaultValueSql("((1))");
+                entity.Property(e => e.NumViews)
+                    .HasColumnName("numViews")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Rating).HasDefaultValueSql("((1))");
 
 				entity.Property(e => e.ReviewScore).HasColumnName("Review_score");
 
-				entity.Property(e => e.RoomsScore)
-					.HasColumnType("decimal(2, 1)")
-					.HasColumnName("Rooms_score");
+                entity.Property(e => e.RoomsScore)
+                    .HasColumnType("decimal(2, 1)")
+                    .HasColumnName("Rooms_score");
+
+                entity.Property(e => e.SearchKey).HasMaxLength(200);
 
 				entity.Property(e => e.ServiceScore)
 					.HasColumnType("decimal(2, 1)")
@@ -620,11 +647,13 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
 
+                entity.Property(e => e.Iduser).HasColumnName("IDUser");
+
                 entity.Property(e => e.IntDate)
                     .HasColumnName("intDate")
                     .HasDefaultValueSql("(datediff(second,'2022-1-1',getdate()))");
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(150);
 
                 entity.Property(e => e.NewPrice).HasColumnType("decimal(18, 0)");
 
@@ -636,10 +665,15 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.RoomSize).HasColumnType("decimal(5, 2)");
 
-				entity.HasOne(d => d.IdhotelNavigation)
-					.WithMany(p => p.HotelRooms)
-					.HasForeignKey(d => d.Idhotel)
-					.HasConstraintName("FK_TBLROOM_TBLHOTEL");
+                entity.HasOne(d => d.IdhotelNavigation)
+                    .WithMany(p => p.HotelRooms)
+                    .HasForeignKey(d => d.Idhotel)
+                    .HasConstraintName("FK_TBLROOM_TBLHOTEL");
+
+                entity.HasOne(d => d.IduserNavigation)
+                    .WithMany(p => p.HotelRooms)
+                    .HasForeignKey(d => d.Iduser)
+                    .HasConstraintName("FK_HotelRoom_users");
 
 				entity.HasOne(d => d.ViewDirectionNavigation)
 					.WithMany(p => p.HotelRooms)
@@ -706,9 +740,46 @@ namespace GoStay.DataAccess.DBContext
 				entity.Property(e => e.Title).HasMaxLength(50);
 			});
 
-			modelBuilder.Entity<Phuong>(entity =>
-			{
-				entity.ToTable("Phuong");
+            modelBuilder.Entity<NearbyHotel>(entity =>
+            {
+                entity.Property(e => e.IdPlace)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title).HasMaxLength(50);
+
+                entity.HasOne(d => d.IdHotelNavigation)
+                    .WithMany(p => p.NearbyHotels)
+                    .HasForeignKey(d => d.IdHotel)
+                    .HasConstraintName("FK_NearbyHotels_Hotel");
+            });
+
+            modelBuilder.Entity<OrderRoom>(entity =>
+            {
+                entity.ToTable("OrderRoom");
+
+                entity.Property(e => e.ChechIn).HasColumnType("datetime");
+
+                entity.Property(e => e.CheckOut).HasColumnType("datetime");
+
+                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdRoomNavigation)
+                    .WithMany(p => p.OrderRooms)
+                    .HasForeignKey(d => d.IdRoom)
+                    .HasConstraintName("FK_OrderRoom_HotelRoom");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.OrderRooms)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_OrderRoom_users");
+            });
+
+            modelBuilder.Entity<Phuong>(entity =>
+            {
+                entity.ToTable("Phuong");
+
+                entity.Property(e => e.SearchKey).HasMaxLength(200);
 
 				entity.Property(e => e.Stt).HasColumnName("STT");
 
@@ -787,9 +858,11 @@ namespace GoStay.DataAccess.DBContext
 			{
 				entity.ToTable("Quan");
 
-				entity.Property(e => e.Diengiai)
-					.HasMaxLength(50)
-					.HasColumnName("DIENGIAI");
+                entity.Property(e => e.Diengiai)
+                    .HasMaxLength(50)
+                    .HasColumnName("DIENGIAI");
+
+                entity.Property(e => e.SearchKey).HasMaxLength(200);
 
 				entity.Property(e => e.Stt).HasColumnName("stt");
 
@@ -1217,7 +1290,13 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Locality).HasMaxLength(50);
 
-				entity.Property(e => e.Stt).HasColumnName("STT");
+                entity.Property(e => e.SanitizedName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SearchKey).HasMaxLength(200);
+
+                entity.Property(e => e.Stt).HasColumnName("STT");
 
 				entity.Property(e => e.TenTt)
 					.HasMaxLength(50)
@@ -1248,9 +1327,10 @@ namespace GoStay.DataAccess.DBContext
 					.HasMaxLength(600)
 					.HasColumnName("address");
 
-				entity.Property(e => e.CreatedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("created_at");
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("(getdate())");
 
 				entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
@@ -1262,7 +1342,9 @@ namespace GoStay.DataAccess.DBContext
 					.HasMaxLength(70)
 					.HasColumnName("first_name");
 
-				entity.Property(e => e.IsActive).HasColumnName("is_active");
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("is_active")
+                    .HasDefaultValueSql("((1))");
 
 				entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
 
@@ -1301,8 +1383,10 @@ namespace GoStay.DataAccess.DBContext
 					.HasMaxLength(150)
 					.HasColumnName("user_name");
 
-				entity.Property(e => e.UserType).HasColumnName("user_type");
-			});
+                entity.Property(e => e.UserType)
+                    .HasColumnName("user_type")
+                    .HasDefaultValueSql("((1))");
+            });
 
 			modelBuilder.Entity<VGetAllHotel>(entity =>
 			{

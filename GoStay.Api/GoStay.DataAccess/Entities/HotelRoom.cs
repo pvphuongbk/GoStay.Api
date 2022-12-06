@@ -7,6 +7,7 @@ namespace GoStay.DataAccess.Entities
     {
         public HotelRoom()
         {
+            OrderRooms = new HashSet<OrderRoom>();
             Pictures = new HashSet<Picture>();
             RoomMamenitis = new HashSet<RoomMameniti>();
         }
@@ -29,9 +30,12 @@ namespace GoStay.DataAccess.Entities
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
         public long? IntDate { get; set; }
+        public int? Iduser { get; set; }
 
         public virtual Hotel? IdhotelNavigation { get; set; }
+        public virtual User? IduserNavigation { get; set; }
         public virtual ViewDirection? ViewDirectionNavigation { get; set; }
+        public virtual ICollection<OrderRoom> OrderRooms { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<RoomMameniti> RoomMamenitis { get; set; }
     }

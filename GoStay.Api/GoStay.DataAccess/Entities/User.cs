@@ -5,6 +5,12 @@ namespace GoStay.DataAccess.Entities
 {
     public partial class User
     {
+        public User()
+        {
+            HotelRooms = new HashSet<HotelRoom>();
+            OrderRooms = new HashSet<OrderRoom>();
+        }
+
         public int UserId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -23,5 +29,8 @@ namespace GoStay.DataAccess.Entities
         public int? ModifiedBy { get; set; }
         public int? IsDeleted { get; set; }
         public string? Picture { get; set; }
+
+        public virtual ICollection<HotelRoom> HotelRooms { get; set; }
+        public virtual ICollection<OrderRoom> OrderRooms { get; set; }
     }
 }
