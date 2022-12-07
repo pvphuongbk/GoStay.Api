@@ -1,9 +1,11 @@
+﻿using GoStay.Common.Extention;
 using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.Services.Hotels;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace GoStay.Api.Controllers
 {
@@ -20,7 +22,7 @@ namespace GoStay.Api.Controllers
 		[HttpGet("hotel-home-page")]
 		public ResponseBase GetListHotelForHomePage()
 		{
-			var items = _hotelService.GetListHotelForHomePage();
+            var items = _hotelService.GetListHotelForHomePage();
 
 			return items;
 		}
