@@ -10,8 +10,15 @@
         public List<int>? Types { get; set; }
         public double? ReviewScore { get; set; }
         public List<int>? Services { get; set; }
+        public int? Palletbed { get; set; }
+        public int? NumMature { get; set; }
+        public int? NumChild { get; set; }
+        public DateTime? CheckinDate { get; set; }
+        public DateTime? CheckoutDate { get; set; }
+
         public int? PageIndex { get; set; }
         public int? PageSize { get; set; }
-        public int IdTinhThanh { get; set; }
+        public int? IdTinhThanh { get; set; }
+
     }
 }

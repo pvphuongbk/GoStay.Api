@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoStay.Common.Extention;
 using GoStay.Common.Helpers;
 using GoStay.Common.Helpers.Hotels;
 using GoStay.Data.Base;
@@ -32,33 +33,6 @@ namespace GoStay.Services.Hotels
 			_pictureRepository = pictureRepository;
 			_viewRepository = viewRepository;
 		}
-		public ResponseBase GetListHotelForHomePage()
-		{
-			ResponseBase responseBase = new ResponseBase();
-			try
-			{
-				var now = DateTime.Now;
-				var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
-												.Include(x => x.Pictures.Skip(5).Take(5))
-												.Include(x=>x.IdTinhThanhNavigation)
-												.Include(x=>x.IdQuanNavigation)
-												.Include(x => x.HotelRooms.Where(x => (x.CheckInDate > now || x.CheckInDate == null)))
-												//|| (x.CheckOutDate < now || x.CheckInDate == null)))
-												.Where(x => x.HotelRooms.Any(x => (x.CheckInDate > now || x.CheckInDate == null)))
-                                                .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
-                                             //|| (x.CheckOutDate < now || x.CheckInDate == null)))
-                                             .ToList();
-				var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
-				responseBase.Data = hotelDtos;
-				return responseBase;
-			}
-			catch (Exception e)
-			{
-				responseBase.Code = ErrorCodeMessage.Exception.Key;
-				responseBase.Message = e.Message;
-				return responseBase;
-			}
-		}
         public ResponseBase GetListHotelTopFlashSale(int number)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -73,32 +47,6 @@ namespace GoStay.Services.Hotels
 												.Take(number)
                                                 .ToList();
                 var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotels);
-                responseBase.Data = hotelDtos;
-                return responseBase;
-            }
-            catch (Exception e)
-            {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
-                responseBase.Message = e.Message;
-                return responseBase;
-            }
-        }
-
-        public ResponseBase GetListHotelForHotelPage()
-        {
-            ResponseBase responseBase = new ResponseBase();
-            try
-            {
-                var now = DateTime.Now;
-                var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
-                                                .Include(x => x.Pictures.Skip(5).Take(5))
-                                                .Include(x => x.IdTinhThanhNavigation)
-                                                .Include(x => x.IdQuanNavigation)
-                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1))
-                                                .OrderByDescending(x => x.HotelRooms.Max(x => x.IntDate))
-												.Take(20)
-                                                .ToList();
-                var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
                 responseBase.Data = hotelDtos;
                 return responseBase;
             }
@@ -135,44 +83,13 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-		public ResponseBase GetListHotelForSearching(HotelSearchingRequest filter)
-		{
-			ResponseBase responseBase = new ResponseBase();
-			try
-			{
-				var now = DateTime.Now;
-				var inDate = filter.CheckinDate == null ? now : (DateTime)filter.CheckinDate;
-				var outDate = filter.CheckOutDate == null ? now : (DateTime)filter.CheckOutDate;
-				var hotels = _hotelRepository.FindAll(x => x.Deleted != 1 && !string.IsNullOrEmpty(x.Address) && x.Address.ToLower().Replace(" ", "").Contains(filter.AddressSearch.ToLower().Replace(" ", "")))
-												.Include(x => x.HotelRooms.Where(x=> x.Status==1 && (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
-												&& ((x.CheckInDate > now || x.CheckInDate == null)
-												|| (x.CheckOutDate < now || x.CheckInDate == null))))
-												.Include(x => x.Pictures.Take(5))
-                                                .Include(x => x.IdTinhThanhNavigation)
-                                                .Include(x => x.IdQuanNavigation)
-                                                .Where(x => x.HotelRooms.Any(x => (x.NumChild == filter.NumChild && x.NumMature == filter.NumMature)
-												&& ((x.CheckInDate > now || x.CheckInDate == null)
-												|| (x.CheckOutDate < now || x.CheckInDate == null))))
-												.Take(20)
-											 .ToList();
-				var hotelDtos = CommonFunction.CreateHotelHomePageDto(hotels);
-				responseBase.Data = hotelDtos;
-				return responseBase;
-			}
-			catch (Exception e)
-			{
-				responseBase.Code = ErrorCodeMessage.Exception.Key;
-				responseBase.Message = e.Message;
-				return responseBase;
-			}
-		}
 
 		public ResponseBase GetListForSearchHotel(HotelSearchRequest filter)
 		{
 			ResponseBase responseBase = new ResponseBase();
 			try
 			{
-				responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
 				return responseBase;
 			}
 			catch (Exception e)
@@ -183,11 +100,14 @@ namespace GoStay.Services.Hotels
 			}
 		}
 
-        public ResponseBase GetListLocationForDropdown(string searchText)
+        public ResponseBase GetListSuggestHotel(string searchText)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
+				// Remove unicode
+				searchText = searchText.RemoveUnicode();
+				searchText = searchText.Replace(" ", string.Empty).ToLower();
                 responseBase.Data = HotelRepository.GetListLocationForDropdown(searchText);
                 return responseBase;
             }
@@ -198,23 +118,6 @@ namespace GoStay.Services.Hotels
                 return responseBase;
             }
         }
-
-        public ResponseBase GetListHotelForHomePageNew(SeachHomePageDto search)
-        {
-            ResponseBase responseBase = new ResponseBase();
-            try
-            {
-                responseBase.Data = HotelRepository.GetListHotelForHomePageNew(search);
-                return responseBase;
-            }
-            catch (Exception e)
-            {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
-                responseBase.Message = e.Message;
-                return responseBase;
-            }
-        }
-
 
         public ResponseBase GetHotelDetail(int hotelId)
 		{
