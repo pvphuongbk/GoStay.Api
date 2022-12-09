@@ -26,12 +26,6 @@ namespace GoStay.Api.Controllers
 			_hotelService = hotelService;
 		}
 
-		[HttpGet(Name = "GetWeatherForecast")]
-		public ResponseBase Get()
-		{
-			var h = _hotelService.GetListHotelForHomePage();
 
-			return h;
-		}
 	}
 }
