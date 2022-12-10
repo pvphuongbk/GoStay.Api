@@ -11,5 +11,6 @@ namespace GoStay.DataAccess.Entities
         public string? Description { get; set; }
         public string? Link { get; set; }
         public string? Image { get; set; }
+        public byte? Stt { get; set; }
     }
 }

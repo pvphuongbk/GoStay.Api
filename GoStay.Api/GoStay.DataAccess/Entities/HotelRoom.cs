@@ -31,6 +31,7 @@ namespace GoStay.DataAccess.Entities
         public DateTime? CheckOutDate { get; set; }
         public long? IntDate { get; set; }
         public int? Iduser { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public virtual Hotel? IdhotelNavigation { get; set; }
         public virtual User? IduserNavigation { get; set; }
