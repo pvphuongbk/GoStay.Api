@@ -45,6 +45,7 @@ namespace GoStay.DataAccess.Entities
         public int IdTinhThanh { get; set; }
         public int? NumViews { get; set; }
         public string? SearchKey { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public virtual PriceRange? IdPriceRangeNavigation { get; set; }
         public virtual Quan IdQuanNavigation { get; set; } = null!;
