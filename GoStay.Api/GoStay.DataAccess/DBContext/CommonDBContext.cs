@@ -61,6 +61,11 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<Tbltigium> Tbltigia { get; set; } = null!;
 		public virtual DbSet<Tbluser> Tblusers { get; set; } = null!;
 		public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
+        public virtual DbSet<Tour> Tours { get; set; } = null!;
+        public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
+        public virtual DbSet<TourDetailsStyle> TourDetailsStyles { get; set; } = null!;
+        public virtual DbSet<TourStyle> TourStyles { get; set; } = null!;
+        public virtual DbSet<TourTopic> TourTopics { get; set; } = null!;
 		public virtual DbSet<TypeHotel> TypeHotels { get; set; } = null!;
 		public virtual DbSet<User> Users { get; set; } = null!;
 		public virtual DbSet<VGetAllHotel> VGetAllHotels { get; set; } = null!;
@@ -239,6 +244,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
 
+                entity.Property(e => e.Stt).HasDefaultValueSql("((10))");
+
                 entity.Property(e => e.Title).HasMaxLength(50);
             });
 			modelBuilder.Entity<Course>(entity =>
@@ -403,7 +410,11 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Content).HasColumnType("ntext");
 
-				entity.Property(e => e.Description).HasMaxLength(3000);
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).HasMaxLength(3000);
 
 				entity.Property(e => e.IdPhuong).HasDefaultValueSql("((2))");
 
@@ -643,7 +654,11 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.CheckOutDate).HasColumnType("datetime");
 
-				entity.Property(e => e.Description).HasMaxLength(1000);
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).HasMaxLength(1000);
 
 				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
 
@@ -1308,6 +1323,86 @@ namespace GoStay.DataAccess.DBContext
 					.HasColumnName("TENTT2");
 			});
 
+            modelBuilder.Entity<Tour>(entity =>
+            {
+                entity.Property(e => e.Content).HasColumnType("ntext");
+
+                entity.Property(e => e.Descriptions).HasMaxLength(350);
+
+                entity.Property(e => e.EnDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Idttfrom).HasColumnName("IDTTFrom");
+
+                entity.Property(e => e.Idttto).HasColumnName("IDTTTo");
+
+                entity.Property(e => e.IntDate).HasColumnName("intDate");
+
+                entity.Property(e => e.Locations)
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.Property(e => e.TourName).HasMaxLength(150);
+
+                entity.HasOne(d => d.IdTourStyleNavigation)
+                    .WithMany(p => p.Tours)
+                    .HasForeignKey(d => d.IdTourStyle)
+                    .HasConstraintName("FK_Tours_TourStyle");
+
+                entity.HasOne(d => d.IdTourTopicNavigation)
+                    .WithMany(p => p.Tours)
+                    .HasForeignKey(d => d.IdTourTopic)
+                    .HasConstraintName("FK_Tours_TourTopic");
+            });
+
+            modelBuilder.Entity<TourDetail>(entity =>
+            {
+                entity.Property(e => e.Details).HasColumnType("ntext");
+
+                entity.Property(e => e.Title).HasMaxLength(50);
+
+                entity.HasOne(d => d.IdStyleNavigation)
+                    .WithMany(p => p.TourDetails)
+                    .HasForeignKey(d => d.IdStyle)
+                    .HasConstraintName("FK_TourDetails_TourDetailsStyle");
+
+                entity.HasOne(d => d.IdToursNavigation)
+                    .WithMany(p => p.TourDetails)
+                    .HasForeignKey(d => d.IdTours)
+                    .HasConstraintName("FK_TourDetails_Tours");
+            });
+
+            modelBuilder.Entity<TourDetailsStyle>(entity =>
+            {
+                entity.ToTable("TourDetailsStyle");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Style).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TourStyle>(entity =>
+            {
+                entity.ToTable("TourStyle");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.TourStyle1)
+                    .HasMaxLength(100)
+                    .HasColumnName("TourStyle");
+            });
+
+            modelBuilder.Entity<TourTopic>(entity =>
+            {
+                entity.ToTable("TourTopic");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.TourTopic1)
+                    .HasMaxLength(100)
+                    .HasColumnName("TourTopic");
+            });
 			modelBuilder.Entity<TypeHotel>(entity =>
 			{
 				entity.ToTable("TypeHotel");
