@@ -20,11 +20,13 @@ namespace GoStay.Services.Hotels
         private readonly ICommonRepository<Service> _serviceRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<ViewDirection> _viewRepository;
+        private readonly ICommonRepository<TypeHotel> _typeHotelRepository;
 
 
         private readonly IMapper _mapper;
 		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper,
-			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository)
+			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository,
+			ICommonRepository<ViewDirection> viewRepository, ICommonRepository<TypeHotel> typeHotelRepository)
 		{
 			_hotelRepository = hotelRepository;
 			_hotelRoomRepository = hotelRoomRepository;
@@ -32,6 +34,7 @@ namespace GoStay.Services.Hotels
 			_serviceRepository = serviceRepository;
 			_pictureRepository = pictureRepository;
 			_viewRepository = viewRepository;
+			_typeHotelRepository = typeHotelRepository;
 		}
         public ResponseBase GetListHotelTopFlashSale(int number)
         {
@@ -108,7 +111,13 @@ namespace GoStay.Services.Hotels
 				// Remove unicode
 				searchText = searchText.RemoveUnicode();
 				searchText = searchText.Replace(" ", string.Empty).ToLower();
-                responseBase.Data = HotelRepository.GetListLocationForDropdown(searchText);
+                var listData = HotelRepository.GetListLocationForDropdown(searchText);
+				foreach (var item in listData.Where(x=>x.HotelType!=0))
+				{
+					item.HotelTypeName = _typeHotelRepository.FindAll().SingleOrDefault(x => x.Id == item.HotelType).Type;
+
+                }
+				responseBase.Data = listData;
                 return responseBase;
             }
             catch (Exception e)
