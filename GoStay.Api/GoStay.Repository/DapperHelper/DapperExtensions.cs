@@ -11,7 +11,6 @@ namespace GoStay.Repository.DapperHelper
 	{
 		internal static string ConnectionString = AppConfigs.SqlConnection;
 
-
 		public static IEnumerable<T> QueryDapperStoreProc<T>(string store, object param = null)
 		{
 			try
