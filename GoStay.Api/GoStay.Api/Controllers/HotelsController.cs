@@ -46,7 +46,7 @@ namespace GoStay.Api.Controllers
 			return items;
 		}
 
-        [HttpGet("hotel-suggest/{search}")]
+        [HttpGet("hotel-suggest")]
         public ResponseBase GetListSuggestHotel(string search)
         {
             var items = _hotelService.GetListSuggestHotel(search);
