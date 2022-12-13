@@ -12,5 +12,6 @@ namespace GoStay.Data.HotelDto
         public LocationDropdown Type { get; set; }
         public int Id { get; set; }
         public int TinhThanhID { get; set; }
+        public string HotelTypeName { get; set; }
     }
 }
