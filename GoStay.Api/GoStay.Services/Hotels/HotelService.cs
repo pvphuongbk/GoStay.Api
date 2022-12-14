@@ -3,6 +3,7 @@ using GoStay.Common.Extention;
 using GoStay.Common.Helpers;
 using GoStay.Common.Helpers.Hotels;
 using GoStay.Data.Base;
+using GoStay.Data.Enums;
 using GoStay.Data.HotelDto;
 using GoStay.Data.ServiceDto;
 using GoStay.DataAccess.Entities;
@@ -10,6 +11,7 @@ using GoStay.DataAccess.Interface;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GoStay.Services.Hotels
 {
@@ -21,12 +23,18 @@ namespace GoStay.Services.Hotels
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<ViewDirection> _viewRepository;
         private readonly ICommonRepository<TypeHotel> _typeHotelRepository;
+        private readonly ICommonRepository<TinhThanh> _tinhThanhRepository;
+        private readonly ICommonRepository<Quan> _quanRepository;
+        private readonly ICommonRepository<Phuong> _phuongRepository;
+
+
 
 
         private readonly IMapper _mapper;
 		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper,
 			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository,
-			ICommonRepository<ViewDirection> viewRepository, ICommonRepository<TypeHotel> typeHotelRepository)
+			ICommonRepository<ViewDirection> viewRepository, ICommonRepository<TypeHotel> typeHotelRepository, 
+			ICommonRepository<TinhThanh> tinhThanhRepository, ICommonRepository<Quan> quanRepository, ICommonRepository<Phuong> phuongRepository)
 		{
 			_hotelRepository = hotelRepository;
 			_hotelRoomRepository = hotelRoomRepository;
@@ -35,6 +43,9 @@ namespace GoStay.Services.Hotels
 			_pictureRepository = pictureRepository;
 			_viewRepository = viewRepository;
 			_typeHotelRepository = typeHotelRepository;
+			_tinhThanhRepository = tinhThanhRepository;
+			_quanRepository = quanRepository;
+			_phuongRepository = phuongRepository;
 		}
         public ResponseBase GetListHotelTopFlashSale(int number)
         {
@@ -112,12 +123,15 @@ namespace GoStay.Services.Hotels
 				searchText = searchText.RemoveUnicode();
 				searchText = searchText.Replace(" ", string.Empty).ToLower();
                 var listData = HotelRepository.GetListLocationForDropdown(searchText);
-				foreach (var item in listData.Where(x=>x.HotelType!=0))
+				foreach (var item in listData.Where(x=>x.Type== LocationDropdown.Hotel))
 				{
 					item.HotelTypeName = _typeHotelRepository.FindAll().SingleOrDefault(x => x.Id == item.HotelType).Type;
+					item.NumRecord = 0;
 
                 }
-				responseBase.Data = listData;
+
+
+                responseBase.Data = listData;
                 return responseBase;
             }
             catch (Exception e)
