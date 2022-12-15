@@ -4,6 +4,7 @@ using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GoStay.Services.Statisticals
 {
@@ -85,6 +86,12 @@ namespace GoStay.Services.Statisticals
                         Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
                     });
                 }
+
+                chart.HotelRating = chart.HotelRating.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+                chart.PriceRange = chart.PriceRange.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+                chart.TypeHotel = chart.TypeHotel.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+                chart.RoomByMonth = chart.RoomByMonth.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+
                 responseBase.Data = chart;
                 return responseBase;
             }
