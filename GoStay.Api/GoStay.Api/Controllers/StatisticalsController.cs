@@ -26,5 +26,12 @@ namespace GoStay.Api.Controllers
             var items = _statisticalService.GetValueChart();
             return items;
         }
+
+        [HttpGet("room-by-day")]
+        public ResponseBase GetRoomInMonthByDay(int month, int year)
+        {
+            var items = _statisticalService.GetRoomInMonthByDay(month, year);
+            return items;
+        }
     }
 }
