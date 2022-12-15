@@ -67,7 +67,7 @@ namespace GoStay.Services.Statisticals
                     chart.PriceRange.Add(priceRange.Title, new ChartValue
                     {
                         Count = priceRange.Count,
-                        Percent = Math.Round(((double)priceRange.Count * 100 / chart.TotalRoom), 2)
+                        Percent = Math.Round(((double)priceRange.Count * 100 / chart.TotalHotel), 2)
                     });
                 }
 
