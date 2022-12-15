@@ -108,27 +108,27 @@ namespace GoStay.Services.Statisticals
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                Dictionary<string, ChartValue> roomByMonth = new Dictionary<string, ChartValue>();
+                RoomByDayDto chart = new RoomByDayDto();
 
                 var hotelRooms = _hotelRoomRepository.FindAll(x => x.Deleted != 1 && x.CreatedDate.Year == year && x.CreatedDate.Month == month)
                                             .Select(x => new CreateRoomForChartDto { CreatedDate = x.CreatedDate }).ToList();
-
+                chart.TotalRoom = hotelRooms.Count;
                 var maxDate = hotelRooms.Max(x => x.CreatedDate);
                 var minDate = hotelRooms.Min(x => x.CreatedDate);
                 for (DateTime i = minDate; i <= maxDate; i = i.AddDays(1))
                 {
                     var key = i.ToString("dd");
-                    if (string.IsNullOrEmpty(key) || roomByMonth.ContainsKey(key))
+                    if (string.IsNullOrEmpty(key) || chart.RoomByDay.ContainsKey(key))
                         continue;
                     var count = hotelRooms.Count(x => x.CreatedDate.Day == i.Day);
-                    roomByMonth.Add(key, new ChartValue
+                    chart.RoomByDay.Add(key, new ChartValue
                     {
                         Count = count,
-                        Percent = Math.Round(((double)count * 100 / hotelRooms.Count), 2)
+                        Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
                     });
                 }
 
-                responseBase.Data = roomByMonth;
+                responseBase.Data = chart;
                 return responseBase;
             }
             catch (Exception e)
