@@ -4,6 +4,7 @@ using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GoStay.Services.Statisticals
 {
@@ -13,12 +14,16 @@ namespace GoStay.Services.Statisticals
         private readonly ICommonRepository<HotelRoom> _hotelRoomRepository;
         private readonly ICommonRepository<PriceRange> _priceRangeRepository;
         private readonly ICommonRepository<TypeHotel> _typeHotelRepository;
-        public StatisticalService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, ICommonRepository<PriceRange> priceRangeRepository, ICommonRepository<TypeHotel> typeHotelRepository)
+        private readonly ICommonRepository<Picture> _pictureRepository;
+
+        public StatisticalService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, 
+            ICommonRepository<PriceRange> priceRangeRepository, ICommonRepository<TypeHotel> typeHotelRepository, ICommonRepository<Picture> pictureRepository)
         {
             _hotelRepository = hotelRepository;
             _hotelRoomRepository = hotelRoomRepository;
             _priceRangeRepository = priceRangeRepository;
             _typeHotelRepository = typeHotelRepository;
+            _pictureRepository = pictureRepository;
         }
         public ResponseBase GetValueChart()
         {
@@ -26,6 +31,7 @@ namespace GoStay.Services.Statisticals
             try
             {
                 ChartDto chart = new ChartDto();
+                chart.TotalSizeImg = 0;
                 var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
                                     .Select(x => new HotelRatingForChartDto { Rating = x.Rating }).ToList();
                 var types = _typeHotelRepository.FindAll(x => x.Deleted != 1)
@@ -41,6 +47,11 @@ namespace GoStay.Services.Statisticals
                                                         .Select(x => new CreateRoomForChartDto { CreatedDate = x.CreatedDate }).ToList();
                 chart.TotalHotel = hotels.Count;
                 chart.TotalRoom = hotelRooms.Count;
+                chart.TotalImg = _pictureRepository.FindAll(x => x.Deleted != 1).Count();
+                foreach( var item in _pictureRepository.FindAll(x=>x.Deleted!=1).Select(x=>x.Size))
+                {
+                    chart.TotalSizeImg =+(long)item;
+                }
                 for (int i = 0; i <= 5; i++)
                 {
                     var count = hotels.Count(x => x.Rating == i);
@@ -67,7 +78,7 @@ namespace GoStay.Services.Statisticals
                     chart.PriceRange.Add(priceRange.Title, new ChartValue
                     {
                         Count = priceRange.Count,
-                        Percent = Math.Round(((double)priceRange.Count * 100 / chart.TotalRoom), 2)
+                        Percent = Math.Round(((double)priceRange.Count * 100 / chart.TotalHotel), 2)
                     });
                 }
 
@@ -76,7 +87,7 @@ namespace GoStay.Services.Statisticals
                 for (DateTime i = minDate; i <= maxDate;i = i.AddMonths(1))
                 {
                     var key = i.ToString("MM-yyyy");
-                    if (string.IsNullOrEmpty(key) || chart.TypeHotel.ContainsKey(key))
+                    if (string.IsNullOrEmpty(key) || chart.RoomByMonth.ContainsKey(key))
                         continue;
                     var count = hotelRooms.Count(x => x.CreatedDate.Year == i.Year && x.CreatedDate.Month == i.Month);
                     chart.RoomByMonth.Add(key, new ChartValue
@@ -85,6 +96,48 @@ namespace GoStay.Services.Statisticals
                         Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
                     });
                 }
+
+                chart.HotelRating = chart.HotelRating.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+                chart.PriceRange = chart.PriceRange.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+                chart.TypeHotel = chart.TypeHotel.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+                chart.RoomByMonth = chart.RoomByMonth.OrderByDescending(x => x.Value.Percent).ToDictionary(x => x.Key, x => x.Value);
+
+                responseBase.Data = chart;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+        public ResponseBase GetRoomInMonthByDay(int month, int year)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                RoomByDayDto chart = new RoomByDayDto();
+
+                var hotelRooms = _hotelRoomRepository.FindAll(x => x.Deleted != 1 && x.CreatedDate.Year == year && x.CreatedDate.Month == month)
+                                            .Select(x => new CreateRoomForChartDto { CreatedDate = x.CreatedDate }).ToList();
+                chart.TotalRoom = hotelRooms.Count;
+                var maxDate = hotelRooms.Max(x => x.CreatedDate);
+                var minDate = hotelRooms.Min(x => x.CreatedDate);
+                for (DateTime i = minDate; i <= maxDate; i = i.AddDays(1))
+                {
+                    var key = i.ToString("dd");
+                    if (string.IsNullOrEmpty(key) || chart.RoomByDay.ContainsKey(key))
+                        continue;
+                    var count = hotelRooms.Count(x => x.CreatedDate.Day == i.Day);
+                    chart.RoomByDay.Add(key, new ChartValue
+                    {
+                        Count = count,
+                        Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
+                    });
+                }
+
                 responseBase.Data = chart;
                 return responseBase;
             }

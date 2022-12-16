@@ -12,6 +12,8 @@
 
         public int TotalHotel { get; set; }
         public int TotalRoom { get; set; }
+        public int TotalImg { get; set; }
+        public long TotalSizeImg { get; set; }
         public Dictionary<string, ChartValue> HotelRating { get; set; }
         public Dictionary<string, ChartValue> PriceRange { get; set; }
         public Dictionary<string, ChartValue> TypeHotel { get; set; }
