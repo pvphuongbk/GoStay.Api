@@ -14,12 +14,16 @@ namespace GoStay.Services.Statisticals
         private readonly ICommonRepository<HotelRoom> _hotelRoomRepository;
         private readonly ICommonRepository<PriceRange> _priceRangeRepository;
         private readonly ICommonRepository<TypeHotel> _typeHotelRepository;
-        public StatisticalService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, ICommonRepository<PriceRange> priceRangeRepository, ICommonRepository<TypeHotel> typeHotelRepository)
+        private readonly ICommonRepository<Picture> _pictureRepository;
+
+        public StatisticalService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, 
+            ICommonRepository<PriceRange> priceRangeRepository, ICommonRepository<TypeHotel> typeHotelRepository, ICommonRepository<Picture> pictureRepository)
         {
             _hotelRepository = hotelRepository;
             _hotelRoomRepository = hotelRoomRepository;
             _priceRangeRepository = priceRangeRepository;
             _typeHotelRepository = typeHotelRepository;
+            _pictureRepository = pictureRepository;
         }
         public ResponseBase GetValueChart()
         {
@@ -27,6 +31,7 @@ namespace GoStay.Services.Statisticals
             try
             {
                 ChartDto chart = new ChartDto();
+                chart.TotalSizeImg = 0;
                 var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
                                     .Select(x => new HotelRatingForChartDto { Rating = x.Rating }).ToList();
                 var types = _typeHotelRepository.FindAll(x => x.Deleted != 1)
@@ -42,6 +47,11 @@ namespace GoStay.Services.Statisticals
                                                         .Select(x => new CreateRoomForChartDto { CreatedDate = x.CreatedDate }).ToList();
                 chart.TotalHotel = hotels.Count;
                 chart.TotalRoom = hotelRooms.Count;
+                chart.TotalImg = _pictureRepository.FindAll(x => x.Deleted != 1).Count();
+                foreach( var item in _pictureRepository.FindAll(x=>x.Deleted!=1).Select(x=>x.Size))
+                {
+                    chart.TotalSizeImg =+(long)item;
+                }
                 for (int i = 0; i <= 5; i++)
                 {
                     var count = hotels.Count(x => x.Rating == i);

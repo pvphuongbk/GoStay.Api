@@ -21,7 +21,7 @@ namespace GoStay.Api.Controllers
 		}
 
         [HttpGet("hotel-chart")]
-        public ResponseBase GetListHotelTopFlashSale()
+        public ResponseBase GetValueChart()
         {
             var items = _statisticalService.GetValueChart();
             return items;
