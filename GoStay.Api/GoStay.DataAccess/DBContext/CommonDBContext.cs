@@ -22,45 +22,30 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
-		public virtual DbSet<Course> Courses { get; set; } = null!;
-		public virtual DbSet<DmKenhTin> DmKenhTins { get; set; } = null!;
-		public virtual DbSet<DmMenuChinh> DmMenuChinhs { get; set; } = null!;
-		public virtual DbSet<DmTinTuc> DmTinTucs { get; set; } = null!;
-		public virtual DbSet<GroupPicture> GroupPictures { get; set; } = null!;
-		public virtual DbSet<Hotel> Hotels { get; set; } = null!;
-		public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
-		public virtual DbSet<HotelOrder> HotelOrders { get; set; } = null!;
-		public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
-		public virtual DbSet<HotelRating> HotelRatings { get; set; } = null!;
-		public virtual DbSet<HotelReview> HotelReviews { get; set; } = null!;
-		public virtual DbSet<HotelRoom> HotelRooms { get; set; } = null!;
-		public virtual DbSet<HotelRoomComment> HotelRoomComments { get; set; } = null!;
-		public virtual DbSet<KhuVuc> KhuVucs { get; set; } = null!;
-		public virtual DbSet<MulltiKeyValue> MulltiKeyValues { get; set; } = null!;
+        public virtual DbSet<Hotel> Hotels { get; set; } = null!;
+        public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
+        public virtual DbSet<HotelOrder> HotelOrders { get; set; } = null!;
+        public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
+        public virtual DbSet<HotelRating> HotelRatings { get; set; } = null!;
+        public virtual DbSet<HotelReview> HotelReviews { get; set; } = null!;
+        public virtual DbSet<HotelRoom> HotelRooms { get; set; } = null!;
+        public virtual DbSet<HotelRoomComment> HotelRoomComments { get; set; } = null!;
+        public virtual DbSet<KhuVuc> KhuVucs { get; set; } = null!;
+        public virtual DbSet<MulltiKeyValue> MulltiKeyValues { get; set; } = null!;
         public virtual DbSet<NearbyHotel> NearbyHotels { get; set; } = null!;
+        public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
         public virtual DbSet<OrderRoom> OrderRooms { get; set; } = null!;
-		public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
-		public virtual DbSet<Picture> Pictures { get; set; } = null!;
-		public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
-		public virtual DbSet<Quan> Quans { get; set; } = null!;
-		public virtual DbSet<Quiz> Quizzes { get; set; } = null!;
-		public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
-		public virtual DbSet<Service> Services { get; set; } = null!;
-		public virtual DbSet<Status> Statuses { get; set; } = null!;
-		public virtual DbSet<Student> Students { get; set; } = null!;
-		public virtual DbSet<TbTintuc> TbTintucs { get; set; } = null!;
-		public virtual DbSet<TblPage> TblPages { get; set; } = null!;
-		public virtual DbSet<TblTab> TblTabs { get; set; } = null!;
-		public virtual DbSet<Tblbuaan> Tblbuaans { get; set; } = null!;
-		public virtual DbSet<Tblcaption> Tblcaptions { get; set; } = null!;
-		public virtual DbSet<Tblfaq> Tblfaqs { get; set; } = null!;
-		public virtual DbSet<Tblparentmenu> Tblparentmenus { get; set; } = null!;
-		public virtual DbSet<Tblservicesforcontent> Tblservicesforcontents { get; set; } = null!;
-		public virtual DbSet<Tblservicesforsearch> Tblservicesforsearches { get; set; } = null!;
-		public virtual DbSet<Tblstyle> Tblstyles { get; set; } = null!;
-		public virtual DbSet<Tbltigium> Tbltigia { get; set; } = null!;
-		public virtual DbSet<Tbluser> Tblusers { get; set; } = null!;
-		public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
+        public virtual DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
+        public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
+        public virtual DbSet<Picture> Pictures { get; set; } = null!;
+        public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
+        public virtual DbSet<Quan> Quans { get; set; } = null!;
+        public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
+        public virtual DbSet<Service> Services { get; set; } = null!;
+        
+
+        public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
         public virtual DbSet<Tour> Tours { get; set; } = null!;
         public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
         public virtual DbSet<TourDetailsStyle> TourDetailsStyles { get; set; } = null!;
@@ -248,148 +233,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Title).HasMaxLength(50);
             });
-			modelBuilder.Entity<Course>(entity =>
-			{
-				entity.HasNoKey();
 
-				entity.ToTable("courses");
-
-				entity.Property(e => e.CourseCategoryId).HasColumnName("course_category_id");
-
-				entity.Property(e => e.CourseId).HasColumnName("course_id");
-
-				entity.Property(e => e.CreatedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("created_at");
-
-				entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-
-				entity.Property(e => e.Description).HasColumnName("description");
-
-				entity.Property(e => e.Guid).HasColumnName("guid");
-
-				entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
-
-				entity.Property(e => e.ModifiedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("modified_at");
-
-				entity.Property(e => e.ModifiedBy).HasColumnName("modified_by");
-
-				entity.Property(e => e.Status).HasColumnName("status");
-
-				entity.Property(e => e.Title)
-					.HasMaxLength(300)
-					.HasColumnName("title");
-			});
-
-			modelBuilder.Entity<DmKenhTin>(entity =>
-			{
-				entity.HasKey(e => e.MaKenhTin)
-					.HasName("PK_dm_kenh_tien");
-
-				entity.ToTable("dm_kenh_tin");
-
-				entity.Property(e => e.MaKenhTin)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("ma_kenh_tin");
-
-				entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
-
-				entity.Property(e => e.IsHienThi).HasColumnName("is_hien_thi");
-
-				entity.Property(e => e.TenDanhMuc)
-					.HasMaxLength(500)
-					.HasColumnName("ten_danh_muc");
-
-				entity.Property(e => e.UidName).HasMaxLength(50);
-
-				entity.Property(e => e.UpdatedDateUtc).HasColumnType("datetime");
-			});
-
-			modelBuilder.Entity<DmMenuChinh>(entity =>
-			{
-				entity.HasKey(e => e.MaTrang);
-
-				entity.ToTable("dm_menu_chinh");
-
-				entity.Property(e => e.MaTrang)
-					.HasMaxLength(25)
-					.IsUnicode(false)
-					.HasColumnName("ma_trang");
-
-				entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
-
-				entity.Property(e => e.Level).HasColumnName("level");
-
-				entity.Property(e => e.MaTrangCha)
-					.HasMaxLength(25)
-					.IsUnicode(false)
-					.HasColumnName("ma_trang_cha");
-
-				entity.Property(e => e.MoTa)
-					.HasMaxLength(200)
-					.HasColumnName("mo_ta");
-
-				entity.Property(e => e.Stt).HasColumnName("stt");
-
-				entity.Property(e => e.TenTrang)
-					.HasMaxLength(100)
-					.HasColumnName("ten_trang");
-
-				entity.Property(e => e.UidName).HasMaxLength(50);
-
-				entity.Property(e => e.UpdatedDateUtc).HasColumnType("datetime");
-
-				entity.Property(e => e.Url)
-					.HasMaxLength(50)
-					.HasColumnName("url");
-			});
-
-			modelBuilder.Entity<DmTinTuc>(entity =>
-			{
-				entity.ToTable("dm_tin_tuc");
-
-				entity.Property(e => e.AnhDaiDien)
-					.HasMaxLength(500)
-					.IsUnicode(false)
-					.HasColumnName("anh_dai_dien");
-
-				entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
-
-				entity.Property(e => e.IsHienThi).HasColumnName("is_hien_thi");
-
-				entity.Property(e => e.MaDmKenhTin)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("ma_dm_kenh_tin");
-
-				entity.Property(e => e.NoiDung)
-					.HasMaxLength(500)
-					.HasColumnName("noi_dung");
-
-				entity.Property(e => e.NoiDungChiTiet).HasColumnName("noi_dung_chi_tiet");
-
-				entity.Property(e => e.TieuDe)
-					.HasMaxLength(500)
-					.HasColumnName("tieu_de");
-
-				entity.Property(e => e.TieuDeSeo)
-					.HasMaxLength(50)
-					.HasColumnName("tieu_de_seo");
-
-				entity.Property(e => e.UidName).HasMaxLength(50);
-
-				entity.Property(e => e.UpdatedDateUtc).HasColumnType("datetime");
-			});
-
-			modelBuilder.Entity<GroupPicture>(entity =>
-			{
-				entity.ToTable("GroupPicture");
-
-				entity.Property(e => e.Name).HasMaxLength(50);
-			});
 
 			modelBuilder.Entity<Hotel>(entity =>
 			{
@@ -769,6 +613,30 @@ namespace GoStay.DataAccess.DBContext
                     .HasConstraintName("FK_NearbyHotels_Hotel");
             });
 
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IdPtthanhToan).HasColumnName("IdPTThanhToan");
+
+                entity.Property(e => e.More).HasMaxLength(500);
+
+                entity.Property(e => e.Session)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<OrderPhuongThucTt>(entity =>
+            {
+                entity.ToTable("OrderPhuongThucTT");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.PhuongThuc).HasMaxLength(50);
+            });
+
             modelBuilder.Entity<OrderRoom>(entity =>
             {
                 entity.ToTable("OrderRoom");
@@ -782,12 +650,17 @@ namespace GoStay.DataAccess.DBContext
                 entity.HasOne(d => d.IdRoomNavigation)
                     .WithMany(p => p.OrderRooms)
                     .HasForeignKey(d => d.IdRoom)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderRoom_HotelRoom");
+            });
 
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.OrderRooms)
-                    .HasForeignKey(d => d.IdUser)
-                    .HasConstraintName("FK_OrderRoom_users");
+            modelBuilder.Entity<OrderStatus>(entity =>
+            {
+                entity.ToTable("OrderStatus");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Status).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Phuong>(entity =>
@@ -877,6 +750,10 @@ namespace GoStay.DataAccess.DBContext
                     .HasMaxLength(50)
                     .HasColumnName("DIENGIAI");
 
+                entity.Property(e => e.SanitizedName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.SearchKey).HasMaxLength(200);
 
 				entity.Property(e => e.Stt).HasColumnName("stt");
@@ -885,60 +762,11 @@ namespace GoStay.DataAccess.DBContext
 					.HasMaxLength(50)
 					.HasColumnName("TENQUAN");
 
-				entity.HasOne(d => d.IdTinhThanhNavigation)
-					.WithMany(p => p.Quans)
-					.HasForeignKey(d => d.IdTinhThanh)
-					.HasConstraintName("FK_Quan_TinhThanh");
-			});
-
-			modelBuilder.Entity<Quiz>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("quiz");
-
-				entity.Property(e => e.AllowedTimeMinutes).HasColumnName("allowed_time_minutes");
-
-				entity.Property(e => e.CategoryId).HasColumnName("category_id");
-
-				entity.Property(e => e.CourseId).HasColumnName("course_id");
-
-				entity.Property(e => e.CreatedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("created_at");
-
-				entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-
-				entity.Property(e => e.Description).HasColumnName("description");
-
-				entity.Property(e => e.EndDate)
-					.HasColumnType("datetime")
-					.HasColumnName("end_date");
-
-				entity.Property(e => e.Guid).HasColumnName("guid");
-
-				entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
-
-				entity.Property(e => e.ModifiedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("modified_at");
-
-				entity.Property(e => e.ModifiedBy).HasColumnName("modified_by");
-
-				entity.Property(e => e.PassingMarks).HasColumnName("passing_marks");
-
-				entity.Property(e => e.QuizId).HasColumnName("quiz_id");
-
-				entity.Property(e => e.StartDate)
-					.HasColumnType("datetime")
-					.HasColumnName("start_date");
-
-				entity.Property(e => e.Status).HasColumnName("status");
-
-				entity.Property(e => e.Title)
-					.HasMaxLength(300)
-					.HasColumnName("title");
-			});
+                entity.HasOne(d => d.IdTinhThanhNavigation)
+                    .WithMany(p => p.Quans)
+                    .HasForeignKey(d => d.IdTinhThanh)
+                    .HasConstraintName("FK_Quan_TinhThanh");
+            });
 
 			modelBuilder.Entity<RoomMameniti>(entity =>
 			{
@@ -970,332 +798,7 @@ namespace GoStay.DataAccess.DBContext
 				entity.Property(e => e.Name).HasMaxLength(50);
 			});
 
-			modelBuilder.Entity<Status>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("status");
-
-				entity.Property(e => e.CreatedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("created_at");
-
-				entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-
-				entity.Property(e => e.Guid).HasColumnName("guid");
-
-				entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
-
-				entity.Property(e => e.ModifiedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("modified_at");
-
-				entity.Property(e => e.ModifiedBy).HasColumnName("modified_by");
-
-				entity.Property(e => e.StatusId).HasColumnName("status_id");
-
-				entity.Property(e => e.Title)
-					.HasMaxLength(100)
-					.HasColumnName("title");
-			});
-
-			modelBuilder.Entity<Student>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("students");
-
-				entity.Property(e => e.Address)
-					.HasMaxLength(600)
-					.HasColumnName("address");
-
-				entity.Property(e => e.CreatedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("created_at");
-
-				entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-
-				entity.Property(e => e.Email)
-					.HasMaxLength(150)
-					.HasColumnName("email");
-
-				entity.Property(e => e.FirstName)
-					.HasMaxLength(70)
-					.HasColumnName("first_name");
-
-				entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-				entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
-
-				entity.Property(e => e.LastName)
-					.HasMaxLength(70)
-					.HasColumnName("last_name");
-
-				entity.Property(e => e.MobileNo)
-					.HasMaxLength(150)
-					.HasColumnName("mobile_no");
-
-				entity.Property(e => e.ModifiedAt)
-					.HasColumnType("datetime")
-					.HasColumnName("modified_at");
-
-				entity.Property(e => e.ModifiedBy).HasColumnName("modified_by");
-
-				entity.Property(e => e.Nationality)
-					.HasMaxLength(150)
-					.HasColumnName("nationality");
-
-				entity.Property(e => e.Password)
-					.HasMaxLength(200)
-					.HasColumnName("password");
-
-				entity.Property(e => e.ResidenceNo)
-					.HasMaxLength(150)
-					.HasColumnName("residence_no");
-
-				entity.Property(e => e.StudentId).HasColumnName("student_id");
-
-				entity.Property(e => e.UserName)
-					.HasMaxLength(150)
-					.HasColumnName("user_name");
-			});
-
-			modelBuilder.Entity<TbTintuc>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("TB_TINTUC");
-
-				entity.Property(e => e.Content)
-					.HasColumnType("ntext")
-					.HasColumnName("content");
-
-				entity.Property(e => e.Date)
-					.HasColumnType("datetime")
-					.HasColumnName("DATE");
-
-				entity.Property(e => e.IdNt).HasColumnName("ID_NT");
-
-				entity.Property(e => e.IdTin).HasColumnName("ID_TIN");
-
-				entity.Property(e => e.IdU).HasColumnName("ID_U");
-
-				entity.Property(e => e.Numclick).HasColumnName("numclick");
-
-				entity.Property(e => e.Title)
-					.HasMaxLength(100)
-					.HasColumnName("TITLE");
-
-				entity.Property(e => e.Tomtat)
-					.HasColumnType("ntext")
-					.HasColumnName("TOMTAT");
-			});
-
-			modelBuilder.Entity<TblPage>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("tblPage");
-
-				entity.Property(e => e.Id).HasColumnName("id");
-
-				entity.Property(e => e.Idtab).HasColumnName("IDTAB");
-
-				entity.Property(e => e.PageName).HasMaxLength(50);
-
-				entity.Property(e => e.Stt).HasColumnName("STT");
-			});
-
-			modelBuilder.Entity<TblTab>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("tblTab");
-
-				entity.Property(e => e.Id).HasColumnName("id");
-
-				entity.Property(e => e.TenTab).HasMaxLength(50);
-			});
-
-			modelBuilder.Entity<Tblbuaan>(entity =>
-			{
-				entity.ToTable("TBLBUAAN");
-
-				entity.Property(e => e.Id).HasColumnName("ID");
-
-				entity.Property(e => e.Buaan)
-					.HasMaxLength(200)
-					.HasColumnName("BUAAN");
-			});
-
-			modelBuilder.Entity<Tblcaption>(entity =>
-			{
-				entity.ToTable("TBLCAPTION");
-
-				entity.Property(e => e.Id).HasColumnName("ID");
-
-				entity.Property(e => e.Cap)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("CAP");
-
-				entity.Property(e => e.Idcap).HasColumnName("IDCAP");
-
-				entity.Property(e => e.Idpage).HasColumnName("IDPAGE");
-
-				entity.Property(e => e.Lang)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("LANG");
-			});
-
-			modelBuilder.Entity<Tblfaq>(entity =>
-			{
-				entity.ToTable("TBLFAQ");
-
-				entity.Property(e => e.Id).HasColumnName("ID");
-
-				entity.Property(e => e.Content)
-					.HasColumnType("ntext")
-					.HasColumnName("CONTENT");
-
-				entity.Property(e => e.Date)
-					.HasColumnType("datetime")
-					.HasColumnName("DATE");
-
-				entity.Property(e => e.Stt).HasColumnName("STT");
-
-				entity.Property(e => e.Title)
-					.HasMaxLength(100)
-					.HasColumnName("TITLE");
-			});
-
-			modelBuilder.Entity<Tblparentmenu>(entity =>
-			{
-				entity.ToTable("TBLPARENTMENU");
-
-				entity.Property(e => e.Id)
-					.ValueGeneratedNever()
-					.HasColumnName("ID");
-
-				entity.Property(e => e.Text)
-					.HasMaxLength(50)
-					.HasColumnName("TEXT");
-			});
-
-			modelBuilder.Entity<Tblservicesforcontent>(entity =>
-			{
-				entity.HasKey(e => new { e.Idhotel, e.Idservices })
-					.HasName("PK_TBLSERVICESFORCONTENT_1");
-
-				entity.ToTable("TBLSERVICESFORCONTENT");
-
-				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
-
-				entity.Property(e => e.Idservices).HasColumnName("IDSERVICES");
-
-				entity.Property(e => e.Content)
-					.HasMaxLength(500)
-					.HasColumnName("CONTENT");
-
-				entity.Property(e => e.Id)
-					.ValueGeneratedOnAdd()
-					.HasColumnName("ID");
-
-				entity.Property(e => e.Intlang)
-					.HasColumnName("INTLANG")
-					.HasDefaultValueSql("((1))");
-			});
-
-			modelBuilder.Entity<Tblservicesforsearch>(entity =>
-			{
-				entity.ToTable("TBLSERVICESFORSEARCH");
-
-				entity.Property(e => e.Id).HasColumnName("ID");
-
-				entity.Property(e => e.Css)
-					.HasMaxLength(100)
-					.IsUnicode(false)
-					.HasColumnName("CSS");
-
-				entity.Property(e => e.Intstyle).HasColumnName("INTSTYLE");
-
-				entity.Property(e => e.Services)
-					.HasMaxLength(100)
-					.IsUnicode(false)
-					.HasColumnName("SERVICES");
-
-				entity.Property(e => e.ServicesVn)
-					.HasMaxLength(100)
-					.HasColumnName("SERVICES_VN");
-			});
-
-			modelBuilder.Entity<Tblstyle>(entity =>
-			{
-				entity.HasKey(e => e.Intstyle);
-
-				entity.ToTable("TBLSTYLE");
-
-				entity.Property(e => e.Intstyle).HasColumnName("INTSTYLE");
-
-				entity.Property(e => e.Style)
-					.HasMaxLength(50)
-					.HasColumnName("STYLE");
-			});
-
-			modelBuilder.Entity<Tbltigium>(entity =>
-			{
-				entity.ToTable("TBLTIGIA");
-
-				entity.Property(e => e.Id).HasColumnName("ID");
-
-				entity.Property(e => e.Price)
-					.HasColumnType("decimal(10, 2)")
-					.HasColumnName("PRICE");
-
-				entity.Property(e => e.Tigia)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("TIGIA");
-			});
-
-			modelBuilder.Entity<Tbluser>(entity =>
-			{
-				entity.ToTable("TBLUSER");
-
-				entity.Property(e => e.Id).HasColumnName("ID");
-
-				entity.Property(e => e.Diachi)
-					.HasMaxLength(200)
-					.HasColumnName("DIACHI");
-
-				entity.Property(e => e.Email)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("email");
-
-				entity.Property(e => e.IsActive)
-					.HasColumnName("is_active")
-					.HasDefaultValueSql("((1))");
-
-				entity.Property(e => e.Mobile)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("MOBILE");
-
-				entity.Property(e => e.Password)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("password");
-
-				entity.Property(e => e.Ten)
-					.HasMaxLength(200)
-					.HasColumnName("TEN");
-
-				entity.Property(e => e.UserType)
-					.HasColumnName("user_type")
-					.HasDefaultValueSql("((1))");
-			});
+           
 
 			modelBuilder.Entity<TinhThanh>(entity =>
 			{
@@ -1327,15 +830,13 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.Property(e => e.Content).HasColumnType("ntext");
 
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Descriptions).HasMaxLength(350);
 
-                entity.Property(e => e.EnDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Idttfrom).HasColumnName("IDTTFrom");
-
-                entity.Property(e => e.Idttto).HasColumnName("IDTTTo");
-
-                entity.Property(e => e.IntDate).HasColumnName("intDate");
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Locations)
                     .HasMaxLength(150)
