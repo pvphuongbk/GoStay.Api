@@ -43,7 +43,7 @@ namespace GoStay.Common.Helpers.Hotels
                 TinhThanh = hotel.IdTinhThanhNavigation.TenTt,
                 QuanHuyen = hotel.IdQuanNavigation.Tenquan,
                 TinhThanh_url = hotel.IdTinhThanhNavigation.SanitizedName,
-                //QuanHuyen_url = hotel.IdQuanNavigation,
+                QuanHuyen_url = hotel.IdQuanNavigation.SanitizedName,
                 Rooms = _mapper.Map<List<HotelRoom>, List<HotelRoomDto>>(hotel.HotelRooms.ToList()),
 
                 NumberReviewers = hotel.NumberReviewers
