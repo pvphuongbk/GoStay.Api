@@ -26,7 +26,8 @@ namespace GoStay.Data.HotelDto
         public string? Content { get; set; }
         public string? TinhThanh { get; set; }
         public string? QuanHuyen { get; set; }
-
+        public string? TinhThanh_url { get; set; }
+        public string? QuanHuyen_url { get; set; }
         public double? Lat_map { get; set; }
         public double? Lon_map { get; set; }
         public double? Discount { get; set; }
