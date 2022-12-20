@@ -19,6 +19,7 @@ namespace GoStay.DataAccess.Entities
         public int? Deleted { get; set; }
         public int? Numrecord { get; set; }
         public string? SearchKey { get; set; }
+        public string? SanitizedName { get; set; }
 
         public virtual TinhThanh? IdTinhThanhNavigation { get; set; }
         public virtual ICollection<Hotel> Hotels { get; set; }

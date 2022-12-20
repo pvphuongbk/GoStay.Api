@@ -42,7 +42,8 @@ namespace GoStay.Common.Helpers.Hotels
                 Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).OrderByDescending(x => x.Size).Select(x => x.Url).ToList(),
                 TinhThanh = hotel.IdTinhThanhNavigation.TenTt,
                 QuanHuyen = hotel.IdQuanNavigation.Tenquan,
-
+                TinhThanh_url = hotel.IdTinhThanhNavigation.SanitizedName,
+                QuanHuyen_url = hotel.IdQuanNavigation.SanitizedName,
                 Rooms = _mapper.Map<List<HotelRoom>, List<HotelRoomDto>>(hotel.HotelRooms.ToList()),
 
                 NumberReviewers = hotel.NumberReviewers
