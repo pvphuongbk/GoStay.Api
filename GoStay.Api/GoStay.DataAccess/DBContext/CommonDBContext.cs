@@ -24,7 +24,6 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Banner> Banners { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
         public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
-        public virtual DbSet<HotelOrder> HotelOrders { get; set; } = null!;
         public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
         public virtual DbSet<HotelRating> HotelRatings { get; set; } = null!;
         public virtual DbSet<HotelReview> HotelReviews { get; set; } = null!;
@@ -34,8 +33,8 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<MulltiKeyValue> MulltiKeyValues { get; set; } = null!;
         public virtual DbSet<NearbyHotel> NearbyHotels { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
-        public virtual DbSet<OrderRoom> OrderRooms { get; set; } = null!;
         public virtual DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
         public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
         public virtual DbSet<Picture> Pictures { get; set; } = null!;
@@ -43,8 +42,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Quan> Quans { get; set; } = null!;
         public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
-        
-
+        public virtual DbSet<Tbltigium> Tbltigia { get; set; } = null!;
         public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
         public virtual DbSet<Tour> Tours { get; set; } = null!;
         public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
@@ -367,28 +365,9 @@ namespace GoStay.DataAccess.DBContext
 					.HasConstraintName("FK_HotelMameniti_Services");
 			});
 
-			modelBuilder.Entity<HotelOrder>(entity =>
-			{
-				entity.HasNoKey();
-
-				entity.ToTable("HotelOrder");
-
-				entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
-
-				entity.Property(e => e.DateOrder).HasColumnType("datetime");
-
-				entity.Property(e => e.NumberRoomNd).HasColumnName("Number_Room_ND");
-
-				entity.Property(e => e.TotalMoney)
-					.HasColumnType("decimal(18, 0)")
-					.HasColumnName("Total_Money");
-
-				entity.Property(e => e.UpdatedDateUtc).HasColumnType("datetime");
-			});
-
-			modelBuilder.Entity<HotelPromotion>(entity =>
-			{
-				entity.ToTable("HotelPromotion");
+            modelBuilder.Entity<HotelPromotion>(entity =>
+            {
+                entity.ToTable("HotelPromotion");
 
 				entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -523,17 +502,12 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.RemainNum).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.RoomSize).HasColumnType("decimal(5, 2)");
+                entity.Property(e => e.RoomSize).HasColumnType("decimal(6, 2)");
 
                 entity.HasOne(d => d.IdhotelNavigation)
                     .WithMany(p => p.HotelRooms)
                     .HasForeignKey(d => d.Idhotel)
                     .HasConstraintName("FK_TBLROOM_TBLHOTEL");
-
-                entity.HasOne(d => d.IduserNavigation)
-                    .WithMany(p => p.HotelRooms)
-                    .HasForeignKey(d => d.Iduser)
-                    .HasConstraintName("FK_HotelRoom_users");
 
 				entity.HasOne(d => d.ViewDirectionNavigation)
 					.WithMany(p => p.HotelRooms)
@@ -616,17 +590,69 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("datetime");
 
                 entity.Property(e => e.IdPtthanhToan).HasColumnName("IdPTThanhToan");
 
-                entity.Property(e => e.More).HasMaxLength(500);
+                entity.Property(e => e.MoreInfo).HasMaxLength(500);
 
                 entity.Property(e => e.Session)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Title).HasMaxLength(50);
+
+                entity.HasOne(d => d.IdPtthanhToanNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.IdPtthanhToan)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Orders_OrderPhuongThucTT");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Orders_users");
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.Status)
+                    .HasConstraintName("FK_Orders_OrderStatus");
+            });
+
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.ToTable("OrderDetail");
+
+                entity.Property(e => e.ChechIn).HasColumnType("datetime");
+
+                entity.Property(e => e.CheckOut).HasColumnType("datetime");
+
+                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+
+                entity.Property(e => e.MoreInfo).HasMaxLength(500);
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+
+                entity.HasOne(d => d.IdOrderNavigation)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.IdOrder)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Orders");
+
+                entity.HasOne(d => d.IdProductNavigation)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.IdProduct)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_HotelRoom");
+
+                entity.HasOne(d => d.IdProduct1)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.IdProduct)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Tours");
             });
 
             modelBuilder.Entity<OrderPhuongThucTt>(entity =>
@@ -636,23 +662,6 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.PhuongThuc).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<OrderRoom>(entity =>
-            {
-                entity.ToTable("OrderRoom");
-
-                entity.Property(e => e.ChechIn).HasColumnType("datetime");
-
-                entity.Property(e => e.CheckOut).HasColumnType("datetime");
-
-                entity.Property(e => e.DateCreate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdRoomNavigation)
-                    .WithMany(p => p.OrderRooms)
-                    .HasForeignKey(d => d.IdRoom)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderRoom_HotelRoom");
             });
 
             modelBuilder.Entity<OrderStatus>(entity =>
