@@ -49,6 +49,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Tour> Tours { get; set; } = null!;
         public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
         public virtual DbSet<TourDetailsStyle> TourDetailsStyles { get; set; } = null!;
+        public virtual DbSet<TourProvinceTo> TourProvinceTos { get; set; } = null!;
         public virtual DbSet<TourStyle> TourStyles { get; set; } = null!;
         public virtual DbSet<TourTopic> TourTopics { get; set; } = null!;
 		public virtual DbSet<TypeHotel> TypeHotels { get; set; } = null!;
@@ -830,13 +831,21 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.Property(e => e.Content).HasColumnType("ntext");
 
-                entity.Property(e => e.CreateDate)
+                entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Descriptions).HasMaxLength(350);
 
+                entity.Property(e => e.Discount).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IdTourStyle).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IdTourTopic).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IdUser).HasDefaultValueSql("((9))");
 
                 entity.Property(e => e.Locations)
                     .HasMaxLength(150)
@@ -846,14 +855,22 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.TourName).HasMaxLength(150);
 
+                entity.HasOne(d => d.IdProvinceFromNavigation)
+                    .WithMany(p => p.Tours)
+                    .HasForeignKey(d => d.IdProvinceFrom)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Tours_TinhThanh");
+
                 entity.HasOne(d => d.IdTourStyleNavigation)
                     .WithMany(p => p.Tours)
                     .HasForeignKey(d => d.IdTourStyle)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tours_TourStyle");
 
                 entity.HasOne(d => d.IdTourTopicNavigation)
                     .WithMany(p => p.Tours)
                     .HasForeignKey(d => d.IdTourTopic)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tours_TourTopic");
             });
 
@@ -881,6 +898,25 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Style).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TourProvinceTo>(entity =>
+            {
+                entity.ToTable("TourProvinceTo");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.IdProvinceToNavigation)
+                    .WithMany(p => p.TourProvinceTos)
+                    .HasForeignKey(d => d.IdProvinceTo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TourProvinceTo_TinhThanh");
+
+                entity.HasOne(d => d.IdTourNavigation)
+                    .WithMany(p => p.TourProvinceTos)
+                    .HasForeignKey(d => d.IdTour)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TourProvinceTo_Tours");
             });
 
             modelBuilder.Entity<TourStyle>(entity =>
