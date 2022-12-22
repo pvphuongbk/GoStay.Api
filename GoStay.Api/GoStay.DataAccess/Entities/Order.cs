@@ -19,6 +19,7 @@ namespace GoStay.DataAccess.Entities
         public byte IdPtthanhToan { get; set; }
         public string? MoreInfo { get; set; }
         public string? Session { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual OrderPhuongThucTt IdPtthanhToanNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
