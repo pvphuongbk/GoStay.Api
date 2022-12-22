@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GoStay.DataAccess.EntitiesTemp
+namespace GoStay.DataAccess.Entities
 {
     public partial class OrderDetail
     {
@@ -15,6 +15,7 @@ namespace GoStay.DataAccess.EntitiesTemp
         public decimal? Price { get; set; }
         public double? Discount { get; set; }
         public string? MoreInfo { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual Order IdOrderNavigation { get; set; } = null!;
         public virtual Tour IdProduct1 { get; set; } = null!;
