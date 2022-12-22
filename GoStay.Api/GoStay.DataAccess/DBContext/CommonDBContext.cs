@@ -42,7 +42,6 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Quan> Quans { get; set; } = null!;
         public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
-        public virtual DbSet<Tbltigium> Tbltigia { get; set; } = null!;
         public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
         public virtual DbSet<Tour> Tours { get; set; } = null!;
         public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
