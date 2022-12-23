@@ -593,7 +593,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.DateUpdate).HasColumnType("datetime");
 
-                entity.Property(e => e.IdPtthanhToan).HasColumnName("IdPTThanhToan");
+                entity.Property(e => e.IdPaymentMethod).HasColumnName("IdPTThanhToan");
 
                 entity.Property(e => e.MoreInfo).HasMaxLength(500);
 
@@ -603,9 +603,9 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Title).HasMaxLength(50);
 
-                entity.HasOne(d => d.IdPtthanhToanNavigation)
+                entity.HasOne(d => d.IdPaymentMethodNavigation)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.IdPtthanhToan)
+                    .HasForeignKey(d => d.IdPaymentMethod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Orders_OrderPhuongThucTT");
 
@@ -631,6 +631,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.DateCreate).HasColumnType("datetime");
 
+                entity.Property(e => e.DetailStyle).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.MoreInfo).HasMaxLength(500);
 
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
@@ -641,16 +643,14 @@ namespace GoStay.DataAccess.DBContext
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderDetail_Orders");
 
-                entity.HasOne(d => d.IdProductNavigation)
+                entity.HasOne(d => d.IdRoomNavigation)
                     .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.IdProduct)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasForeignKey(d => d.IdRoom)
                     .HasConstraintName("FK_OrderDetail_HotelRoom");
 
-                entity.HasOne(d => d.IdProduct1)
+                entity.HasOne(d => d.IdTourNavigation)
                     .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.IdProduct)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasForeignKey(d => d.IdTour)
                     .HasConstraintName("FK_OrderDetail_Tours");
             });
 

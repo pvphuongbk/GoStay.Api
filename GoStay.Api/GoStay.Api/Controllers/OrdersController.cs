@@ -24,12 +24,7 @@ namespace GoStay.Api.Controllers
             var items = _orderService.CreateOrder(order.order, order.orderDetail);
             return items;
         }
-        [HttpPut("order")]
-        public ResponseBase UpdateOrder(Order dataOrder)
-        {
-            var items = _orderService.UpdateOrder(dataOrder);
-            return items;
-        }
+
         [HttpPost("detail")]
         public ResponseBase AddOrderDetail(AddOrderDetailParam dto)
         {
@@ -37,7 +32,7 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpPut("detail")]
-        public ResponseBase UpdateOrderDetail(OrderDetail orderDetail)
+        public ResponseBase UpdateOrderDetail(InsertOrderDetailDto orderDetail)
         {
             var items = _orderService.UpdateOrderDetail(orderDetail);
             return items;
@@ -60,6 +55,13 @@ namespace GoStay.Api.Controllers
             var items = _orderService.UpdatePTTTOrder(param.IdPTThanhtoan, param.IdOder);
             return items;
         }
+        [HttpPut("moreinfo")]
+        public ResponseBase UpdateMoreInfoOrder(UpdateMoreInfoOrderParam info)
+        {
+            var items = _orderService.UpdateMoreInfoOrder(info.moreinfo, info.IdOrder);
+            return items;
+        }
+
         [HttpGet("detail-by-order")]
         public ResponseBase GetOrderDetailbyOrder(int order)
         {

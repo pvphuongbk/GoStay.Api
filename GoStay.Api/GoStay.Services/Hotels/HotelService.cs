@@ -127,10 +127,7 @@ namespace GoStay.Services.Hotels
 				{
 					item.HotelTypeName = _typeHotelRepository.FindAll().SingleOrDefault(x => x.Id == item.HotelType).Type;
 					item.NumRecord = 0;
-
                 }
-
-
                 responseBase.Data = listData;
                 return responseBase;
             }
