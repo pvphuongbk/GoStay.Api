@@ -25,6 +25,13 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpPost("check-order")]
+        public ResponseBase CheckOrder(int iduser, int idhotel, int IdRoom)
+        {
+            var items = _orderService.CheckOrder(iduser, idhotel,IdRoom);
+            return items;
+        }
+
         [HttpPost("detail")]
         public ResponseBase AddOrderDetail(AddOrderDetailParam dto)
         {

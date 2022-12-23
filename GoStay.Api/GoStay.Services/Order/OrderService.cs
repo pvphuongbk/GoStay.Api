@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using GoStay.Common.Helpers.Hotels;
 using GoStay.Data.ServiceDto;
 using GoStay.Repository.Repositories;
+using System.Runtime.CompilerServices;
 
 namespace GoStay.Services.Orders
 {
@@ -76,6 +77,51 @@ namespace GoStay.Services.Orders
             }
         }
 
+        public ResponseBase CheckOrder(int iduser, int idhotel,int IdRoom)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == iduser && x.IdHotel == idhotel);
+                if (ordercheck is null)
+                {
+                    responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
+                    responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                }
+                else
+                {
+                    foreach(var item in ordercheck)
+                    {
+                        var listdata = new List<Order>();
+                        if(item.OrderDetails.Where(x=>x.IdRoom==IdRoom)==null )
+                        {
+                            responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
+                            responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
+                            listdata.Add(item);
+                        }
+                        else
+                        {
+                            if(item.Status==3)
+                            {
+                                responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
+                                responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
+                                listdata.Add(item);
+                            }
+                        }    
+                    }    
+                    responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                    responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                }
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
 
         public ResponseBase AddOrderDetail(int IdOrder, OrderDetailDto orderDetail)
         {
@@ -273,10 +319,10 @@ namespace GoStay.Services.Orders
                     .Include(x=>x.StatusNavigation).Include(x=>x.IdUserNavigation);
                 List<int> listIdOrder = new List<int>();
                 List<OrderDetailInfoDto> listOrderDetailInfo = new List<OrderDetailInfoDto>();
-                //foreach (var item in listOrderInfo)
-                //{
-                //    listIdOrder.Add(item.Id);
-                //}
+                foreach (var item in listOrderInfo)
+                {
+                    listIdOrder.Add(item.Id);
+                }
                 //foreach (var i in listIdOrder)
                 //{
                 //    listOrderDetailInfo.Add(_OrderDetailRepository.FindAll(x => x.IdOrder == hotelId)

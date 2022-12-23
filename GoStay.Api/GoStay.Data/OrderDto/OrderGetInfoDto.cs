@@ -35,7 +35,7 @@ namespace GoStay.Data.OrderDto
         public byte? Num { get; set; }
         public decimal? Price { get; set; }
         public double? Discount { get; set; }
-        public decimal NewPrice { get; set; }
+        public decimal? NewPrice { get; set; }
         public string? MoreInfo { get; set; }
 
         public List<HotelRoomOrderDto> Rooms { get; set; }
