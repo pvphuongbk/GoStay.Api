@@ -21,6 +21,14 @@ namespace GoStay.Api.Configurations
             CreateMap<OrderDetailDto, OrderDetail>().ReverseMap();
             CreateMap<OrderDetail, OrderDetailDto>().ReverseMap();
 
+            CreateMap<OrderDetail, InsertOrderDetailDto>().ReverseMap();
+            CreateMap<InsertOrderDetailDto, OrderDetail>().ReverseMap();
+
+            CreateMap<OrderDetailShowDto, OrderDetail>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailShowDto>().ReverseMap();
+
+
+
         }
     }
 }

@@ -16,12 +16,12 @@ namespace GoStay.DataAccess.Entities
         public DateTime? DateCreate { get; set; }
         public DateTime? DateUpdate { get; set; }
         public byte? Status { get; set; }
-        public byte IdPtthanhToan { get; set; }
+        public byte IdPaymentMethod { get; set; }
         public string? MoreInfo { get; set; }
         public string? Session { get; set; }
         public bool IsDeleted { get; set; }
 
-        public virtual OrderPhuongThucTt IdPtthanhToanNavigation { get; set; } = null!;
+        public virtual OrderPhuongThucTt IdPaymentMethodNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
         public virtual OrderStatus? StatusNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

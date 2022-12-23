@@ -9,9 +9,9 @@ namespace GoStay.Services.Orders
     public interface IOrderService
     {
         public ResponseBase CreateOrder(OrderDto dataOrder, OrderDetailDto dataOrderRoom);
-        public ResponseBase UpdateOrder(Order dataOrder);
+        public ResponseBase UpdateMoreInfoOrder(string moreinfo, int IdOrder);
         public ResponseBase AddOrderDetail(int IdOrder, OrderDetailDto orderDetail);
-        public ResponseBase UpdateOrderDetail(OrderDetail orderDetail);
+        public ResponseBase UpdateOrderDetail(InsertOrderDetailDto orderDetail);
         public ResponseBase RemoveOrderDetail(int IdOrderDetail);
         public ResponseBase UpdateStatusOrder(byte Status, int IdOder);
         public ResponseBase UpdatePTTTOrder(byte IdPTThanhtoan, int IdOder);
