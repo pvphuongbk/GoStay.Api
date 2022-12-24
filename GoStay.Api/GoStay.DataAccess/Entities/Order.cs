@@ -13,6 +13,8 @@ namespace GoStay.DataAccess.Entities
         public int Id { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }
+        public int? IdHotel { get; set; }
+
         public DateTime? DateCreate { get; set; }
         public DateTime? DateUpdate { get; set; }
         public byte? Status { get; set; }

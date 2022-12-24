@@ -15,13 +15,13 @@ namespace GoStay.Data.OrderDto
         public int Id { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }
-        public string UserName { get; set; }
-        public string? Status { get; set; }
-        public string PaymentMethod{ get; set; }
+        public string? UserName { get; set; }
+        public string? StatusDetail { get; set; }
+        public string? PaymentMethod{ get; set; }
         public string? MoreInfo { get; set; }
         public string? Session { get; set; }
-        public bool IsDeleted { get; set; }
-        public List<OrderDetailInfoDto> OrderDetails { get; set; }
+        public bool? IsDeleted { get; set; }
+        public List<OrderDetailInfoDto>? ListOrderDetails { get; set; }
 
     }
 
@@ -35,11 +35,11 @@ namespace GoStay.Data.OrderDto
         public byte? Num { get; set; }
         public decimal? Price { get; set; }
         public double? Discount { get; set; }
-        public decimal NewPrice { get; set; }
+        public decimal? NewPrice { get; set; }
         public string? MoreInfo { get; set; }
 
-        public List<HotelRoomOrderDto> Rooms { get; set; }
-        public List<TourOrderDto> Tours { get; set; }
+        public HotelRoomOrderDto Rooms { get; set; }
+        public TourOrderDto Tours { get; set; }
     }
 
     public class HotelRoomOrderDto
@@ -53,7 +53,7 @@ namespace GoStay.Data.OrderDto
         public int? NumberReviewers { get; set; }
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
-        public string? RoomName { get; set; }
+        public string? Name { get; set; }
         public byte? NumMature { get; set; }
         public byte? NumChild { get; set; }
         public byte? Palletbed { get; set; }
