@@ -106,11 +106,12 @@ namespace GoStay.Services.Orders
                 }
                 else
                 {
-
+                    int addDetail = 0;
                     foreach (var item in ordercheck.OrderDetails)
                     {
                         if (item.IdRoom == orderDetail.IdProduct)
                         {
+                            addDetail ++;
                             if (ordercheck.Status == 3)
                             {
                                 responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
@@ -124,13 +125,14 @@ namespace GoStay.Services.Orders
                                 responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
                             }
                         }
-                        else
-                        {
-                            responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
-                            responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
-                            responseBase.Data = AddOrderDetail(order.IdHotel, orderDetail).Data;
-                        }
-                    }    
+
+                    }
+                    if (addDetail == 0)
+                    {
+                        responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
+                        responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
+                        responseBase.Data = AddOrderDetail(ordercheck.Id, orderDetail).Data;
+                    }
 
                 }
                 return responseBase;
