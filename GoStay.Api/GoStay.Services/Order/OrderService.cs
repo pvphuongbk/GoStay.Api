@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using GoStay.Common.Helpers.Hotels;
 using GoStay.Data.ServiceDto;
 using GoStay.Repository.Repositories;
+using System.Runtime.CompilerServices;
+using GoStay.Common.Helpers.Order;
 
 namespace GoStay.Services.Orders
 {
@@ -22,14 +24,18 @@ namespace GoStay.Services.Orders
         private readonly ICommonRepository<OrderDetail> _OrderDetailRepository;
         private readonly ICommonRepository<Tour> _tourRepository;
         private readonly ICommonRepository<HotelRoom> _roomRepository;
-
+        private readonly ICommonRepository<Hotel> _hotelRepository;
+        private readonly ICommonRepository<Service> _serviceRepository;
+        private readonly ICommonRepository<Picture> _pictureRepository;
+        private readonly ICommonRepository<ViewDirection> _viewRepository;
 
         private readonly ICommonUoW _commonUoW;
         private readonly IMapper _mapper;
 
 
         public OrderService(ICommonRepository<Order> OrderRepository,ICommonRepository<OrderDetail> OrderRoomRepository,ICommonUoW commonUoW,
-            IMapper mapper, ICommonRepository<Tour> tourRepository, ICommonRepository<HotelRoom> roomRepository)
+            IMapper mapper, ICommonRepository<Tour> tourRepository, ICommonRepository<HotelRoom> roomRepository, ICommonRepository<Hotel> hotelRepository
+            , ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository)
         {
             _OrderDetailRepository = OrderRoomRepository;
             _OrderRepository = OrderRepository;
@@ -37,6 +43,11 @@ namespace GoStay.Services.Orders
             _mapper = mapper;
             _tourRepository = tourRepository;
             _roomRepository = roomRepository;
+            _serviceRepository = serviceRepository;
+            _pictureRepository = pictureRepository;
+            _viewRepository = viewRepository;
+            _hotelRepository = hotelRepository;
+
         }
 
         public ResponseBase CreateOrder(OrderDto order, OrderDetailDto orderDetail)
@@ -76,6 +87,55 @@ namespace GoStay.Services.Orders
             }
         }
 
+        public ResponseBase CheckOrder(int iduser, int idhotel,int IdRoom)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == iduser && x.IdHotel == idhotel).SingleOrDefault();
+                if (ordercheck is null)
+                {
+                    responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
+                    responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                }
+                else
+                {
+
+                    foreach (var item in ordercheck.OrderDetails)
+                    {
+                        if (item.IdRoom == IdRoom)
+                        {
+                            if (ordercheck.Status == 3)
+                            {
+                                responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
+                                responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                            }
+                            else
+                            {
+                                responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                                responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                                responseBase.Data = ordercheck;
+                            }
+                        }
+                        else
+                        {
+                            responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
+                            responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
+                            responseBase.Data = ordercheck;
+                        }
+                    }    
+
+                }
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
 
         public ResponseBase AddOrderDetail(int IdOrder, OrderDetailDto orderDetail)
         {
@@ -265,30 +325,32 @@ namespace GoStay.Services.Orders
         }
         public ResponseBase GetOrderbyUserID(int IDUser)
         {
-            IHotelFunction hotelFunction = new HotelFunction(_mapper);
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository,_serviceRepository,_pictureRepository,_viewRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listOrderInfo = _OrderRepository.FindAll(x => x.IdUser == IDUser).Include(x=>x.OrderDetails).Include(x=>x.IdPaymentMethodNavigation)
-                    .Include(x=>x.StatusNavigation).Include(x=>x.IdUserNavigation);
-                List<int> listIdOrder = new List<int>();
-                List<OrderDetailInfoDto> listOrderDetailInfo = new List<OrderDetailInfoDto>();
-                //foreach (var item in listOrderInfo)
-                //{
-                //    listIdOrder.Add(item.Id);
-                //}
-                //foreach (var i in listIdOrder)
-                //{
-                //    listOrderDetailInfo.Add(_OrderDetailRepository.FindAll(x => x.IdOrder == hotelId)
-                //                            .Include(x => x.RoomMamenitis)
-                //                            .Include(x => x.ViewDirectionNavigation)
-                //                            .Include(x => x.Pictures.Take(4)).ToList();
-                //}
+                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser).Include(x=>x.OrderDetails).Include(x=>x.IdPaymentMethodNavigation)
+                    .Include(x=>x.StatusNavigation).Include(x=>x.IdUserNavigation).ToList();
+                var listOrderDetail = new List<OrderDetail>();
+                foreach( var item in listOrder.Select(x=>x.Id))
+                {
+                    listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x=>x.IdRoomNavigation).Include(x=>x.IdTourNavigation));
+                }
 
-                //OrderGetInfoDto hotelDetailDto = hotelFunction.CreateHotelDetailDto(hotel);
+                var listOrderInfo = new List<OrderGetInfoDto>();
+                for (int i=0;i<listOrder.Count();i++)
+                {
+                    listOrderInfo.Add(_mapper.Map<Order, OrderGetInfoDto>(listOrder[i]));
+                    //var listdetail = listOrder[i].OrderDetails.ToList();
+                    var listdetail = listOrderDetail.Where(x => x.IdOrder == listOrder[i].Id).ToList();
 
+                    for (int j = 0;j< listdetail.Count();j++)
+                    {
+                        listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                    }
+                }
 
-                //responseBase.Data = hotelDetailDto;
+                responseBase.Data = listOrderInfo;
                 return responseBase;
             }
             catch (Exception e)
@@ -300,12 +362,32 @@ namespace GoStay.Services.Orders
         }
         public ResponseBase GetOrderbySession(string session)
         {
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var order = _OrderRepository.FindAll(x => x.Session == session).FirstOrDefault();
+                var listOrder = _OrderRepository.FindAll(x => x.Session == session).Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
+                    .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).ToList();
+                var listOrderDetail = new List<OrderDetail>();
+                foreach (var item in listOrder.Select(x => x.Id))
+                {
+                    listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation));
+                }
 
-                responseBase.Data = order;
+                var listOrderInfo = new List<OrderGetInfoDto>();
+                for (int i = 0; i < listOrder.Count(); i++)
+                {
+                    listOrderInfo.Add(_mapper.Map<Order, OrderGetInfoDto>(listOrder[i]));
+                    //var listdetail = listOrder[i].OrderDetails.ToList();
+                    var listdetail = listOrderDetail.Where(x => x.IdOrder == listOrder[i].Id).ToList();
+
+                    for (int j = 0; j < listdetail.Count(); j++)
+                    {
+                        listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                    }
+                }
+
+                responseBase.Data = listOrderInfo;
                 return responseBase;
             }
             catch (Exception e)

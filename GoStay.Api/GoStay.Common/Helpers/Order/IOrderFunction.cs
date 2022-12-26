@@ -1,4 +1,5 @@
 ﻿using GoStay.Data.HotelDto;
+using GoStay.Data.OrderDto;
 using GoStay.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,8 @@ namespace GoStay.Common.Helpers.Order
 {
     public interface IOrderFunction
     {
-        //public HotelDetailDto CreateOrderDetailInfoDto(Hotel hotel);
+        public OrderDetailInfoDto CreateOrderDetailInfoDto(OrderDetail orderDetail);
+        public HotelRoomOrderDto CreateHotelRoomOrderDto(HotelRoom roomOrderDetail);
 
     }
 }
