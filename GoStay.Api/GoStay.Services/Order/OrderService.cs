@@ -331,13 +331,19 @@ namespace GoStay.Services.Orders
             {
                 var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser).Include(x=>x.OrderDetails).Include(x=>x.IdPaymentMethodNavigation)
                     .Include(x=>x.StatusNavigation).Include(x=>x.IdUserNavigation).ToList();
-
+                var listOrderDetail = new List<OrderDetail>();
+                foreach( var item in listOrder.Select(x=>x.Id))
+                {
+                    listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x=>x.IdRoomNavigation).Include(x=>x.IdTourNavigation));
+                }
 
                 var listOrderInfo = new List<OrderGetInfoDto>();
                 for (int i=0;i<listOrder.Count();i++)
                 {
                     listOrderInfo.Add(_mapper.Map<Order, OrderGetInfoDto>(listOrder[i]));
-                    var listdetail = listOrder[i].OrderDetails.ToList();
+                    //var listdetail = listOrder[i].OrderDetails.ToList();
+                    var listdetail = listOrderDetail.Where(x => x.IdOrder == listOrder[i].Id).ToList();
+
                     for (int j = 0;j< listdetail.Count();j++)
                     {
                         listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
@@ -356,12 +362,32 @@ namespace GoStay.Services.Orders
         }
         public ResponseBase GetOrderbySession(string session)
         {
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var order = _OrderRepository.FindAll(x => x.Session == session).FirstOrDefault();
+                var listOrder = _OrderRepository.FindAll(x => x.Session == session).Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
+                    .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).ToList();
+                var listOrderDetail = new List<OrderDetail>();
+                foreach (var item in listOrder.Select(x => x.Id))
+                {
+                    listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation));
+                }
 
-                responseBase.Data = order;
+                var listOrderInfo = new List<OrderGetInfoDto>();
+                for (int i = 0; i < listOrder.Count(); i++)
+                {
+                    listOrderInfo.Add(_mapper.Map<Order, OrderGetInfoDto>(listOrder[i]));
+                    //var listdetail = listOrder[i].OrderDetails.ToList();
+                    var listdetail = listOrderDetail.Where(x => x.IdOrder == listOrder[i].Id).ToList();
+
+                    for (int j = 0; j < listdetail.Count(); j++)
+                    {
+                        listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                    }
+                }
+
+                responseBase.Data = listOrderInfo;
                 return responseBase;
             }
             catch (Exception e)
