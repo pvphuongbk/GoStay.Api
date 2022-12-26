@@ -87,29 +87,33 @@ namespace GoStay.Services.Orders
             }
         }
 
-        public ResponseBase CheckOrder(int iduser, int idhotel,int IdRoom)
+        public ResponseBase CheckOrder(OrderDto order, OrderDetailDto orderDetail)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
 
-                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == iduser && x.IdHotel == idhotel).SingleOrDefault();
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel).SingleOrDefault();
+
                 if (ordercheck is null)
                 {
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                    responseBase.Data = CreateOrder(order, orderDetail);
                 }
                 else
                 {
 
                     foreach (var item in ordercheck.OrderDetails)
                     {
-                        if (item.IdRoom == IdRoom)
+                        if (item.IdRoom == orderDetail.IdProduct)
                         {
                             if (ordercheck.Status == 3)
                             {
                                 responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                                 responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                                responseBase.Data = responseBase.Code;
+                                responseBase.Data = CreateOrder(order, orderDetail);
                             }
                             else
                             {
@@ -122,7 +126,7 @@ namespace GoStay.Services.Orders
                         {
                             responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
                             responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
-                            responseBase.Data = ordercheck;
+                            responseBase.Data = AddOrderDetail(order.IdHotel, orderDetail);
                         }
                     }    
 
