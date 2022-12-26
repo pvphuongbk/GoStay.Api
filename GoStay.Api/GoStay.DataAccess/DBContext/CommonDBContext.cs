@@ -912,7 +912,8 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.ToTable("TourProvinceTo");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasIndex(e => new { e.IdTour, e.IdProvinceTo }, "uq_tours")
+                    .IsUnique();
 
                 entity.HasOne(d => d.IdProvinceToNavigation)
                     .WithMany(p => p.TourProvinceTos)

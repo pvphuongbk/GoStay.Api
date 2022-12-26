@@ -30,6 +30,8 @@ namespace GoStay.DataAccess.Entities
         public string? Locations { get; set; }
         public int Style { get; set; }
         public DateTime CreatedDate { get; set; }
+        public double ActualPrice { get; set; }
+        public int Deleted { get; set; }
 
         public virtual TinhThanh IdProvinceFromNavigation { get; set; } = null!;
         public virtual TourStyle IdTourStyleNavigation { get; set; } = null!;

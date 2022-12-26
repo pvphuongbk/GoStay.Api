@@ -12,6 +12,10 @@ namespace GoStay.Data.OrderDto
 {
     public class OrderGetInfoDto
     {
+        public OrderGetInfoDto()
+        {
+            ListOrderDetails = new List<OrderDetailInfoDto>();
+        }
         public int Id { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }
@@ -21,13 +25,14 @@ namespace GoStay.Data.OrderDto
         public string? MoreInfo { get; set; }
         public string? Session { get; set; }
         public bool? IsDeleted { get; set; }
-        public List<OrderDetailInfoDto>? ListOrderDetails { get; set; }
+        public List<OrderDetailInfoDto> ListOrderDetails { get; set; }
 
     }
 
     public class OrderDetailInfoDto
     {
         public int Id { get; set; }
+        public int IdOrder { get; set; }
         public string DetailStyle { get; set; }
         public int? IdProduct { get; set; }
         public DateTime? ChechIn { get; set; }
