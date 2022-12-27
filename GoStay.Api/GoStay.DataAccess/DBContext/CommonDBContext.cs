@@ -36,6 +36,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
         public virtual DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
+        public virtual DbSet<Palletbed> Palletbeds { get; set; } = null!;
         public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
         public virtual DbSet<Picture> Pictures { get; set; } = null!;
         public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
@@ -508,11 +509,16 @@ namespace GoStay.DataAccess.DBContext
                     .HasForeignKey(d => d.Idhotel)
                     .HasConstraintName("FK_TBLROOM_TBLHOTEL");
 
-				entity.HasOne(d => d.ViewDirectionNavigation)
-					.WithMany(p => p.HotelRooms)
-					.HasForeignKey(d => d.ViewDirection)
-					.HasConstraintName("FK_HotelRoom_ViewDirection");
-			});
+                entity.HasOne(d => d.PalletbedNavigation)
+                    .WithMany(p => p.HotelRooms)
+                    .HasForeignKey(d => d.Palletbed)
+                    .HasConstraintName("FK_HotelRoom_Palletbed");
+
+                entity.HasOne(d => d.ViewDirectionNavigation)
+                    .WithMany(p => p.HotelRooms)
+                    .HasForeignKey(d => d.ViewDirection)
+                    .HasConstraintName("FK_HotelRoom_ViewDirection");
+            });
 
 			modelBuilder.Entity<HotelRoomComment>(entity =>
 			{
@@ -670,6 +676,13 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Status).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Palletbed>(entity =>
+            {
+                entity.ToTable("Palletbed");
+
+                entity.Property(e => e.Text).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Phuong>(entity =>

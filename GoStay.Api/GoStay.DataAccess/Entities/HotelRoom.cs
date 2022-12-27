@@ -34,6 +34,7 @@ namespace GoStay.DataAccess.Entities
         public DateTime CreatedDate { get; set; }
 
         public virtual Hotel? IdhotelNavigation { get; set; }
+        public virtual Palletbed? PalletbedNavigation { get; set; }
         public virtual ViewDirection? ViewDirectionNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }

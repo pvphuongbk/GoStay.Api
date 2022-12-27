@@ -22,16 +22,18 @@ namespace GoStay.Common.Helpers.Order
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<ViewDirection> _viewRepository;
 
+        private readonly ICommonRepository<Palletbed> _palletbedRepository;
 
 
         public OrderFunction(IMapper mapper, ICommonRepository<Hotel> hotelRepository, ICommonRepository<Service> serviceRepository,
-            ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository)
+            ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository, ICommonRepository<Palletbed> palletbedRepository)
         {
             _mapper = mapper;
             _hotelRepository = hotelRepository;
             _serviceRepository = serviceRepository;
             _pictureRepository = pictureRepository;
             _viewRepository = viewRepository;
+            _palletbedRepository = palletbedRepository;
         }
         public OrderDetailInfoDto CreateOrderDetailInfoDto(OrderDetail orderDetail)
         {
@@ -74,7 +76,7 @@ namespace GoStay.Common.Helpers.Order
             hotelRoomOrderDto.ViewDirection = _viewRepository.GetById(roomOrderDetail.ViewDirection).ViewDirection1;
             hotelRoomOrderDto.Pictures = _pictureRepository.FindAll(x => x.HotelRoomId == roomOrderDetail.Id && x.Type==1).Select(x=>x.Url).Take(1).ToList();
             hotelRoomOrderDto.Pictures.AddRange(_pictureRepository.FindAll(x => x.HotelId == hotel.Id && x.Type == 0).Select(x => x.Url).Take(1).ToList());
-
+            hotelRoomOrderDto.PalletbedText = _palletbedRepository.GetById(roomOrderDetail.Palletbed).Text;
             hotelRoomOrderDto.Services = _mapper.Map<List<Service>, List<ServiceDetailHotelDto>>
                                                     (_serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 1)
                                                     .Where(x => x.RoomMamenitis.Any(x => x.Idroom == roomOrderDetail.Id))

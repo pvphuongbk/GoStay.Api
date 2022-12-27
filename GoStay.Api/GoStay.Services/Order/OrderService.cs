@@ -28,14 +28,15 @@ namespace GoStay.Services.Orders
         private readonly ICommonRepository<Service> _serviceRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<ViewDirection> _viewRepository;
+        private readonly ICommonRepository<Palletbed> _palletbedRepository;
 
         private readonly ICommonUoW _commonUoW;
         private readonly IMapper _mapper;
 
 
-        public OrderService(ICommonRepository<Order> OrderRepository,ICommonRepository<OrderDetail> OrderRoomRepository,ICommonUoW commonUoW,
+        public OrderService(ICommonRepository<Order> OrderRepository,ICommonRepository<OrderDetail> OrderRoomRepository, ICommonUoW commonUoW,
             IMapper mapper, ICommonRepository<Tour> tourRepository, ICommonRepository<HotelRoom> roomRepository, ICommonRepository<Hotel> hotelRepository
-            , ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository)
+            , ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository, ICommonRepository<Palletbed> palletbedRepository)
         {
             _OrderDetailRepository = OrderRoomRepository;
             _OrderRepository = OrderRepository;
@@ -47,7 +48,7 @@ namespace GoStay.Services.Orders
             _pictureRepository = pictureRepository;
             _viewRepository = viewRepository;
             _hotelRepository = hotelRepository;
-
+            _palletbedRepository = palletbedRepository;
         }
 
         public ResponseBase CreateOrder(OrderDto order, OrderDetailDto orderDetail)
@@ -334,7 +335,7 @@ namespace GoStay.Services.Orders
         }
         public ResponseBase GetOrderbyUserID(int IDUser)
         {
-            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository,_serviceRepository,_pictureRepository,_viewRepository);
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository,_serviceRepository,_pictureRepository,_viewRepository,_palletbedRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
@@ -371,7 +372,7 @@ namespace GoStay.Services.Orders
         }
         public ResponseBase GetOrderbySession(string session)
         {
-            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository);
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository, _palletbedRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
@@ -411,7 +412,7 @@ namespace GoStay.Services.Orders
 
         public ResponseBase GetOrderbyId(int Id)
         {
-            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository);
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository, _palletbedRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
