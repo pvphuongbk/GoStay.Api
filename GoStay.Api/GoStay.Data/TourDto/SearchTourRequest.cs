@@ -1,6 +1,8 @@
+
 ﻿using GoStay.DataAccess.Entities;
 
 namespace GoStay.Data.TourDto
+
 {
     public class SearchTourRequest
     {

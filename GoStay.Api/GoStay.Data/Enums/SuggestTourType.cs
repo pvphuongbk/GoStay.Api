@@ -9,6 +9,7 @@ namespace GoStay.Data.Enums
     public enum SuggestTourType
     {
         From = 1,
-        To = 2
+        To = 2,
     }
 }
+

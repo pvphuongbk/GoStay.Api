@@ -7,8 +7,9 @@
         public static string sq_GetListHotelForHomePage = "sq_GetListHotelForHomePage";
         public static string sq_GetListForSearchHotelPaging_gamma = "sq_GetListForSearchHotelPaging_gamma";
 
-        // Tour
-        public static string sq_SuggestSearchTour = "sq_SuggestSearchTour";
+        // Tours
         public static string sq_GetListForSearchTours = "sq_GetListForSearchTours";
+        public static string sq_SuggestSearchTour = "sq_SuggestSearchTour";
+
     }
 }
