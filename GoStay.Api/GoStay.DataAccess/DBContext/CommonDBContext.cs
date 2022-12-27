@@ -595,9 +595,13 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+                entity.Property(e => e.DateCreate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.DateUpdate).HasColumnType("datetime");
+                entity.Property(e => e.DateUpdate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.IdPaymentMethod).HasColumnName("IdPTThanhToan");
 
@@ -635,7 +639,9 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.CheckOut).HasColumnType("datetime");
 
-                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+                entity.Property(e => e.DateCreate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.DetailStyle).HasDefaultValueSql("((1))");
 

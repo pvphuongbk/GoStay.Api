@@ -39,6 +39,8 @@ namespace GoStay.Data.OrderDto
         public int? IdProduct { get; set; }
         public DateTime? ChechIn { get; set; }
         public DateTime? CheckOut { get; set; }
+        public DateTime? DateCreate { get; set; }
+
         public byte? Num { get; set; }
         public decimal? Price { get; set; }
         public double? Discount { get; set; }
