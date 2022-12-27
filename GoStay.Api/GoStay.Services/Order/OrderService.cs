@@ -420,7 +420,8 @@ namespace GoStay.Services.Orders
                     .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).SingleOrDefault();
                 var listOrderDetail = new List<OrderDetail>();
 
-                listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == Id).Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation));
+                listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == Id).
+                    Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation).OrderByDescending(x=>x.DateCreate));
                 
 
                 var orderInfo = new OrderGetInfoDto();
@@ -428,13 +429,15 @@ namespace GoStay.Services.Orders
                 orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
                 orderInfo.Status =order.Status;
                 orderInfo.StatusDetail = order.StatusNavigation.Status;
+                orderInfo.PaymentMethod = order.IdPaymentMethodNavigation.PhuongThuc;
+
                 var listdetail = listOrderDetail;
 
                 for (int j = 0; j < listdetail.Count(); j++)
                 {
                     orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
                 }
-                
+
 
                 responseBase.Data = orderInfo;
                 return responseBase;

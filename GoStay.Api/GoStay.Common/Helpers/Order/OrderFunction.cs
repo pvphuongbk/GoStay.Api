@@ -43,6 +43,7 @@ namespace GoStay.Common.Helpers.Order
 
                 ChechIn = orderDetail.ChechIn,
                 CheckOut = orderDetail.CheckOut,
+                DateCreate = orderDetail.DateCreate,
                 Num = orderDetail.Num,
                 Price = orderDetail.Price,
                 Discount = orderDetail.Discount,
