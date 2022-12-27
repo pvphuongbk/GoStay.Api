@@ -19,6 +19,7 @@ namespace GoStay.Services.Orders
         public ResponseBase GetOrderbyUserID(int IDUser);
         public ResponseBase GetOrderbySession(string session);
         public ResponseBase CheckOrder(OrderDto order, OrderDetailDto orderDetai);
+        public ResponseBase GetOrderbyId(int Id);
 
     }
 }

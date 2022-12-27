@@ -19,6 +19,8 @@ namespace GoStay.Data.OrderDto
         public int Id { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }
+        public byte? Status { get; set; }
+
         public string? UserName { get; set; }
         public string? StatusDetail { get; set; }
         public string? PaymentMethod{ get; set; }

@@ -73,6 +73,8 @@ namespace GoStay.Common.Helpers.Order
             hotelRoomOrderDto.NumberReviewers = hotel.NumberReviewers;
             hotelRoomOrderDto.ViewDirection = _viewRepository.GetById(roomOrderDetail.ViewDirection).ViewDirection1;
             hotelRoomOrderDto.Pictures = _pictureRepository.FindAll(x => x.HotelRoomId == roomOrderDetail.Id && x.Type==1).Select(x=>x.Url).Take(1).ToList();
+            hotelRoomOrderDto.Pictures.AddRange(_pictureRepository.FindAll(x => x.HotelId == hotel.Id && x.Type == 0).Select(x => x.Url).Take(1).ToList());
+
             hotelRoomOrderDto.Services = _mapper.Map<List<Service>, List<ServiceDetailHotelDto>>
                                                     (_serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 1)
                                                     .Where(x => x.RoomMamenitis.Any(x => x.Idroom == roomOrderDetail.Id))

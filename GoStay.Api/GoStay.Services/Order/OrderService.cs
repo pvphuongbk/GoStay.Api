@@ -425,6 +425,8 @@ namespace GoStay.Services.Orders
                 var orderInfo = new OrderGetInfoDto();
 
                 orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
+                orderInfo.Status =order.Status;
+                orderInfo.StatusDetail = order.StatusNavigation.Status;
                 var listdetail = listOrderDetail;
 
                 for (int j = 0; j < listdetail.Count(); j++)
