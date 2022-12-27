@@ -10,5 +10,6 @@
         // Tours
         public static string sq_GetListForSearchTours = "sq_GetListForSearchTours";
         public static string sq_SuggestSearchTour = "sq_SuggestSearchTour";
+
     }
 }

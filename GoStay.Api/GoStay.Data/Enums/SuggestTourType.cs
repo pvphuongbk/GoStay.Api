@@ -12,3 +12,4 @@ namespace GoStay.Data.Enums
         To = 2,
     }
 }
+
