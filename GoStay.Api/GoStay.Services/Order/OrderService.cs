@@ -76,6 +76,7 @@ namespace GoStay.Services.Orders
                 _commonUoW.Commit();
                 responseBase.Code = ErrorCodeMessage.Success.Key;
                 responseBase.Message = ErrorCodeMessage.Success.Value;
+                responseBase.Data = GetOrderbyId(orderEntity.Id).Data;
                 return responseBase;
             }
             catch (Exception e)
@@ -87,44 +88,51 @@ namespace GoStay.Services.Orders
             }
         }
 
-        public ResponseBase CheckOrder(int iduser, int idhotel,int IdRoom)
+        public ResponseBase CheckOrder(OrderDto order, OrderDetailDto orderDetail)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
 
-                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == iduser && x.IdHotel == idhotel).SingleOrDefault();
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel)
+                    .Include(x=>x.OrderDetails)
+                    .SingleOrDefault();
+
                 if (ordercheck is null)
                 {
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                    responseBase.Data = CreateOrder(order, orderDetail).Data;
                 }
                 else
                 {
-
+                    int addDetail = 0;
                     foreach (var item in ordercheck.OrderDetails)
                     {
-                        if (item.IdRoom == IdRoom)
+                        if (item.IdRoom == orderDetail.IdProduct)
                         {
+                            addDetail ++;
                             if (ordercheck.Status == 3)
                             {
                                 responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                                 responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                                responseBase.Data = CreateOrder(order, orderDetail).Data;
                             }
                             else
                             {
                                 responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
                                 responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
-                                responseBase.Data = ordercheck;
+                                responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
                             }
                         }
-                        else
-                        {
-                            responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
-                            responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
-                            responseBase.Data = ordercheck;
-                        }
-                    }    
+
+                    }
+                    if (addDetail == 0)
+                    {
+                        responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
+                        responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
+                        responseBase.Data = AddOrderDetail(ordercheck.Id, orderDetail).Data;
+                    }
 
                 }
                 return responseBase;
@@ -161,6 +169,7 @@ namespace GoStay.Services.Orders
                 _commonUoW.Commit();
                 responseBase.Code = ErrorCodeMessage.Success.Key;
                 responseBase.Message = ErrorCodeMessage.Success.Value;
+                responseBase.Data = GetOrderbyId(IdOrder).Data;
                 return responseBase;
             }
             catch (Exception e)
@@ -388,6 +397,43 @@ namespace GoStay.Services.Orders
                 }
 
                 responseBase.Data = listOrderInfo;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+
+
+        public ResponseBase GetOrderbyId(int Id)
+        {
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository);
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var order = _OrderRepository.FindAll(x => x.Id == Id).Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
+                    .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).SingleOrDefault();
+                var listOrderDetail = new List<OrderDetail>();
+
+                listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == Id).Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation));
+                
+
+                var orderInfo = new OrderGetInfoDto();
+
+                orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
+                var listdetail = listOrderDetail;
+
+                for (int j = 0; j < listdetail.Count(); j++)
+                {
+                    orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                }
+                
+
+                responseBase.Data = orderInfo;
                 return responseBase;
             }
             catch (Exception e)
