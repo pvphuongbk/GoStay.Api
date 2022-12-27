@@ -48,7 +48,10 @@ namespace GoStay.Common.Helpers.Hotels
 
                 NumberReviewers = hotel.NumberReviewers
             };
-            
+            for(int i=0;i< hotel.HotelRooms.Count(); i++)
+            {
+                hotelDto.Rooms[i].PalletbedText = hotel.HotelRooms.ToList()[i].PalletbedNavigation.Text;
+            }    
             var room = hotelDto.Rooms.Where(x => x.Discount != null).MaxBy(x => x.Discount);
             if (room != null)
             {

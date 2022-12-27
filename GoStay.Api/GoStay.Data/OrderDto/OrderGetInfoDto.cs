@@ -64,6 +64,7 @@ namespace GoStay.Data.OrderDto
         public byte? NumMature { get; set; }
         public byte? NumChild { get; set; }
         public byte? Palletbed { get; set; }
+        public string PalletbedText { get; set; }
         public decimal? RoomSize { get; set; }
         public string ViewDirection { get; set; }
         public byte? RemainNum { get; set; }

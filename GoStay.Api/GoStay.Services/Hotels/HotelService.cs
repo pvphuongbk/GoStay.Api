@@ -160,6 +160,7 @@ namespace GoStay.Services.Hotels
 				var hotelRoom = _hotelRoomRepository.FindAll(x => x.Idhotel == hotelId)
 										.Include(x=>x.RoomMamenitis)
 										.Include(x=>x.ViewDirectionNavigation)
+										.Include(x=>x.PalletbedNavigation)
 										.Include(x=>x.Pictures.Take(4)).ToList();
                 if (hotel==null)
 				{
