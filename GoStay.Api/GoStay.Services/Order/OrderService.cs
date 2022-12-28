@@ -317,11 +317,22 @@ namespace GoStay.Services.Orders
 
         public ResponseBase GetOrderDetailbyOrder(int IdOrder)
         {
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository, _palletbedRepository);
+
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listtemp = _OrderRepository.FindAll(x => x.Id == IdOrder).Include(x => x.OrderDetails).FirstOrDefault().OrderDetails.ToList();
-                var list = _mapper.Map<List<OrderDetail>,List<OrderDetailShowDto>>(listtemp);
+                var listtemp = _OrderRepository.FindAll(x => x.Id == IdOrder)?.Include(x => x.OrderDetails).FirstOrDefault().OrderDetails.ToList();
+                var list = new List<OrderDetailInfoDto>();
+                if(listtemp == null)
+                {
+                    responseBase.Data = list;
+                    return responseBase;
+                }
+                foreach (var item in listtemp)
+                {
+                    list.Add(orderFunction.CreateOrderDetailInfoDto(item));
+                }    
                 
                 responseBase.Data = list;
                 return responseBase;
@@ -339,10 +350,15 @@ namespace GoStay.Services.Orders
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser).Include(x=>x.OrderDetails).Include(x=>x.IdPaymentMethodNavigation)
+                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser)?.Include(x=>x.OrderDetails).Include(x=>x.IdPaymentMethodNavigation)
                     .Include(x=>x.StatusNavigation).Include(x=>x.IdUserNavigation).ToList();
                 var listOrderDetail = new List<OrderDetail>();
-                foreach( var item in listOrder.Select(x=>x.Id))
+                if (listOrder == null)
+                {
+                    responseBase.Data = listOrderDetail;
+                    return responseBase;
+                }
+                foreach ( var item in listOrder.Select(x=>x.Id))
                 {
                     listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x=>x.IdRoomNavigation).Include(x=>x.IdTourNavigation));
                 }
@@ -376,9 +392,14 @@ namespace GoStay.Services.Orders
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listOrder = _OrderRepository.FindAll(x => x.Session == session).Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
+                var listOrder = _OrderRepository.FindAll(x => x.Session == session)?.Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
                     .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).ToList();
                 var listOrderDetail = new List<OrderDetail>();
+                if (listOrder == null)
+                {
+                    responseBase.Data = listOrderDetail;
+                    return responseBase;
+                }
                 foreach (var item in listOrder.Select(x => x.Id))
                 {
                     listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation));
@@ -416,28 +437,30 @@ namespace GoStay.Services.Orders
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var order = _OrderRepository.FindAll(x => x.Id == Id).Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
-                    .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).SingleOrDefault();
+                var orderInfo = new OrderGetInfoDto();
                 var listOrderDetail = new List<OrderDetail>();
 
-                listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == Id).
-                    Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation).OrderByDescending(x=>x.DateCreate));
-                
+                var order = _OrderRepository.FindAll(x => x.Id == Id)?.Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
+                    .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).SingleOrDefault();
 
-                var orderInfo = new OrderGetInfoDto();
+                if (order == null)
+                {
+                    responseBase.Data = orderInfo;
+                    return responseBase;
+                }    
+
+                listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == Id)?.
+                    Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation).OrderByDescending(x=>x.DateCreate));
 
                 orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
                 orderInfo.Status =order.Status;
                 orderInfo.StatusDetail = order.StatusNavigation.Status;
                 orderInfo.PaymentMethod = order.IdPaymentMethodNavigation.PhuongThuc;
 
-                var listdetail = listOrderDetail;
-
-                for (int j = 0; j < listdetail.Count(); j++)
+                for (int j = 0; j < listOrderDetail.Count(); j++)
                 {
-                    orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                    orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listOrderDetail[j]));
                 }
-
 
                 responseBase.Data = orderInfo;
                 return responseBase;
