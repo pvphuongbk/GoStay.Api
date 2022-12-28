@@ -2,6 +2,7 @@
 using GoStay.Data.HotelDto;
 using GoStay.Data.OrderDto;
 using GoStay.Data.ServiceDto;
+using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
 using System.Linq;
 
@@ -33,6 +34,11 @@ namespace GoStay.Api.Configurations
             CreateMap<Order, OrderGetInfoDto>().ReverseMap();
             CreateMap<OrderGetInfoDto, Order>().ReverseMap();
 
+            CreateMap<TourDetailDto, TourDetail>().ReverseMap();
+            CreateMap<TourDetail, TourDetailDto>().ReverseMap();
+
+            CreateMap<Tour, TourOrderDto>().ReverseMap();
+            CreateMap<TourOrderDto, Tour>().ReverseMap();
 
         }
     }

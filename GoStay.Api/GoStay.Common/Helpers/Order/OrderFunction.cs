@@ -21,12 +21,21 @@ namespace GoStay.Common.Helpers.Order
         private readonly ICommonRepository<Service> _serviceRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<ViewDirection> _viewRepository;
-
         private readonly ICommonRepository<Palletbed> _palletbedRepository;
 
+        private readonly ICommonRepository<TourStyle> _tourStyleRepository;
+        private readonly ICommonRepository<TourTopic> _tourTopicRepository;
+        private readonly ICommonRepository<TourDetail> _tourDetailRepository;
+        private readonly ICommonRepository<TourProvinceTo> _tourProvinceToRepository;
+
+        private readonly ICommonRepository<TinhThanh> _tinhThanhRepository;
+        private readonly ICommonRepository<User> _userRepository;
 
         public OrderFunction(IMapper mapper, ICommonRepository<Hotel> hotelRepository, ICommonRepository<Service> serviceRepository,
-            ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository, ICommonRepository<Palletbed> palletbedRepository)
+            ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository,
+            ICommonRepository<Palletbed> palletbedRepository, ICommonRepository<TourStyle> tourStyleRepository, 
+            ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TinhThanh> tinhThanhRepository,
+            ICommonRepository<User> userRepository, ICommonRepository<TourDetail> tourDetailRepository, ICommonRepository<TourProvinceTo> tourProvinceToRepository)
         {
             _mapper = mapper;
             _hotelRepository = hotelRepository;
@@ -34,6 +43,12 @@ namespace GoStay.Common.Helpers.Order
             _pictureRepository = pictureRepository;
             _viewRepository = viewRepository;
             _palletbedRepository = palletbedRepository;
+            _tourStyleRepository = tourStyleRepository;
+            _tourTopicRepository = tourTopicRepository;
+            _tinhThanhRepository = tinhThanhRepository;
+            _userRepository = userRepository;
+            _tourDetailRepository = tourDetailRepository;
+            _tourProvinceToRepository = tourProvinceToRepository;
         }
         public OrderDetailInfoDto CreateOrderDetailInfoDto(OrderDetail orderDetail)
         {
@@ -61,6 +76,8 @@ namespace GoStay.Common.Helpers.Order
             {
                 orderDetailInfoDto.DetailStyle = "tour";
                 orderDetailInfoDto.IdProduct = orderDetail.IdTour;
+                orderDetailInfoDto.Tours = CreateTourOrderDto(orderDetail.IdTourNavigation);
+
             }
             return orderDetailInfoDto;
         }
@@ -83,6 +100,25 @@ namespace GoStay.Common.Helpers.Order
                                                     .Where(x => x.RoomMamenitis.Any(x => x.Idroom == roomOrderDetail.Id))?
                                                     .OrderBy(x => x.Name).OrderBy(x => x.AdvantageLevel).Take(5).ToList());
             return hotelRoomOrderDto;
+        }
+        public TourOrderDto CreateTourOrderDto(Tour tourOrderDetail)
+        {
+            var tourOrderDto = _mapper.Map<Tour, TourOrderDto>(tourOrderDetail);
+            tourOrderDto.TourStyle = _tourStyleRepository.GetById(tourOrderDto.IdTourStyle)?.TourStyle1;
+            tourOrderDto.TourTopic = _tourTopicRepository.GetById(tourOrderDto.IdTourTopic)?.TourTopic1; 
+            tourOrderDto.UserName = _userRepository.GetById(tourOrderDto.IdUser)?.UserName;
+            tourOrderDto.ProvinceFrom = _tinhThanhRepository.GetById(tourOrderDto.IdProvinceFrom).TenTt;
+
+            var listTourDetail = _tourDetailRepository.FindAll(x => x.IdTours == tourOrderDetail.Id).ToList();
+
+            tourOrderDto.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(listTourDetail);
+            var listprovinceto = new List<string>();
+            foreach (var item in _tourProvinceToRepository.FindAll(x=>x.IdTour== tourOrderDetail.Id).Select(x=>x.IdProvinceTo).ToList())
+            {
+                listprovinceto.Add(_tinhThanhRepository.GetById(item)?.TenTt);
+            }
+            tourOrderDto.ProvinceTo = listprovinceto;
+            return tourOrderDto;
         }
     }
 }
