@@ -52,7 +52,7 @@ namespace GoStay.Common.Helpers.Hotels
             {
                 hotelDto.Rooms[i].PalletbedText = hotel.HotelRooms.ToList()[i].PalletbedNavigation.Text;
             }    
-            var room = hotelDto.Rooms.Where(x => x.Discount != null).MaxBy(x => x.Discount);
+            var room = hotelDto.Rooms.Where(x => x.Discount != null).MaxBy(x => x.NewPrice);
             if (room != null)
             {
                 hotelDto.Discount = room.Discount;
