@@ -20,6 +20,7 @@ namespace GoStay.Data.OrderDto
     public class OrderDto
     {
         public string? Title { get; set; }
+        public string? Ordercode { get; set; }
         public int IdHotel { get; set; }
         public int IdUser { get; set; }
         public DateTime? DateCreate { get; set; }

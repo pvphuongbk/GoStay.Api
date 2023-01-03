@@ -15,6 +15,7 @@ namespace GoStay.Services.Orders
         public ResponseBase RemoveOrderDetail(int IdOrderDetail);
         public ResponseBase UpdateStatusOrder(byte Status, int IdOder);
         public ResponseBase UpdatePTTTOrder(byte IdPTThanhtoan, int IdOder);
+        public ResponseBase UpdateUserIDbySession(int IdUser, string Session);
         public ResponseBase GetOrderDetailbyOrder(int oder);
         public ResponseBase GetOrderbyUserID(int IDUser);
         public ResponseBase GetOrderbySession(string session);

@@ -17,16 +17,23 @@ namespace GoStay.Data.OrderDto
             ListOrderDetails = new List<OrderDetailInfoDto>();
         }
         public int Id { get; set; }
+        public string? Ordercode { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }
-        public byte? Status { get; set; }
-
         public string? UserName { get; set; }
+        public string? Email { get; set; }
+        public string? Mobile { get; set; }
+        public string? Address { get; set; }
+        public bool IsLogined { get; set; }
+        public byte? Status { get; set; }
         public string? StatusDetail { get; set; }
-        public string? PaymentMethod{ get; set; }
+        public string? PaymentMethod { get; set; }
         public string? MoreInfo { get; set; }
         public string? Session { get; set; }
         public bool? IsDeleted { get; set; }
+        public DateTime DateUpdate { get; set; }
+        public DateTime DateCreate { get; set; }
+
         public List<OrderDetailInfoDto> ListOrderDetails { get; set; }
 
     }
