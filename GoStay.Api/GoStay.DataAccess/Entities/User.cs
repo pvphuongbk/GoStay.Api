@@ -31,4 +31,10 @@ namespace GoStay.DataAccess.Entities
 
         public virtual ICollection<Order> Orders { get; set; }
     }
+
+    public class UserGostay : User
+    {
+        public string? SesstionID { get; set; }
+        public bool isLogined { get; set; }
+    }
 }
