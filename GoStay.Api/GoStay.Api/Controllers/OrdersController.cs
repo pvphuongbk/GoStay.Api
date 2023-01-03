@@ -69,6 +69,13 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpPut("userid-by-session")]
+        public ResponseBase UpdateUserIDbySession(UpdateUserIdBySessionParam param )
+        {
+            var items = _orderService.UpdateUserIDbySession(param.IdUser, param.Session);
+            return items;
+        }
+
         [HttpGet("detail-by-order")]
         public ResponseBase GetOrderDetailbyOrder(int order)
         {

@@ -15,6 +15,7 @@ using GoStay.Data.ServiceDto;
 using GoStay.Repository.Repositories;
 using System.Runtime.CompilerServices;
 using GoStay.Common.Helpers.Order;
+using System.Linq.Expressions;
 
 namespace GoStay.Services.Orders
 {
@@ -252,7 +253,6 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-        
         public ResponseBase RemoveOrderDetail(int IdOrderDetail)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -328,7 +328,6 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-
         public ResponseBase UpdateMoreInfoOrder(string moreinfo, int IdOrder)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -343,6 +342,43 @@ namespace GoStay.Services.Orders
                 responseBase.Code = ErrorCodeMessage.Success.Key;
                 responseBase.Message = ErrorCodeMessage.Success.Value;
                 return responseBase;
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+        public ResponseBase UpdateUserIDbySession(int IdUser, string Session)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var listoder = _OrderRepository.FindAll(x=>x.Session == Session);
+                if (listoder == null)
+                {
+                    _commonUoW.Commit();
+                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    responseBase.Message = ErrorCodeMessage.Exception.Value;
+                    return responseBase;
+                }
+                else
+                {
+                    foreach (var item in listoder)
+                    {
+                        item.DateUpdate = DateTime.Now;
+                        item.IdUser = IdUser;
+                        _OrderRepository.Update(item);
+                    }
+                    _commonUoW.Commit();
+                    responseBase.Code = ErrorCodeMessage.Success.Key;
+                    responseBase.Message = ErrorCodeMessage.Success.Value;
+                    return responseBase;
+                }
             }
             catch (Exception e)
             {
@@ -469,9 +505,6 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-
-
-
         public ResponseBase GetOrderbyId(int Id)
         {
             IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository, 
