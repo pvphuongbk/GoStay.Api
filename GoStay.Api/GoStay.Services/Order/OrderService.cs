@@ -112,7 +112,7 @@ namespace GoStay.Services.Orders
             try
             {
 
-                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel)
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel&& x.Status!=3)
                     .Include(x=>x.OrderDetails)
                     .SingleOrDefault();
 
