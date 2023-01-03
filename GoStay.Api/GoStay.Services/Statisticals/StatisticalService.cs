@@ -48,7 +48,7 @@ namespace GoStay.Services.Statisticals
                 chart.TotalHotel = hotels.Count;
                 chart.TotalRoom = hotelRooms.Count;
                 chart.TotalImg = _pictureRepository.FindAll(x => x.Deleted != 1).Count();
-                chart.TotalSizeImg = (long)_pictureRepository.FindAll(x => x.Deleted != 1).Select(x => x.Size).Sum() / 1000000;
+                chart.TotalSizeImg = (long)_pictureRepository.FindAll(x => x.Deleted != 1).Select(x => x.Size/100).Sum() / 10000;
                 for (int i = 0; i <= 5; i++)
                 {
                     var count = hotels.Count(x => x.Rating == i);
