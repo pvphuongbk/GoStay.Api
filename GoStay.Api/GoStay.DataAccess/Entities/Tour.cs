@@ -8,8 +8,10 @@ namespace GoStay.DataAccess.Entities
         public Tour()
         {
             OrderDetails = new HashSet<OrderDetail>();
+            Pictures = new HashSet<Picture>();
             TourDetails = new HashSet<TourDetail>();
             TourProvinceTos = new HashSet<TourProvinceTo>();
+            ToursGalleries = new HashSet<ToursGallery>();
         }
 
         public int Id { get; set; }
@@ -37,7 +39,9 @@ namespace GoStay.DataAccess.Entities
         public virtual TourStyle IdTourStyleNavigation { get; set; } = null!;
         public virtual TourTopic IdTourTopicNavigation { get; set; } = null!;
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<TourDetail> TourDetails { get; set; }
         public virtual ICollection<TourProvinceTo> TourProvinceTos { get; set; }
+        public virtual ICollection<ToursGallery> ToursGalleries { get; set; }
     }
 }

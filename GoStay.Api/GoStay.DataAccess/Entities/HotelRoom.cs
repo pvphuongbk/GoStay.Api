@@ -19,7 +19,7 @@ namespace GoStay.DataAccess.Entities
         public string? Description { get; set; }
         public int? Status { get; set; }
         public byte? RemainNum { get; set; }
-        public decimal PriceValue { get; set; }
+        public decimal? PriceValue { get; set; }
         public int? Deleted { get; set; }
         public double? Discount { get; set; }
         public decimal? NewPrice { get; set; }

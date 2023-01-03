@@ -8,6 +8,7 @@ namespace GoStay.DataAccess.Entities
         public int Id { get; set; }
         public int IdTour { get; set; }
         public int IdProvinceTo { get; set; }
+        public string? Description { get; set; }
         public int Deleted { get; set; }
 
         public virtual TinhThanh IdProvinceToNavigation { get; set; } = null!;

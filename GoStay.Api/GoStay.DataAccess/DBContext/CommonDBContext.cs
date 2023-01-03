@@ -32,6 +32,9 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<KhuVuc> KhuVucs { get; set; } = null!;
         public virtual DbSet<MulltiKeyValue> MulltiKeyValues { get; set; } = null!;
         public virtual DbSet<NearbyHotel> NearbyHotels { get; set; } = null!;
+        public virtual DbSet<News> News { get; set; } = null!;
+        public virtual DbSet<NewsCategory> NewsCategories { get; set; } = null!;
+        public virtual DbSet<NewsGallery> NewsGalleries { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
@@ -50,11 +53,12 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<TourProvinceTo> TourProvinceTos { get; set; } = null!;
         public virtual DbSet<TourStyle> TourStyles { get; set; } = null!;
         public virtual DbSet<TourTopic> TourTopics { get; set; } = null!;
-		public virtual DbSet<TypeHotel> TypeHotels { get; set; } = null!;
-		public virtual DbSet<User> Users { get; set; } = null!;
-		public virtual DbSet<VGetAllHotel> VGetAllHotels { get; set; } = null!;
-		public virtual DbSet<ViewDirection> ViewDirections { get; set; } = null!;
-		public virtual DbSet<Viewhotelservice> Viewhotelservices { get; set; } = null!;
+        public virtual DbSet<ToursGallery> ToursGalleries { get; set; } = null!;
+        public virtual DbSet<TypeHotel> TypeHotels { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<VGetAllHotel> VGetAllHotels { get; set; } = null!;
+        public virtual DbSet<ViewDirection> ViewDirections { get; set; } = null!;
+        public virtual DbSet<Viewhotelservice> Viewhotelservices { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -593,6 +597,61 @@ namespace GoStay.DataAccess.DBContext
                     .HasConstraintName("FK_NearbyHotels_Hotel");
             });
 
+            modelBuilder.Entity<News>(entity =>
+            {
+                entity.Property(e => e.Content).HasColumnType("ntext");
+
+                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+
+                entity.Property(e => e.DateEdit).HasColumnType("datetime");
+
+                entity.Property(e => e.Keysearch)
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title).HasMaxLength(150);
+
+                entity.HasOne(d => d.IdcatNavigation)
+                    .WithMany(p => p.News)
+                    .HasForeignKey(d => d.Idcat)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_News_NewsCategory");
+            });
+
+            modelBuilder.Entity<NewsCategory>(entity =>
+            {
+                entity.ToTable("NewsCategory");
+
+                entity.Property(e => e.Category).HasMaxLength(100);
+
+                entity.Property(e => e.Keysearch)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
+            });
+
+            modelBuilder.Entity<NewsGallery>(entity =>
+            {
+                entity.ToTable("NewsGallery");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Idpic).ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.IdnewsNavigation)
+                    .WithMany(p => p.NewsGalleries)
+                    .HasForeignKey(d => d.Idnews)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NewsGallery_News");
+
+                entity.HasOne(d => d.IdpicNavigation)
+                    .WithMany(p => p.NewsGalleries)
+                    .HasForeignKey(d => d.Idpic)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NewsGallery_Pictures");
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.Property(e => e.DateCreate)
@@ -606,6 +665,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.IdPaymentMethod).HasColumnName("IdPTThanhToan");
 
                 entity.Property(e => e.MoreInfo).HasMaxLength(500);
+
+                entity.Property(e => e.Ordercode)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Session)
                     .HasMaxLength(50)
@@ -738,11 +801,16 @@ namespace GoStay.DataAccess.DBContext
 					.HasForeignKey(d => d.HotelRoomId)
 					.HasConstraintName("Fk_Pictures_HotelRoom");
 
-				entity.HasOne(d => d.IdAlbumNavigation)
-					.WithMany(p => p.Pictures)
-					.HasForeignKey(d => d.IdAlbum)
-					.HasConstraintName("FK_Pictures_Album");
-			});
+                entity.HasOne(d => d.IdAlbumNavigation)
+                    .WithMany(p => p.Pictures)
+                    .HasForeignKey(d => d.IdAlbum)
+                    .HasConstraintName("FK_Pictures_Album");
+
+                entity.HasOne(d => d.Tour)
+                    .WithMany(p => p.Pictures)
+                    .HasForeignKey(d => d.TourId)
+                    .HasConstraintName("FK_Pictures_Tours");
+            });
 
 			modelBuilder.Entity<PriceRange>(entity =>
 			{
@@ -832,7 +900,12 @@ namespace GoStay.DataAccess.DBContext
 			{
 				entity.ToTable("TinhThanh");
 
-				entity.Property(e => e.Diengiai).HasMaxLength(50);
+                entity.Property(e => e.Diengiai).HasMaxLength(50);
+
+                entity.Property(e => e.ECode)
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasColumnName("eCode");
 
 				entity.Property(e => e.Locality).HasMaxLength(50);
 
@@ -934,6 +1007,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.HasIndex(e => new { e.IdTour, e.IdProvinceTo }, "uq_tours")
                     .IsUnique();
 
+                entity.Property(e => e.Description)
+                    .HasMaxLength(100)
+                    .IsFixedLength();
+
                 entity.HasOne(d => d.IdProvinceToNavigation)
                     .WithMany(p => p.TourProvinceTos)
                     .HasForeignKey(d => d.IdProvinceTo)
@@ -968,9 +1045,29 @@ namespace GoStay.DataAccess.DBContext
                     .HasMaxLength(100)
                     .HasColumnName("TourTopic");
             });
-			modelBuilder.Entity<TypeHotel>(entity =>
-			{
-				entity.ToTable("TypeHotel");
+
+            modelBuilder.Entity<ToursGallery>(entity =>
+            {
+                entity.ToTable("ToursGallery");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.IdpicNavigation)
+                    .WithMany(p => p.ToursGalleries)
+                    .HasForeignKey(d => d.Idpic)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ToursGallery_Pictures");
+
+                entity.HasOne(d => d.IdtoursNavigation)
+                    .WithMany(p => p.ToursGalleries)
+                    .HasForeignKey(d => d.Idtours)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ToursGallery_Tours");
+            });
+
+            modelBuilder.Entity<TypeHotel>(entity =>
+            {
+                entity.ToTable("TypeHotel");
 
 				entity.Property(e => e.Deleted).HasDefaultValueSql("((0))");
 
