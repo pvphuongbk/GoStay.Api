@@ -79,18 +79,20 @@ namespace GoStay.Services.Statisticals
                     });
                 }
 
-                var maxDate = hotelRooms.Max(x => x.CreatedDate);
+                var maxDate = DateTime.Now;//hotelRooms.Max(x => x.CreatedDate);
                 var minDate = hotelRooms.Min(x => x.CreatedDate);
                 for (DateTime i = minDate; i <= maxDate;i = i.AddMonths(1))
                 {
                     var key = i.ToString("MM-yyyy");
                     if (string.IsNullOrEmpty(key) || chart.RoomByMonth.ContainsKey(key))
                         continue;
-                    var count = hotelRooms.Count(x => x.CreatedDate.Year == i.Year && x.CreatedDate.Month == i.Month);
+
+                    var count = hotelRooms.Count(x => (x.CreatedDate.Year == i.Year && x.CreatedDate.Month <= i.Month) 
+                                || x.CreatedDate.Year < i.Year);
                     chart.RoomByMonth.Add(key, new ChartValue
                     {
                         Count = count,
-                        Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
+                        //Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
                     });
                 }
 
@@ -120,21 +122,18 @@ namespace GoStay.Services.Statisticals
                 var hotelRooms = _hotelRoomRepository.FindAll(x => x.Deleted != 1 && x.CreatedDate.Year == year && x.CreatedDate.Month == month)
                                             .Select(x => new CreateRoomForChartDto { CreatedDate = x.CreatedDate }).ToList();
                 chart.TotalRoom = hotelRooms.Count;
-                var maxDate = hotelRooms.Max(x => x.CreatedDate);
-                var minDate = hotelRooms.Min(x => x.CreatedDate);
-                for (DateTime i = minDate; i <= maxDate; i = i.AddDays(1))
+                var minDate = new DateTime(year, month, 1);
+                var endDate = minDate.AddMonths(1);
+                var maxDate = endDate < DateTime.Now.Date ? endDate : DateTime.Now.Date.AddDays(1);
+                for (DateTime i = minDate; i < maxDate; i = i.AddDays(1))
                 {
-                    var key = i.ToString("dd");
-                    if (string.IsNullOrEmpty(key) || chart.RoomByDay.ContainsKey(key))
-                        continue;
                     var count = hotelRooms.Count(x => x.CreatedDate.Day == i.Day);
-                    chart.RoomByDay.Add(key, new ChartValue
+                    chart.RoomByDayValue.Add(new RoomByDayValue
                     {
-                        Count = count,
-                        Percent = Math.Round(((double)count * 100 / chart.TotalRoom), 2)
+                        Amount = count,
+                        Day = i.Day
                     });
                 }
-
                 responseBase.Data = chart;
                 return responseBase;
             }

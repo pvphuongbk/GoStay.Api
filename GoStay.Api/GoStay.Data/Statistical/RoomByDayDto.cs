@@ -11,9 +11,16 @@ namespace GoStay.Data.Statistical
     {
         public RoomByDayDto()
         {
-            RoomByDay = new Dictionary<string, ChartValue>();;
+            RoomByDayValue = new List<RoomByDayValue>();
         }
         public int TotalRoom { get; set; }
-        public Dictionary<string, ChartValue> RoomByDay { get; set; }
+        public List<RoomByDayValue> RoomByDayValue { get; set; }
+    }
+
+    public class RoomByDayValue
+    {
+        public int Day { get; set; }
+
+        public int Amount { get; set; }
     }
 }
