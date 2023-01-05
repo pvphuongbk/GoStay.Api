@@ -18,7 +18,11 @@ namespace GoStay.Repository.Repositories
             p.Add("@IdTourStyle", filter.IdTourStyle == null ? null : string.Join(",", filter.IdTourStyle), System.Data.DbType.String);
             p.Add("@IdProvinceFrom", filter.IdProvinceFrom == null ? null : string.Join(",", filter.IdProvinceFrom), System.Data.DbType.String);
             p.Add("@IdProvinceTo", filter.IdProvinceTo == null ? null : string.Join(",", filter.IdProvinceTo), System.Data.DbType.String);
-            p.Add("@ActualPrice", filter.ActualPrice == null ? null : filter.ActualPrice.ToString(), System.Data.DbType.String);
+
+            p.Add("@PriceMax", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
+            p.Add("@PriceMin", filter.PriceMin == null ? null : filter.PriceMin.ToString(), System.Data.DbType.String);
+            p.Add("@NumMature", filter.NumMature == null ? null : filter.NumMature.ToString(), System.Data.DbType.String);
+
             p.Add("@Rating", filter.Rating == null ? null : string.Join(",", filter.Rating), System.Data.DbType.String);
             p.Add("@StartDate", filter.StartDate == null ? null : string.Join(",", filter.StartDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
             p.Add("@EndDate", filter.EndDate == null ? null : string.Join(",", filter.EndDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
@@ -28,8 +32,6 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<SearchTourDto>(Procedures.sq_GetListForSearchTours, p).ToList();
         }
-
-
         public static List<SuggestTourDto> SuggestTour(string searchText)
         {
             var p = new DynamicParameters();
