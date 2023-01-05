@@ -32,5 +32,13 @@ namespace GoStay.Services.Tours
             response.Data = TourRepository.GetPagingListTours(request);
             return response;
         }
+
+        public ResponseBase GetTourContent(int Id)
+        {
+            
+            ResponseBase response = new ResponseBase();
+            response.Data = TourRepository.GetPagingListTours(request);
+            return response;
+        }
     }
 }
