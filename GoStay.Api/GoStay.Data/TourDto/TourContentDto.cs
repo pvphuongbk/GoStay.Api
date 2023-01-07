@@ -31,7 +31,6 @@ namespace GoStay.Data.TourDto
         public DateTime CreatedDate { get; set; }
         public double ActualPrice { get; set; }
         public byte Status { get; set; }
-        public int Deleted { get; set; }
 
         public List<TourDetailDto> TourDetails { get; set; }
 

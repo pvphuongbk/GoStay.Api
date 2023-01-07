@@ -37,6 +37,8 @@ namespace GoStay.Data.TourDto
     }
     public class TourDetailDto
     {
+        public int Id { get; set; }
+        public int IdTours { get; set; }
         public byte? IdStyle { get; set; }
         public string? Title { get; set; }
         public string? Details { get; set; }

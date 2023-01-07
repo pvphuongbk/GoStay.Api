@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GoStay.DataAccess\GoStay.DataAccess.csproj" />
-    <ProjectReference Include="..\GoStay.Data\GoStay.Data.csproj" />
+    <ProjectReference Include="..\GoStay.Data\GoStay.DataDto.csproj" />
   </ItemGroup>
 
 </Project>
