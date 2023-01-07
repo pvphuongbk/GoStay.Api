@@ -33,6 +33,7 @@ namespace GoStay.DataAccess.Entities
         public int Style { get; set; }
         public DateTime CreatedDate { get; set; }
         public double ActualPrice { get; set; }
+        public byte Status { get; set; }
         public int Deleted { get; set; }
 
         public virtual TinhThanh IdProvinceFromNavigation { get; set; } = null!;

@@ -40,6 +40,9 @@ namespace GoStay.Api.Configurations
             CreateMap<Tour, TourOrderDto>().ReverseMap();
             CreateMap<TourOrderDto, Tour>().ReverseMap();
 
+            CreateMap<Tour, TourContentDto>().ReverseMap();
+            CreateMap<TourContentDto, Tour>().ReverseMap();
+
         }
     }
 }

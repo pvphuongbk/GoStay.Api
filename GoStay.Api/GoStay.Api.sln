@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoStay.Api", "GoStay.Api\GoStay.Api.csproj", "{EB27160C-3CE6-45E5-8D02-87B7196997A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoStay.Api", "GoStay.Api\GoStay.Api.csproj", "{EB27160C-3CE6-45E5-8D02-87B7196997A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoStay.Services", "GoStay.Services\GoStay.Services.csproj", "{7ABC3579-3290-476B-BF60-CE7DF4AF4F6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoStay.Services", "GoStay.Services\GoStay.Services.csproj", "{7ABC3579-3290-476B-BF60-CE7DF4AF4F6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoStay.Repository", "GoStay.Repository\GoStay.Repository.csproj", "{B9915036-D649-44CE-AD2B-ECEC6BE742CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoStay.Repository", "GoStay.Repository\GoStay.Repository.csproj", "{B9915036-D649-44CE-AD2B-ECEC6BE742CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoStay.Common", "GoStay.Common\GoStay.Common.csproj", "{78F12CA2-F959-41A3-AA52-3441C9458741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoStay.Common", "GoStay.Common\GoStay.Common.csproj", "{78F12CA2-F959-41A3-AA52-3441C9458741}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoStay.Data", "GoStay.Data\GoStay.Data.csproj", "{491EFA58-22F9-44AF-B895-1BFB2157F911}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoStay.DataDto", "GoStay.Data\GoStay.DataDto.csproj", "{491EFA58-22F9-44AF-B895-1BFB2157F911}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoStay.DataAccess", "GoStay.DataAccess\GoStay.DataAccess.csproj", "{C87E5D05-38F9-4F3D-939E-95E158C999E0}"
 EndProject
