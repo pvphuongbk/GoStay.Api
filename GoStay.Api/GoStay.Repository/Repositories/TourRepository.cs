@@ -16,8 +16,8 @@ namespace GoStay.Repository.Repositories
             var p = new DynamicParameters();
             p.Add("@IdTourTopic", filter.IdTourTopic == null ? null : string.Join(",", filter.IdTourTopic), System.Data.DbType.String);
             p.Add("@IdTourStyle", filter.IdTourStyle == null ? null : string.Join(",", filter.IdTourStyle), System.Data.DbType.String);
-            p.Add("@IdProvinceFrom", filter.IdProvinceFrom == null ? null : string.Join(",", filter.IdProvinceFrom), System.Data.DbType.String);
-            p.Add("@IdProvinceTo", filter.IdProvinceTo == null ? null : string.Join(",", filter.IdProvinceTo), System.Data.DbType.String);
+            p.Add("@IdDistrictFrom", filter.IdDistrictFrom == null ? null : string.Join(",", filter.IdDistrictFrom), System.Data.DbType.String);
+            p.Add("@IdDistrictTo", filter.IdDistrictTo == null ? null : string.Join(",", filter.IdDistrictTo), System.Data.DbType.String);
 
             p.Add("@PriceMax", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
             p.Add("@PriceMin", filter.PriceMin == null ? null : filter.PriceMin.ToString(), System.Data.DbType.String);
@@ -25,7 +25,6 @@ namespace GoStay.Repository.Repositories
 
             p.Add("@Rating", filter.Rating == null ? null : string.Join(",", filter.Rating), System.Data.DbType.String);
             p.Add("@StartDate", filter.StartDate == null ? null : string.Join(",", filter.StartDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
-            p.Add("@EndDate", filter.EndDate == null ? null : string.Join(",", filter.EndDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
 

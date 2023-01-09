@@ -73,12 +73,12 @@ namespace GoStay.Services.Tours
 
                 tourContent.TourTopic = _tourTopicRepository.GetById(tourContent.IdTourTopic).TourTopic1;
 
-                tourContent.ProvinceFrom = _provinceRepository.GetById(tourContent.IdProvinceFrom).TenTt;
+                tourContent.ProvinceFrom = _provinceRepository.GetById(tourContent.IdDistrictFrom).TenTt;
 
-                tourContent.IdProvinceTo = _tourProvinceToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdDistrictTo).ToList();
+                tourContent.IdDistrictTo = _tourProvinceToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdDistrictTo).ToList();
 
                 tourContent.ProvinceTo = new List<string>();
-                foreach(var item in tourContent.IdProvinceTo)
+                foreach(var item in tourContent.IdDistrictTo)
                 {
                     tourContent.ProvinceTo.Add(_provinceRepository.GetById(item).TenTt);
                 }

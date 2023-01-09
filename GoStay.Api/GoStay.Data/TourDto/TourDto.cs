@@ -20,7 +20,7 @@ namespace GoStay.Data.TourDto
         public string? Descriptions { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int IdProvinceFrom { get; set; }
+        public int IdDistrictFrom { get; set; }
         public string ProvinceFrom { get; set; }
         public double Price { get; set; }
         public byte? Discount { get; set; }

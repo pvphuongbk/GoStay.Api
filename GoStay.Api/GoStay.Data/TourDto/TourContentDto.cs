@@ -34,9 +34,9 @@ namespace GoStay.Data.TourDto
 
         public List<TourDetailDto> TourDetails { get; set; }
 
-        public int IdProvinceFrom { get; set; }
+        public int IdDistrictFrom { get; set; }
         public string ProvinceFrom { get; set; }
-        public List<int> IdProvinceTo { get; set; }
+        public List<int> IdDistrictTo { get; set; }
         public List<string> ProvinceTo { get; set; }
 
         public List<string> Pictures { get; set; }

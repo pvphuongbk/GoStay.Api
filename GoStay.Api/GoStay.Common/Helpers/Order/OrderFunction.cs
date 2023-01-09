@@ -107,7 +107,7 @@ namespace GoStay.Common.Helpers.Order
             tourOrderDto.TourStyle = _tourStyleRepository.GetById(tourOrderDto.IdTourStyle)?.TourStyle1;
             tourOrderDto.TourTopic = _tourTopicRepository.GetById(tourOrderDto.IdTourTopic)?.TourTopic1; 
             tourOrderDto.UserName = _userRepository.GetById(tourOrderDto.IdUser)?.UserName;
-            tourOrderDto.ProvinceFrom = _tinhThanhRepository.GetById(tourOrderDto.IdProvinceFrom).TenTt;
+            tourOrderDto.ProvinceFrom = _tinhThanhRepository.GetById(tourOrderDto.IdDistrictFrom).TenTt;
 
             var listTourDetail = _tourDetailRepository.FindAll(x => x.IdTours == tourOrderDetail.Id).ToList();
 
