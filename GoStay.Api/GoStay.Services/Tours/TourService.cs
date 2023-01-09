@@ -21,13 +21,13 @@ namespace GoStay.Services.Tours
         private readonly ICommonRepository<TourDetail> _tourDetailRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<TinhThanh> _provinceRepository;
-        private readonly ICommonRepository<TourProvinceTo> _tourProvinceToRepository;
+        private readonly ICommonRepository<TourDistrictTo> _tourProvinceToRepository;
 
 
 
         public TourService(ICommonRepository<Tour> tourRepository, IMapper mapper, ICommonRepository<TourStyle> tourStyleRepository,
             ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TourDetail> tourDetailRepository,
-            ICommonRepository<Picture> pictureRepository, ICommonRepository<TinhThanh> provinceRepository, ICommonRepository<TourProvinceTo> tourProvinceToRepository)
+            ICommonRepository<Picture> pictureRepository, ICommonRepository<TinhThanh> provinceRepository, ICommonRepository<TourDistrictTo> tourProvinceToRepository)
         {
             _tourRepository = tourRepository;
             _mapper = mapper;
@@ -65,7 +65,7 @@ namespace GoStay.Services.Tours
                 var tour = _tourRepository.FindAll(x => x.Id == Id)
                                 .Include(x=>x.OrderDetails)
                                 .Include(x=>x.Pictures.Take(5))
-                                .Include(x=>x.TourProvinceTos).SingleOrDefault();
+                                .Include(x=>x.TourDistrictTos).SingleOrDefault();
                 var tourContent = new TourContentDto();
                 tourContent = _mapper.Map<Tour,TourContentDto >(tour);
 
@@ -75,7 +75,7 @@ namespace GoStay.Services.Tours
 
                 tourContent.ProvinceFrom = _provinceRepository.GetById(tourContent.IdProvinceFrom).TenTt;
 
-                tourContent.IdProvinceTo = _tourProvinceToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdProvinceTo).ToList();
+                tourContent.IdProvinceTo = _tourProvinceToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdDistrictTo).ToList();
 
                 tourContent.ProvinceTo = new List<string>();
                 foreach(var item in tourContent.IdProvinceTo)

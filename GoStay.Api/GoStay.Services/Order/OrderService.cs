@@ -36,7 +36,7 @@ namespace GoStay.Services.Orders
         private readonly ICommonRepository<TourDetail> _tourDetailRepository;
         private readonly ICommonRepository<TinhThanh> _tinhThanhRepository;
         private readonly ICommonRepository<User> _userRepository;
-        private readonly ICommonRepository<TourProvinceTo> _tourProvinceToRepository;
+        private readonly ICommonRepository<TourDistrictTo> _tourProvinceToRepository;
         private readonly ICommonUoW _commonUoW;
         private readonly IMapper _mapper;
 
@@ -47,7 +47,7 @@ namespace GoStay.Services.Orders
             ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository,
             ICommonRepository<Palletbed> palletbedRepository, ICommonRepository<TourStyle> tourStyleRepository,
             ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TourDetail> tourDetailRepository,
-            ICommonRepository<TinhThanh> tinhThanhRepository, ICommonRepository<User> userRepository, ICommonRepository<TourProvinceTo> tourProvinceToRepository)
+            ICommonRepository<TinhThanh> tinhThanhRepository, ICommonRepository<User> userRepository, ICommonRepository<TourDistrictTo> tourProvinceToRepository)
         {
             _OrderDetailRepository = OrderRoomRepository;
             _OrderRepository = OrderRepository;
