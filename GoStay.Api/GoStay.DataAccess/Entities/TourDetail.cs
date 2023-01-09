@@ -14,4 +14,5 @@ namespace GoStay.DataAccess.Entities
         public virtual TourDetailsStyle? IdStyleNavigation { get; set; }
         public virtual Tour? IdToursNavigation { get; set; }
     }
+
 }

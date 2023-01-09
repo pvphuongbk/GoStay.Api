@@ -9,6 +9,8 @@ namespace GoStay.DataAccess.Entities
         {
             Hotels = new HashSet<Hotel>();
             Phuongs = new HashSet<Phuong>();
+            TourDistrictTos = new HashSet<TourDistrictTo>();
+            Tours = new HashSet<Tour>();
         }
 
         public int Id { get; set; }
@@ -24,5 +26,7 @@ namespace GoStay.DataAccess.Entities
         public virtual TinhThanh? IdTinhThanhNavigation { get; set; }
         public virtual ICollection<Hotel> Hotels { get; set; }
         public virtual ICollection<Phuong> Phuongs { get; set; }
+        public virtual ICollection<TourDistrictTo> TourDistrictTos { get; set; }
+        public virtual ICollection<Tour> Tours { get; set; }
     }
 }
