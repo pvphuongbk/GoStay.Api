@@ -67,7 +67,7 @@ namespace GoStay.Services.Tours
             {
                 var tour = _tourRepository.FindAll(x => x.Id == Id)
                                 .Include(x=>x.OrderDetails)
-                                .Include(x=>x.Pictures.Take(5))
+                                .Include(x=>x.Pictures)
                                 .Include(x=>x.TourDistrictTos).SingleOrDefault();
                 var tourContent = new TourContentDto();
                 tourContent = _mapper.Map<Tour,TourContentDto >(tour);
@@ -86,7 +86,7 @@ namespace GoStay.Services.Tours
                     tourContent.DistrictTo.Add(_districtRepository.GetById(item).Tenquan);
                 }
 
-                tourContent.Pictures = tour.Pictures.Select(x=>x.Url).ToList();
+                tourContent.Pictures = tour.Pictures.Where(x=>x.Deleted!=1).Select(x=>x.Url).ToList();
 
                 tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(_tourDetailRepository.FindAll(x => x.IdTours == Id).ToList());
 
