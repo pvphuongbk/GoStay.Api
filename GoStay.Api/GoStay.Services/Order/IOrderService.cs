@@ -21,6 +21,9 @@ namespace GoStay.Services.Orders
         public ResponseBase GetOrderbySession(string session);
         public ResponseBase CheckOrder(OrderDto order, OrderDetailDto orderDetai);
         public ResponseBase GetOrderbyId(int Id);
+        ResponseBase GetOrderTotalMoneyByMonth(int month, int year, int status);
+        ResponseBase GetOrderByMonth(int month, int year, int status);
+        ResponseBase GetOrderRoomByMonth(int month, int year, int status);
 
     }
 }

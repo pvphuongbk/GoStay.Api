@@ -26,7 +26,7 @@ namespace GoStay.Common.Helpers.Order
         private readonly ICommonRepository<TourStyle> _tourStyleRepository;
         private readonly ICommonRepository<TourTopic> _tourTopicRepository;
         private readonly ICommonRepository<TourDetail> _tourDetailRepository;
-        private readonly ICommonRepository<TourProvinceTo> _tourProvinceToRepository;
+        private readonly ICommonRepository<TourDistrictTo> _tourProvinceToRepository;
 
         private readonly ICommonRepository<TinhThanh> _tinhThanhRepository;
         private readonly ICommonRepository<User> _userRepository;
@@ -35,7 +35,7 @@ namespace GoStay.Common.Helpers.Order
             ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository,
             ICommonRepository<Palletbed> palletbedRepository, ICommonRepository<TourStyle> tourStyleRepository, 
             ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TinhThanh> tinhThanhRepository,
-            ICommonRepository<User> userRepository, ICommonRepository<TourDetail> tourDetailRepository, ICommonRepository<TourProvinceTo> tourProvinceToRepository)
+            ICommonRepository<User> userRepository, ICommonRepository<TourDetail> tourDetailRepository, ICommonRepository<TourDistrictTo> tourProvinceToRepository)
         {
             _mapper = mapper;
             _hotelRepository = hotelRepository;
@@ -107,13 +107,13 @@ namespace GoStay.Common.Helpers.Order
             tourOrderDto.TourStyle = _tourStyleRepository.GetById(tourOrderDto.IdTourStyle)?.TourStyle1;
             tourOrderDto.TourTopic = _tourTopicRepository.GetById(tourOrderDto.IdTourTopic)?.TourTopic1; 
             tourOrderDto.UserName = _userRepository.GetById(tourOrderDto.IdUser)?.UserName;
-            tourOrderDto.ProvinceFrom = _tinhThanhRepository.GetById(tourOrderDto.IdProvinceFrom).TenTt;
+            tourOrderDto.ProvinceFrom = _tinhThanhRepository.GetById(tourOrderDto.IdDistrictFrom).TenTt;
 
             var listTourDetail = _tourDetailRepository.FindAll(x => x.IdTours == tourOrderDetail.Id).ToList();
 
             tourOrderDto.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(listTourDetail);
             var listprovinceto = new List<string>();
-            foreach (var item in _tourProvinceToRepository.FindAll(x=>x.IdTour== tourOrderDetail.Id).Select(x=>x.IdProvinceTo).ToList())
+            foreach (var item in _tourProvinceToRepository.FindAll(x=>x.IdTour== tourOrderDetail.Id).Select(x=>x.IdDistrictTo).ToList())
             {
                 listprovinceto.Add(_tinhThanhRepository.GetById(item)?.TenTt);
             }

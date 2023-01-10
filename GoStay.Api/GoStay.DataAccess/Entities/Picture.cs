@@ -9,7 +9,6 @@ namespace GoStay.DataAccess.Entities
 		public Picture()
         {
             NewsGalleries = new HashSet<NewsGallery>();
-            ToursGalleries = new HashSet<ToursGallery>();
         }
         public string? Url { get; set; }
         public string? Name { get; set; }
@@ -31,6 +30,5 @@ namespace GoStay.DataAccess.Entities
         public virtual Album? IdAlbumNavigation { get; set; }
 		public virtual Tour? Tour { get; set; }
         public virtual ICollection<NewsGallery> NewsGalleries { get; set; }
-        public virtual ICollection<ToursGallery> ToursGalleries { get; set; }
     }
 }
