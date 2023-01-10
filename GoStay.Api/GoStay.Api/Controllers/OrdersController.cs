@@ -101,5 +101,26 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpGet("order-in-month")]
+        public ResponseBase GetOrderByMonth(int month, int year, int status)
+        {
+            var items = _orderService.GetOrderByMonth(month, year, status);
+            return items;
+        }
+
+        [HttpGet("money-in-month")]
+        public ResponseBase GetOrderTotalMoneyByMonth(int month, int year, int status)
+        {
+            var items = _orderService.GetOrderTotalMoneyByMonth(month, year, status);
+            return items;
+        }
+
+        [HttpGet("room-in-month")]
+        public ResponseBase GetOrderRoomByMonth(int month, int year, int status)
+        {
+            var items = _orderService.GetOrderRoomByMonth(month, year, status);
+            return items;
+        }
+
     }
 }
