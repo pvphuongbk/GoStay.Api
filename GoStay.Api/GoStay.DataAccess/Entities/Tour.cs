@@ -33,6 +33,9 @@ namespace GoStay.DataAccess.Entities
         public double ActualPrice { get; set; }
         public byte Status { get; set; }
         public int Deleted { get; set; }
+        public double? PriceChild { get; set; }
+        public int? NumTour { get; set; }
+        public int? Songuoidadat { get; set; }
 
         public virtual Quan IdDistrictFromNavigation { get; set; } = null!;
         public virtual TourStyle IdTourStyleNavigation { get; set; } = null!;
