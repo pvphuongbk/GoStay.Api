@@ -40,15 +40,16 @@ namespace GoStay.Services.Orders
         private readonly ICommonRepository<TourDistrictTo> _tourProvinceToRepository;
         private readonly ICommonUoW _commonUoW;
         private readonly IMapper _mapper;
+        private readonly IOrderFunction _orderFunction;
 
 
-        public OrderService(ICommonRepository<Order> OrderRepository,ICommonRepository<OrderDetail> OrderRoomRepository, ICommonUoW commonUoW,
+        public OrderService(ICommonRepository<Order> OrderRepository, ICommonRepository<OrderDetail> OrderRoomRepository, ICommonUoW commonUoW,
             IMapper mapper, ICommonRepository<Tour> tourRepository, ICommonRepository<HotelRoom> roomRepository,
             ICommonRepository<Hotel> hotelRepository, ICommonRepository<Service> serviceRepository,
             ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository,
             ICommonRepository<Palletbed> palletbedRepository, ICommonRepository<TourStyle> tourStyleRepository,
             ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TourDetail> tourDetailRepository,
-            ICommonRepository<TinhThanh> tinhThanhRepository, ICommonRepository<User> userRepository, ICommonRepository<TourDistrictTo> tourProvinceToRepository)
+            ICommonRepository<TinhThanh> tinhThanhRepository, ICommonRepository<User> userRepository, ICommonRepository<TourDistrictTo> tourProvinceToRepository, IOrderFunction orderFunction)
         {
             _OrderDetailRepository = OrderRoomRepository;
             _OrderRepository = OrderRepository;
@@ -67,6 +68,7 @@ namespace GoStay.Services.Orders
             _tourDetailRepository = tourDetailRepository;
             _tinhThanhRepository = tinhThanhRepository;
             _tourProvinceToRepository = tourProvinceToRepository;
+            _orderFunction = orderFunction;
         }
 
         public ResponseBase CreateOrder(OrderDto order, OrderDetailDto orderDetail)
@@ -463,6 +465,7 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
+
         public ResponseBase GetOrderbySession(string session)
         {
             IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _serviceRepository, _pictureRepository, _viewRepository, 
@@ -493,6 +496,47 @@ namespace GoStay.Services.Orders
                     for (int j = 0; j < listdetail.Count(); j++)
                     {
                         listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                    }
+                }
+
+                responseBase.Data = listOrderInfo;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+        public ResponseBase GetOrderbySession2(string session)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var listOrder = _OrderRepository.FindAll(x => x.Session == session)
+                                                    .Include(x => x.OrderDetails)
+                                                        .ThenInclude(x => x.IdRoomNavigation)
+                                                    .Include(x => x.OrderDetails)
+                                                        .ThenInclude(x => x.IdTourNavigation)
+                                                    .ToList();
+                if (listOrder == null)
+                {
+                    responseBase.Data = new List<OrderDetail>();
+                    return responseBase;
+                }
+
+                var listOrderInfo = _mapper.Map<List<OrderGetInfoDto>>(listOrder);
+                foreach (var order in listOrder)
+                {
+                    var orderInfor = listOrderInfo.FirstOrDefault(x => x.Id == order.Id);
+                    if (orderInfor == null)
+                        continue;
+
+                    foreach (var detail in order.OrderDetails)
+                    {
+                        orderInfor.ListOrderDetails.Add(_orderFunction.CreateOrderDetailInfoDto(detail));
                     }
                 }
 

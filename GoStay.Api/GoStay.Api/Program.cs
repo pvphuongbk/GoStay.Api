@@ -7,6 +7,7 @@ using GoStay.DataAccess.UnitOfWork;
 using Q101.ServiceCollectionExtensions.ServiceCollectionExtensions;
 using GoStay.Services.Hotels;
 using GoStay.Api.Configurations;
+using GoStay.Common.Helpers.Order;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<CommonDBContext>(options =>
 			);
 builder.Services.AddTransient(typeof(ICommonRepository<>), typeof(CommonRepository<>));
 builder.Services.AddTransient(typeof(ICommonUoW), typeof(CommonUoW));
+builder.Services.AddScoped(typeof(IOrderFunction), typeof(OrderFunction));
 //--register Service
 builder.Services.RegisterAssemblyTypesByName(typeof(IHotelService).Assembly,
 	 name => name.EndsWith("Service")) // Condition for name of type
