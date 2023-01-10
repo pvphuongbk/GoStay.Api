@@ -944,9 +944,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.IdUser).HasDefaultValueSql("((9))");
 
-                entity.Property(e => e.Locations)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Locations).HasMaxLength(150);
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
@@ -975,7 +973,7 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.Property(e => e.Details).HasColumnType("ntext");
 
-                entity.Property(e => e.Title).HasMaxLength(50);
+                entity.Property(e => e.Title).HasMaxLength(200);
 
                 entity.HasOne(d => d.IdStyleNavigation)
                     .WithMany(p => p.TourDetails)
@@ -1001,9 +999,7 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.ToTable("TourDistrictTo");
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(100)
-                    .IsFixedLength();
+                entity.Property(e => e.Description).HasMaxLength(200);
 
                 entity.HasOne(d => d.IdDistrictToNavigation)
                     .WithMany(p => p.TourDistrictTos)
