@@ -16,6 +16,7 @@ using GoStay.Repository.Repositories;
 using System.Runtime.CompilerServices;
 using GoStay.Common.Helpers.Order;
 using System.Linq.Expressions;
+using GoStay.DataDto.OrderDto;
 
 namespace GoStay.Services.Orders
 {
@@ -538,6 +539,127 @@ namespace GoStay.Services.Orders
                 }
 
                 responseBase.Data = orderInfo;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
+        private List<ChartOdertDetailValue> CreateChartOdertDetailValue(ICollection<OrderDetail> orderDetails)
+        {
+            return orderDetails.Select(x => new ChartOdertDetailValue
+            {
+                Discount = x.Discount,
+                Price = x.Price
+            }).ToList();
+        }
+
+        public ResponseBase GetOrderTotalMoneyByMonth(int month, int year, int status)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                List<ChartOdertByDayDto> chart = new List<ChartOdertByDayDto>();
+
+                var orders = _OrderRepository.FindAll(x => !x.IsDeleted && x.DateCreate.Year == year && x.DateCreate.Month == month && (status == 0 || x.Status == status))
+                                               .Include(x => x.OrderDetails)
+                                               .ToList()
+                                                .Select(x => new ChartOdertValue
+                                                {
+                                                    Date = x.DateCreate,
+                                                    ID = x.Id,
+                                                    ChartOdertDetailValues = CreateChartOdertDetailValue(x.OrderDetails)
+                                                }).ToList();
+                var minDate = new DateTime(year, month, 1);
+                var endDate = minDate.AddMonths(1);
+                var maxDate = endDate < DateTime.Now.Date ? endDate : DateTime.Now.Date.AddDays(1);
+                for (DateTime i = minDate; i < maxDate; i = i.AddDays(1))
+                {
+                    var totalMoney = orders.Where(x => x.Date.Day == i.Day).SelectMany(x => x.ChartOdertDetailValues).Sum(x => x.ActualPrice);
+                    chart.Add(new ChartOdertByDayDto
+                    {
+                        Value = (int)totalMoney,
+                        Day = i.Day
+                    });
+                }
+                responseBase.Data = chart;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+        public ResponseBase GetOrderByMonth(int month, int year, int status)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                List<ChartOdertByDayDto> chart = new List<ChartOdertByDayDto>();
+
+                var orders = _OrderRepository.FindAll(x => !x.IsDeleted && x.DateCreate.Year == year && x.DateCreate.Month == month && (status == 0 || x.Status == status))
+                                                .Select(x => new ChartOdertValue
+                                                {
+                                                    Date = x.DateCreate,
+                                                    ID = x.Id,
+                                                }).ToList();
+                var minDate = new DateTime(year, month, 1);
+                var endDate = minDate.AddMonths(1);
+                var maxDate = endDate < DateTime.Now.Date ? endDate : DateTime.Now.Date.AddDays(1);
+                for (DateTime i = minDate; i < maxDate; i = i.AddDays(1))
+                {
+                    var count = orders.Count(x => x.Date.Day == i.Day);
+                    chart.Add(new ChartOdertByDayDto
+                    {
+                        Value = count,
+                        Day = i.Day
+                    });
+                }
+                responseBase.Data = chart;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+        public ResponseBase GetOrderRoomByMonth(int month, int year, int status)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                List<ChartOdertByDayDto> chart = new List<ChartOdertByDayDto>();
+
+                var orders = _OrderRepository.FindAll(x => !x.IsDeleted && x.DateCreate.Year == year && x.DateCreate.Month == month && (status == 0 || x.Status == status))
+                                               .Include(x => x.OrderDetails)
+                                               .ToList()
+                                                .Select(x => new ChartOdertValue
+                                                {
+                                                    Date = x.DateCreate,
+                                                    ID = x.Id,
+                                                    ChartOdertDetailValues = CreateChartOdertDetailValue(x.OrderDetails)
+                                                }).ToList();
+                var minDate = new DateTime(year, month, 1);
+                var endDate = minDate.AddMonths(1);
+                var maxDate = endDate < DateTime.Now.Date ? endDate : DateTime.Now.Date.AddDays(1);
+                for (DateTime i = minDate; i < maxDate; i = i.AddDays(1))
+                {
+                    var countRoom = orders.Where(x => x.Date.Day == i.Day).SelectMany(x => x.ChartOdertDetailValues).Count();
+                    chart.Add(new ChartOdertByDayDto
+                    {
+                        Value = countRoom,
+                        Day = i.Day
+                    });
+                }
+                responseBase.Data = chart;
                 return responseBase;
             }
             catch (Exception e)
