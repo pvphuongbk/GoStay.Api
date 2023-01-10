@@ -91,8 +91,9 @@ namespace GoStay.Api.Controllers
         [HttpGet("order-by-session")]
         public ResponseBase GetOrderbySession(string session)
         {
-            var items = _orderService.GetOrderbySession(session);
-            return items;
+            //var items = _orderService.GetOrderbySession(session);
+            var items2 = _orderService.GetOrderbySession2(session);
+            return items2;
         }
         [HttpGet("order-by-id")]
         public ResponseBase GetOrderbyId(int Id)
