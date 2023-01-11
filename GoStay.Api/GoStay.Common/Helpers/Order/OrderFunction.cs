@@ -70,6 +70,8 @@ namespace GoStay.Common.Helpers.Order
                 orderDetailInfoDto.DetailStyle = "room";
                 orderDetailInfoDto.IdProduct = orderDetail.IdRoom;
                 orderDetailInfoDto.Rooms = CreateHotelRoomOrderDto(orderDetail.IdRoomNavigation);
+                orderDetailInfoDto.Price = orderDetailInfoDto.Rooms.PriceValue;
+                orderDetailInfoDto.Discount = orderDetailInfoDto.Rooms.Discount;
             }
 
             if (orderDetail.DetailStyle == 2)
@@ -77,6 +79,8 @@ namespace GoStay.Common.Helpers.Order
                 orderDetailInfoDto.DetailStyle = "tour";
                 orderDetailInfoDto.IdProduct = orderDetail.IdTour;
                 orderDetailInfoDto.Tours = CreateTourOrderDto(orderDetail.IdTourNavigation);
+                orderDetailInfoDto.Price = (decimal)orderDetailInfoDto.Tours.Price;
+                orderDetailInfoDto.Discount = orderDetailInfoDto.Tours.Discount;
 
             }
             return orderDetailInfoDto;
