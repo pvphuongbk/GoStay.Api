@@ -16,6 +16,7 @@
         public decimal ActualPrice { get; set; }
         public int? NumberReviewers { get; set; }
         public int? PalletbedRoom { get; set; }
+        public long? IntDate { get; set; }
         public int Total { get; set; }
         private string Urls 
         {
