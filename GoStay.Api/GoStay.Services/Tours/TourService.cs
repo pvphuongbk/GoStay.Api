@@ -55,7 +55,7 @@ namespace GoStay.Services.Tours
         public ResponseBase SearchTour(SearchTourRequest request)
         {
             ResponseBase response = new ResponseBase();
-            response.Data = TourRepository.GetPagingListTours(request).OrderByDescending(x => x.IntDate);
+            response.Data = TourRepository.GetPagingListTours(request);
             return response;
         }
 
