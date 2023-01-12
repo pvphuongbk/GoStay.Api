@@ -11,11 +11,10 @@ namespace GoStay.Data.TourDto
         public int Rating { get; set; }
         public int TourSize { get; set; }
 
-        public string ProvinceFrom { get; set; }
-        public List<string>? ProvinceTo { get; set; }
+        public string? DistrictFrom { get; set; }
+        public List<string>? DistrictTo { get; set; }
 
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
         public double Price { get; set; }
         public int Discount { get; set; }
         public double ActualPrice { get; set; }

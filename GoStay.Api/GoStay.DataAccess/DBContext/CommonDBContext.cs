@@ -928,8 +928,6 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<Tour>(entity =>
             {
-                entity.Property(e => e.Content).HasColumnType("ntext");
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -971,8 +969,6 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<TourDetail>(entity =>
             {
-                entity.Property(e => e.Details).HasColumnType("ntext");
-
                 entity.Property(e => e.Title).HasMaxLength(200);
 
                 entity.HasOne(d => d.IdStyleNavigation)
