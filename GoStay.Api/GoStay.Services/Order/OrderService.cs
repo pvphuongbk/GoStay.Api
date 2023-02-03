@@ -1,21 +1,12 @@
-﻿using GoStay.Common;
-using GoStay.DataAccess.Entities;
+﻿using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.Data.Base;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
 using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
-using GoStay.DataAccess.UnitOfWork;
-using System.Collections.Generic;
 using AutoMapper;
 using GoStay.Data.OrderDto;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore;
-using GoStay.Common.Helpers.Hotels;
-using GoStay.Data.ServiceDto;
-using GoStay.Repository.Repositories;
-using System.Runtime.CompilerServices;
 using GoStay.Common.Helpers.Order;
-using System.Linq.Expressions;
 using GoStay.DataDto.OrderDto;
 
 namespace GoStay.Services.Orders
@@ -31,7 +22,6 @@ namespace GoStay.Services.Orders
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<ViewDirection> _viewRepository;
         private readonly ICommonRepository<Palletbed> _palletbedRepository;
-
         private readonly ICommonRepository<TourStyle> _tourStyleRepository;
         private readonly ICommonRepository<TourTopic> _tourTopicRepository;
         private readonly ICommonRepository<TourDetail> _tourDetailRepository;
@@ -623,6 +613,7 @@ namespace GoStay.Services.Orders
                 var maxDate = endDate < DateTime.Now.Date ? endDate : DateTime.Now.Date.AddDays(1);
                 for (DateTime i = minDate; i < maxDate; i = i.AddDays(1))
                 {
+                    var xxxx = orders.Where(x => x.Date.Day == i.Day);
                     var totalMoney = orders.Where(x => x.Date.Day == i.Day).SelectMany(x => x.ChartOdertDetailValues).Sum(x => x.ActualPrice);
                     chart.Add(new ChartOdertByDayDto
                     {
