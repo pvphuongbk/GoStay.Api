@@ -14,6 +14,7 @@ namespace GoStay.Data.TourDto
         public decimal? PriceMax { get; set; }
 
         public int[]? Rating { get; set; }
+        public int[]? ForeignTravel { get; set; }
         public int? NumMature { get; set; }
 
         public DateTime? StartDate { get; set; }

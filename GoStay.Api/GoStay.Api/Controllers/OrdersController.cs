@@ -1,6 +1,7 @@
 ﻿using GoStay.Common;
 using GoStay.Data.OrderDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto.OrderDto;
 using GoStay.Services.Hotels;
 using GoStay.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
@@ -122,6 +123,11 @@ namespace GoStay.Api.Controllers
             var items = _orderService.GetOrderRoomByMonth(month, year, status);
             return items;
         }
-
+        [HttpPost("list-order-search")]
+        public ResponseBase GetListOrderSearch(OrderSearchParam param)
+        {
+            var items = _orderService.GetListOrderSearch(param);
+            return items;
+        }
     }
 }

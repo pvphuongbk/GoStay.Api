@@ -3,6 +3,7 @@ using AutoMapper.Configuration.Conventions;
 using GoStay.Common;
 using GoStay.Data.OrderDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto.OrderDto;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Services.Orders
 {
@@ -25,6 +26,7 @@ namespace GoStay.Services.Orders
         ResponseBase GetOrderTotalMoneyByMonth(int month, int year, int status);
         ResponseBase GetOrderByMonth(int month, int year, int status);
         ResponseBase GetOrderRoomByMonth(int month, int year, int status);
+        ResponseBase GetListOrderSearch(OrderSearchParam param);
 
     }
 }

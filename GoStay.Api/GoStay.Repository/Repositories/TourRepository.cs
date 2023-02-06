@@ -24,6 +24,7 @@ namespace GoStay.Repository.Repositories
             p.Add("@NumMature", filter.NumMature == null ? null : filter.NumMature.ToString(), System.Data.DbType.String);
 
             p.Add("@Rating", filter.Rating == null ? null : string.Join(",", filter.Rating), System.Data.DbType.String);
+            p.Add("@ForeignTravel", filter.ForeignTravel == null ? null : string.Join(",", filter.ForeignTravel), System.Data.DbType.String);
             p.Add("@StartDate", filter.StartDate == null ? null : string.Join(",", filter.StartDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);

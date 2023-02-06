@@ -8,6 +8,7 @@ using GoStay.Data.OrderDto;
 using Microsoft.EntityFrameworkCore;
 using GoStay.Common.Helpers.Order;
 using GoStay.DataDto.OrderDto;
+using GoStay.Repository.Repositories;
 
 namespace GoStay.Services.Orders
 {
@@ -703,6 +704,13 @@ namespace GoStay.Services.Orders
                 responseBase.Message = e.Message;
                 return responseBase;
             }
+        }
+
+        public ResponseBase GetListOrderSearch(OrderSearchParam param)
+        {
+            ResponseBase response = new ResponseBase();
+            response.Data = OrderRepository.SearchListOrder(param);
+            return response;
         }
     }
 }

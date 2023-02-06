@@ -9,6 +9,8 @@ namespace GoStay.Data.TourDto
         public string TourStyle { get; set; }
         public string TourTopic { get; set; }
         public int Rating { get; set; }
+        public int Style { get; set; }
+
         public int TourSize { get; set; }
 
         public int IdDistrictFrom { get; set; }
