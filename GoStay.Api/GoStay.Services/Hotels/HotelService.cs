@@ -146,8 +146,13 @@ namespace GoStay.Services.Hotels
 			try
 			{
 				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
-					.Include(x=>x.HotelRooms.Where(x=>x.Deleted!=1).OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
-					.Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
+					.Include(x=>x.HotelRooms.Where(x=>x.Deleted!=1)
+					.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
+						.ThenInclude(x=>x.RoomMamenitis).Include(x=>x.HotelRooms).ThenInclude(x=>x.ViewDirectionNavigation)
+                        .Include(x => x.HotelRooms).ThenInclude(x => x.PalletbedNavigation)
+                        .Include(x => x.HotelRooms).ThenInclude(x => x.Pictures.Take(4))
+
+                    .Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
 					.Include(x=>x.IdQuanNavigation)
 					.Include(x=>x.IdTinhThanhNavigation)
 					.Include(x=>x.HotelMamenitis)
@@ -157,11 +162,7 @@ namespace GoStay.Services.Hotels
                                                 .OrderBy(x => x.Name).OrderBy(x=>x.AdvantageLevel).Take(4).ToList();
 
 
-				var hotelRoom = _hotelRoomRepository.FindAll(x => x.Idhotel == hotelId)
-										.Include(x=>x.RoomMamenitis)
-										.Include(x=>x.ViewDirectionNavigation)
-										.Include(x=>x.PalletbedNavigation)
-										.Include(x=>x.Pictures.Take(4)).ToList();
+				var hotelRoom = hotel.HotelRooms.ToList();
                 if (hotel==null)
 				{
                     responseBase.Message= ErrorCodeMessage.Exception.Value;
