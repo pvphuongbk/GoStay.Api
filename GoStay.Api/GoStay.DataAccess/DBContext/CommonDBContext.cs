@@ -394,12 +394,9 @@ namespace GoStay.DataAccess.DBContext
 				entity.Property(e => e.UpdatedDateUtc).HasColumnType("datetime");
 			});
 
-			modelBuilder.Entity<HotelRating>(entity =>
-			{
-				entity.HasKey(e => new { e.Id, e.IdHotel })
-					.HasName("PK_TBLRATING");
-
-				entity.ToTable("HotelRating");
+            modelBuilder.Entity<HotelRating>(entity =>
+            {
+                entity.ToTable("HotelRating");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -956,7 +953,7 @@ namespace GoStay.DataAccess.DBContext
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.Descriptions).HasMaxLength(350);
+                entity.Property(e => e.Descriptions).HasMaxLength(1000);
 
                 entity.Property(e => e.Discount).HasDefaultValueSql("((0))");
 
@@ -969,6 +966,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Locations).HasMaxLength(150);
 
                 entity.Property(e => e.Rating).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.SearchKey)
+                    .HasMaxLength(200)
+                    .IsFixedLength();
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
