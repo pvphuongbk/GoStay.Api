@@ -23,6 +23,7 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
+        public virtual DbSet<HotelCriterion> HotelCriteria { get; set; } = null!;
         public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
         public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
         public virtual DbSet<HotelRating> HotelRatings { get; set; } = null!;
@@ -51,6 +52,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
         public virtual DbSet<TourDetailsStyle> TourDetailsStyles { get; set; } = null!;
         public virtual DbSet<TourDistrictTo> TourDistrictTos { get; set; } = null!;
+        public virtual DbSet<TourRating> TourRatings { get; set; } = null!;
         public virtual DbSet<TourStyle> TourStyles { get; set; } = null!;
         public virtual DbSet<TourTopic> TourTopics { get; set; } = null!;
         public virtual DbSet<TourVehicle> TourVehicles { get; set; } = null!;
@@ -349,9 +351,18 @@ namespace GoStay.DataAccess.DBContext
 					.HasConstraintName("FK_Hotel_TypeHotel");
 			});
 
-			modelBuilder.Entity<HotelMameniti>(entity =>
-			{
-				entity.ToTable("HotelMameniti");
+            modelBuilder.Entity<HotelCriterion>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Criteria)
+                    .HasMaxLength(100)
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<HotelMameniti>(entity =>
+            {
+                entity.ToTable("HotelMameniti");
 
 				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
 
@@ -390,20 +401,31 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.ToTable("HotelRating");
 
-				entity.Property(e => e.Id)
-					.ValueGeneratedOnAdd()
-					.HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-				entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
+                entity.Property(e => e.DateReviews).HasColumnType("datetime");
 
-				entity.Property(e => e.Description).HasMaxLength(50);
+                entity.Property(e => e.DateUpdate).HasColumnType("datetime");
 
-				entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Description).HasMaxLength(50);
 
-				entity.Property(e => e.Point).HasColumnType("decimal(3, 1)");
+                entity.Property(e => e.Point).HasColumnType("decimal(3, 1)");
 
-				entity.Property(e => e.UpdatedDateUtc).HasColumnType("datetime");
-			});
+                entity.HasOne(d => d.IdCriteriaNavigation)
+                    .WithMany(p => p.HotelRatings)
+                    .HasForeignKey(d => d.IdCriteria)
+                    .HasConstraintName("FK_HotelRating_HotelRating");
+
+                entity.HasOne(d => d.IdHotelNavigation)
+                    .WithMany(p => p.HotelRatings)
+                    .HasForeignKey(d => d.IdHotel)
+                    .HasConstraintName("FK_HotelRating_Hotel");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.HotelRatings)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_HotelRating_users");
+            });
 
 			modelBuilder.Entity<HotelReview>(entity =>
 			{
@@ -946,6 +968,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Locations).HasMaxLength(150);
 
+                entity.Property(e => e.Rating).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.TourName).HasMaxLength(150);
@@ -967,6 +991,11 @@ namespace GoStay.DataAccess.DBContext
                     .HasForeignKey(d => d.IdTourTopic)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tours_TourTopic");
+
+                entity.HasOne(d => d.RatingNavigation)
+                    .WithMany(p => p.Tours)
+                    .HasForeignKey(d => d.Rating)
+                    .HasConstraintName("FK_Tours_TourRating");
             });
 
             modelBuilder.Entity<TourDetail>(entity =>
@@ -1010,6 +1039,15 @@ namespace GoStay.DataAccess.DBContext
                     .HasForeignKey(d => d.IdTour)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TourDistrictTo_Tours");
+            });
+
+            modelBuilder.Entity<TourRating>(entity =>
+            {
+                entity.ToTable("TourRating");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Rating).HasMaxLength(50);
             });
 
             modelBuilder.Entity<TourStyle>(entity =>

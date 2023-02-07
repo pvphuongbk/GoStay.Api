@@ -6,15 +6,16 @@ namespace GoStay.DataAccess.Entities
     public partial class HotelRating
     {
         public int Id { get; set; }
-        public int IdHotel { get; set; }
+        public int? IdHotel { get; set; }
         public decimal? Point { get; set; }
-        public string? Name { get; set; }
+        public int? IdCriteria { get; set; }
         public string? Description { get; set; }
-        public DateTime? CreatedDateUtc { get; set; }
-        public Guid? CreatedUid { get; set; }
-        public DateTime? UpdatedDateUtc { get; set; }
-        public Guid? UpdatedUid { get; set; }
-        public int? Deleted { get; set; }
-        public Guid? DeletedBy { get; set; }
+        public int? IdUser { get; set; }
+        public DateTime? DateReviews { get; set; }
+        public DateTime? DateUpdate { get; set; }
+
+        public virtual HotelCriterion? IdCriteriaNavigation { get; set; }
+        public virtual Hotel? IdHotelNavigation { get; set; }
+        public virtual User? IdUserNavigation { get; set; }
     }
 }

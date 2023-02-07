@@ -146,7 +146,7 @@ namespace GoStay.Services.Hotels
 			try
 			{
 				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
-					.Include(x=>x.HotelRooms.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
+					.Include(x=>x.HotelRooms.Where(x=>x.Deleted!=1).OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
 					.Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
 					.Include(x=>x.IdQuanNavigation)
 					.Include(x=>x.IdTinhThanhNavigation)

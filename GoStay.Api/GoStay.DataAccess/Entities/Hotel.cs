@@ -9,6 +9,7 @@ namespace GoStay.DataAccess.Entities
         {
             Albums = new HashSet<Album>();
             HotelMamenitis = new HashSet<HotelMameniti>();
+            HotelRatings = new HashSet<HotelRating>();
             HotelReviews = new HashSet<HotelReview>();
             HotelRooms = new HashSet<HotelRoom>();
             NearbyHotels = new HashSet<NearbyHotel>();
@@ -54,6 +55,7 @@ namespace GoStay.DataAccess.Entities
         public virtual TypeHotel? TypeNavigation { get; set; }
         public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<HotelMameniti> HotelMamenitis { get; set; }
+        public virtual ICollection<HotelRating> HotelRatings { get; set; }
         public virtual ICollection<HotelReview> HotelReviews { get; set; }
         public virtual ICollection<HotelRoom> HotelRooms { get; set; }
         public virtual ICollection<NearbyHotel> NearbyHotels { get; set; }

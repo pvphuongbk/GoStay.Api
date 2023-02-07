@@ -25,7 +25,7 @@ namespace GoStay.DataAccess.Entities
         public int IdDistrictFrom { get; set; }
         public double Price { get; set; }
         public byte? Discount { get; set; }
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
         public string? Content { get; set; }
         public int TourSize { get; set; }
         public string? Locations { get; set; }
@@ -42,6 +42,7 @@ namespace GoStay.DataAccess.Entities
         public virtual Quan IdDistrictFromNavigation { get; set; } = null!;
         public virtual TourStyle IdTourStyleNavigation { get; set; } = null!;
         public virtual TourTopic IdTourTopicNavigation { get; set; } = null!;
+        public virtual TourRating? RatingNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<TourDetail> TourDetails { get; set; }
