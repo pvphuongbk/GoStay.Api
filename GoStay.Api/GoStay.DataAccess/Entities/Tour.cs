@@ -11,6 +11,7 @@ namespace GoStay.DataAccess.Entities
             Pictures = new HashSet<Picture>();
             TourDetails = new HashSet<TourDetail>();
             TourDistrictTos = new HashSet<TourDistrictTo>();
+            TourVehicles = new HashSet<TourVehicle>();
         }
 
         public int Id { get; set; }
@@ -24,7 +25,7 @@ namespace GoStay.DataAccess.Entities
         public int IdDistrictFrom { get; set; }
         public double Price { get; set; }
         public byte? Discount { get; set; }
-        public double Rating { get; set; }
+        public int Rating { get; set; }
         public string? Content { get; set; }
         public int TourSize { get; set; }
         public string? Locations { get; set; }
@@ -37,6 +38,7 @@ namespace GoStay.DataAccess.Entities
         public int? NumTour { get; set; }
         public int? Songuoidadat { get; set; }
 
+
         public virtual Quan IdDistrictFromNavigation { get; set; } = null!;
         public virtual TourStyle IdTourStyleNavigation { get; set; } = null!;
         public virtual TourTopic IdTourTopicNavigation { get; set; } = null!;
@@ -44,5 +46,6 @@ namespace GoStay.DataAccess.Entities
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<TourDetail> TourDetails { get; set; }
         public virtual ICollection<TourDistrictTo> TourDistrictTos { get; set; }
+        public virtual ICollection<TourVehicle> TourVehicles { get; set; }
     }
 }

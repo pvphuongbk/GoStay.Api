@@ -53,9 +53,11 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<TourDistrictTo> TourDistrictTos { get; set; } = null!;
         public virtual DbSet<TourStyle> TourStyles { get; set; } = null!;
         public virtual DbSet<TourTopic> TourTopics { get; set; } = null!;
+        public virtual DbSet<TourVehicle> TourVehicles { get; set; } = null!;
         public virtual DbSet<TypeHotel> TypeHotels { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<VGetAllHotel> VGetAllHotels { get; set; } = null!;
+        public virtual DbSet<Vehicle> Vehicles { get; set; } = null!;
         public virtual DbSet<ViewDirection> ViewDirections { get; set; } = null!;
         public virtual DbSet<Viewhotelservice> Viewhotelservices { get; set; } = null!;
 
@@ -1032,6 +1034,19 @@ namespace GoStay.DataAccess.DBContext
                     .HasColumnName("TourTopic");
             });
 
+            modelBuilder.Entity<TourVehicle>(entity =>
+            {
+                entity.HasOne(d => d.IdTourNavigation)
+                    .WithMany(p => p.TourVehicles)
+                    .HasForeignKey(d => d.IdTour)
+                    .HasConstraintName("FK_TourVehicals_Tours");
+
+                entity.HasOne(d => d.IdVehicleNavigation)
+                    .WithMany(p => p.TourVehicles)
+                    .HasForeignKey(d => d.IdVehicle)
+                    .HasConstraintName("FK_TourVehicals_Vehicals");
+            });
+
             modelBuilder.Entity<TypeHotel>(entity =>
             {
                 entity.ToTable("TypeHotel");
@@ -1224,9 +1239,14 @@ namespace GoStay.DataAccess.DBContext
 				entity.Property(e => e.Winebar).HasColumnName("WINEBAR");
 			});
 
-			modelBuilder.Entity<ViewDirection>(entity =>
-			{
-				entity.ToTable("ViewDirection");
+            modelBuilder.Entity<Vehicle>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ViewDirection>(entity =>
+            {
+                entity.ToTable("ViewDirection");
 
 				entity.Property(e => e.ViewDirection1)
 					.HasMaxLength(50)
