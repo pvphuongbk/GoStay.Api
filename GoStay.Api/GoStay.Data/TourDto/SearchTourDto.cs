@@ -52,6 +52,8 @@ namespace GoStay.Data.TourDto
         public List<string>? DistrictTo { get; set; } = new List<string>();
 
         public DateTime StartDate { get; set; }
+        public string StartTime { get; set; }
+
         public double Price { get; set; }
         public int Discount { get; set; }
         public double ActualPrice { get; set; }

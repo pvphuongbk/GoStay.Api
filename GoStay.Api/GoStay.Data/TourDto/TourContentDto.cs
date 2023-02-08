@@ -20,6 +20,8 @@ namespace GoStay.Data.TourDto
         public int? IdUser { get; set; }
         public string? Descriptions { get; set; }
         public DateTime StartDate { get; set; }
+        public string StartTime { get; set; }
+
         public double Price { get; set; }
         public byte? Discount { get; set; }
         public double Rating { get; set; }

@@ -53,6 +53,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<TourDetailsStyle> TourDetailsStyles { get; set; } = null!;
         public virtual DbSet<TourDistrictTo> TourDistrictTos { get; set; } = null!;
         public virtual DbSet<TourRating> TourRatings { get; set; } = null!;
+        public virtual DbSet<TourStartTime> TourStartTimes { get; set; } = null!;
         public virtual DbSet<TourStyle> TourStyles { get; set; } = null!;
         public virtual DbSet<TourTopic> TourTopics { get; set; } = null!;
         public virtual DbSet<TourVehicle> TourVehicles { get; set; } = null!;
@@ -981,6 +982,11 @@ namespace GoStay.DataAccess.DBContext
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tours_Quan");
 
+                entity.HasOne(d => d.IdStartTimeNavigation)
+                    .WithMany(p => p.Tours)
+                    .HasForeignKey(d => d.IdStartTime)
+                    .HasConstraintName("FK_Tours_TourStartTime");
+
                 entity.HasOne(d => d.IdTourStyleNavigation)
                     .WithMany(p => p.Tours)
                     .HasForeignKey(d => d.IdTourStyle)
@@ -1049,6 +1055,15 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Rating).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TourStartTime>(entity =>
+            {
+                entity.ToTable("TourStartTime");
+
+                entity.Property(e => e.StartDate)
+                    .HasMaxLength(100)
+                    .IsFixedLength();
             });
 
             modelBuilder.Entity<TourStyle>(entity =>
