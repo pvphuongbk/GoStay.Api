@@ -20,6 +20,7 @@ namespace GoStay.Repository.Repositories
             p.Add("@Email", filter.Email == null ? null : string.Join(",", filter.Email), System.Data.DbType.String);
             p.Add("@Phone", filter.Phone == null ? null : string.Join(",", filter.Phone), System.Data.DbType.String);
             p.Add("@OrderCode", filter.OrderCode == null ? null : string.Join(",", filter.OrderCode), System.Data.DbType.String);
+            p.Add("@Status", filter.Status == null ? null : string.Join(",", filter.Status), System.Data.DbType.String);
             p.Add("@StartDate", filter.StartDate == null ? null : string.Join(",", filter.StartDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
             p.Add("@EndDate", filter.EndDate == null ? null : string.Join(",", filter.EndDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
 

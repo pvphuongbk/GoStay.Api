@@ -12,6 +12,7 @@ namespace GoStay.DataDto.OrderDto
         public string Email { get; set; }
         public string Phone { get; set; }
         public string OrderCode { get; set; }
+        public int Status { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
     }
@@ -21,6 +22,8 @@ namespace GoStay.DataDto.OrderDto
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public string? OrderCode { get; set; }
+        public int? Status { get; set; }
+
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
     }
