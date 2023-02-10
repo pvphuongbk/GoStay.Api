@@ -12,6 +12,7 @@ namespace GoStay.DataAccess.Entities
 
         public int Id { get; set; }
         public string? Criteria { get; set; }
+        public string HotelColumn { get; set; } = null!;
 
         public virtual ICollection<HotelRating> HotelRatings { get; set; }
     }

@@ -22,6 +22,7 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
+        public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
         public virtual DbSet<HotelCriterion> HotelCriteria { get; set; } = null!;
         public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
@@ -242,6 +243,18 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Title).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<Country>(entity =>
+            {
+                entity.Property(e => e.Country1)
+                    .HasMaxLength(50)
+                    .HasColumnName("Country");
+
+                entity.Property(e => e.Countrycode).HasMaxLength(50);
+
+                entity.Property(e => e.NameKey).HasMaxLength(10);
+
+                entity.Property(e => e.SearchKey).HasMaxLength(50);
+            });
 
 			modelBuilder.Entity<Hotel>(entity =>
 			{
@@ -360,6 +373,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Criteria)
                     .HasMaxLength(100)
                     .IsFixedLength();
+
+                entity.Property(e => e.HotelColumn)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<HotelMameniti>(entity =>
@@ -402,19 +419,21 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.CleanlinessScore).HasColumnType("decimal(3, 1)");
+
                 entity.Property(e => e.DateReviews).HasColumnType("datetime");
 
                 entity.Property(e => e.DateUpdate).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.Point).HasColumnType("decimal(3, 1)");
+                entity.Property(e => e.LocationScore).HasColumnType("decimal(3, 1)");
 
-                entity.HasOne(d => d.IdCriteriaNavigation)
-                    .WithMany(p => p.HotelRatings)
-                    .HasForeignKey(d => d.IdCriteria)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_HotelRating_HotelRating");
+                entity.Property(e => e.RoomsScore).HasColumnType("decimal(3, 1)");
+
+                entity.Property(e => e.ServiceScore).HasColumnType("decimal(3, 1)");
+
+                entity.Property(e => e.ValueScore).HasColumnType("decimal(3, 1)");
 
                 entity.HasOne(d => d.IdHotelNavigation)
                     .WithMany(p => p.HotelRatings)
@@ -959,11 +978,16 @@ namespace GoStay.DataAccess.DBContext
 					.HasMaxLength(50)
 					.HasColumnName("TenTT");
 
-				entity.Property(e => e.Tentt2)
-					.HasMaxLength(50)
-					.IsUnicode(false)
-					.HasColumnName("TENTT2");
-			});
+                entity.Property(e => e.Tentt2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("TENTT2");
+
+                entity.HasOne(d => d.IdCountryNavigation)
+                    .WithMany(p => p.TinhThanhs)
+                    .HasForeignKey(d => d.IdCountry)
+                    .HasConstraintName("FK_TinhThanh_Countries");
+            });
 
             modelBuilder.Entity<Tour>(entity =>
             {
