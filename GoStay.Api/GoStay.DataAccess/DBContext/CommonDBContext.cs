@@ -24,7 +24,6 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Banner> Banners { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
-        public virtual DbSet<HotelCriterion> HotelCriteria { get; set; } = null!;
         public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
         public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
         public virtual DbSet<HotelRating> HotelRatings { get; set; } = null!;
@@ -365,19 +364,6 @@ namespace GoStay.DataAccess.DBContext
 					.HasForeignKey(d => d.Type)
 					.HasConstraintName("FK_Hotel_TypeHotel");
 			});
-
-            modelBuilder.Entity<HotelCriterion>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Criteria)
-                    .HasMaxLength(100)
-                    .IsFixedLength();
-
-                entity.Property(e => e.HotelColumn)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
 
             modelBuilder.Entity<HotelMameniti>(entity =>
             {

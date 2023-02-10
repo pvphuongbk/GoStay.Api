@@ -1,4 +1,6 @@
 ﻿using GoStay.Data.TourDto;
+using GoStay.DataDto.RatingDto;
+using GoStay.Services.Ratings;
 using GoStay.Services.Tours;
 using Microsoft.AspNetCore.Mvc;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
@@ -9,29 +11,23 @@ namespace GoStay.Api.Controllers
     [Route("[controller]")]
     public class RatingController : ControllerBase
     {
-        private readonly ITourService _tourService;
-        public RatingController(ITourService tourService)
+        private readonly IRatingService _ratingService;
+        public RatingController(IRatingService ratingService)
         {
-            _tourService = tourService;
+            _ratingService = ratingService;
         }
 
-        [HttpGet("suggest")]
-        public ResponseBase SuggestTour(string searchText)
+        [HttpPost("Rating")]
+        public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto)
         {
-            var items = _tourService.SuggestTour(searchText);
+            var items = _ratingService.ReviewOrUpdateScore(dto);
             return items;
         }
 
-        [HttpPost("search")]
-        public ResponseBase SearchTour(SearchTourRequest request)
+        [HttpGet("rating-by-user")]
+        public ResponseBase GetRatingByUser(int hotelId, int userId)
         {
-            var items = _tourService.SearchTour(request);
-            return items;
-        }
-        [HttpGet("tourcontent")]
-        public ResponseBase GetTourContent(int Id)
-        {
-            var items = _tourService.GetTourContent(Id);
+            var items = _ratingService.GetRatingByUser(hotelId, userId);
             return items;
         }
     }

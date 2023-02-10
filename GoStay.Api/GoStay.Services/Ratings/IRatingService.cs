@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GoStay.Data.Base;
+using GoStay.DataDto.RatingDto;
 
 namespace GoStay.Services.Ratings
 {
-    public class IRatingService
+    public interface IRatingService
     {
+        public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto);
+        public ResponseBase GetRatingByUser(int hotelId, int userId);
     }
 }

@@ -29,7 +29,7 @@ namespace GoStay.DataAccess.Entities
         public int? Type { get; set; }
         public int? IdPriceRange { get; set; }
         public bool? Meals { get; set; }
-        public int? ReviewScore { get; set; }
+        public decimal? ReviewScore { get; set; }
         public decimal? ServiceScore { get; set; }
         public decimal? ValueScore { get; set; }
         public decimal? SleepQualityScore { get; set; }

@@ -1,9 +1,7 @@
 ﻿namespace GoStay.DataDto.RatingDto
 {
-    public class RatingOrUpdateDto
+    public class GetRatingDto
     {
-        public int UserId { get; set; }
-        public int HotelId { get; set; }
         public string Description { get; set; }
         public decimal LocationScore { get; set; }
         public decimal ValueScore { get; set; }

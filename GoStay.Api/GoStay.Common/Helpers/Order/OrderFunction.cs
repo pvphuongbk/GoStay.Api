@@ -93,7 +93,7 @@ namespace GoStay.Common.Helpers.Order
             hotelRoomOrderDto.HotelName = hotel.Name;
             hotelRoomOrderDto.Address = hotel.Address;
             hotelRoomOrderDto.Rating = hotel.Rating;
-            hotelRoomOrderDto.ReviewScore = hotel.ReviewScore;
+            hotelRoomOrderDto.ReviewScore = (int?)hotel.ReviewScore;
             hotelRoomOrderDto.NumberReviewers = hotel.NumberReviewers;
             hotelRoomOrderDto.ViewDirection = _viewRepository.GetById(roomOrderDetail.ViewDirection)?.ViewDirection1;
             hotelRoomOrderDto.Pictures = _pictureRepository.FindAll(x => x.HotelRoomId == roomOrderDetail.Id && x.Type==1)?.Select(x=>x.Url).Take(1).ToList();
