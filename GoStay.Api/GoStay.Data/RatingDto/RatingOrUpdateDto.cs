@@ -4,5 +4,6 @@
     {
         public float Point { get; set; }
         public int IdCriteria { get; set; }
+        public string Description { get; set; }
     }
 }
