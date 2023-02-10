@@ -46,6 +46,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
         public virtual DbSet<Quan> Quans { get; set; } = null!;
         public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
+        public virtual DbSet<RoomView> RoomViews { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
         public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
         public virtual DbSet<Tour> Tours { get; set; } = null!;
@@ -412,16 +413,19 @@ namespace GoStay.DataAccess.DBContext
                 entity.HasOne(d => d.IdCriteriaNavigation)
                     .WithMany(p => p.HotelRatings)
                     .HasForeignKey(d => d.IdCriteria)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HotelRating_HotelRating");
 
                 entity.HasOne(d => d.IdHotelNavigation)
                     .WithMany(p => p.HotelRatings)
                     .HasForeignKey(d => d.IdHotel)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HotelRating_Hotel");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.HotelRatings)
                     .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HotelRating_users");
             });
 
@@ -906,11 +910,24 @@ namespace GoStay.DataAccess.DBContext
 					.HasConstraintName("FK_RoomMameniti_Services");
 			});
 
-			modelBuilder.Entity<Service>(entity =>
-			{
-				entity.Property(e => e.Icon)
-					.HasMaxLength(50)
-					.IsUnicode(false);
+            modelBuilder.Entity<RoomView>(entity =>
+            {
+                entity.HasOne(d => d.IdRoomNavigation)
+                    .WithMany(p => p.RoomViews)
+                    .HasForeignKey(d => d.IdRoom)
+                    .HasConstraintName("FK_RoomViews_HotelRoom");
+
+                entity.HasOne(d => d.IdViewNavigation)
+                    .WithMany(p => p.RoomViews)
+                    .HasForeignKey(d => d.IdView)
+                    .HasConstraintName("FK_RoomViews_RoomViews");
+            });
+
+            modelBuilder.Entity<Service>(entity =>
+            {
+                entity.Property(e => e.Icon)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
 				entity.Property(e => e.Name).HasMaxLength(50);
 			});

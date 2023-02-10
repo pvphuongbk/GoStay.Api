@@ -10,6 +10,7 @@ namespace GoStay.DataAccess.Entities
             OrderDetails = new HashSet<OrderDetail>();
             Pictures = new HashSet<Picture>();
             RoomMamenitis = new HashSet<RoomMameniti>();
+            RoomViews = new HashSet<RoomView>();
         }
 
         public int Id { get; set; }
@@ -39,5 +40,6 @@ namespace GoStay.DataAccess.Entities
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<RoomMameniti> RoomMamenitis { get; set; }
+        public virtual ICollection<RoomView> RoomViews { get; set; }
     }
 }
