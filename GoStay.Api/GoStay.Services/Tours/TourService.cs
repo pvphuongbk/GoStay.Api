@@ -92,7 +92,7 @@ namespace GoStay.Services.Tours
 
                 tourContent.Pictures = tour.Pictures.Where(x=>x.Deleted!=1).Select(x=>x.Url).ToList();
 
-                tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(_tourDetailRepository.FindAll(x => x.IdTours == Id).ToList());
+                tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(_tourDetailRepository.FindAll(x => x.IdTours == Id&& x.Deleted!=1).ToList());
 
                 response.Data = tourContent;
                 return response;
