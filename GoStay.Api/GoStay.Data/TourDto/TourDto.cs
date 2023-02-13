@@ -42,5 +42,7 @@ namespace GoStay.Data.TourDto
         public byte? IdStyle { get; set; }
         public string? Title { get; set; }
         public string? Details { get; set; }
+        public byte? Stt { get; set; }
+
     }
 }
