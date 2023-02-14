@@ -709,7 +709,7 @@ namespace GoStay.Services.Orders
         public ResponseBase GetListOrderSearch(OrderSearchParam param)
         {
             ResponseBase response = new ResponseBase();
-            response.Data = OrderRepository.SearchListOrder(param);
+            response.Data = OrderRepository.SearchListOrder(param).OrderByDescending(x => x.DateCreate);
             return response;
         }
     }
