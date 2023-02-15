@@ -51,7 +51,16 @@ namespace GoStay.Common.Helpers.Hotels
             for(int i=0;i< hotel.HotelRooms.Count(); i++)
             {
                 hotelDto.Rooms[i].PalletbedText = hotel.HotelRooms.ToList()[i].PalletbedNavigation.Text;
-            }    
+                var temp = hotel.HotelRooms.ToList()[i].RoomViews.Select(x => x.IdViewNavigation.ViewDirection1);
+                if (temp.Count() > 1)
+                {
+                    hotelDto.Rooms[i].ViewRoom = String.Join(",", temp);
+                }
+                else
+                {
+                    hotelDto.Rooms[i].ViewRoom = temp.FirstOrDefault();
+                }    
+            }
             var room = hotelDto.Rooms.Where(x => x.Discount != null).MinBy(x => x.NewPrice);
             if (room != null)
             {

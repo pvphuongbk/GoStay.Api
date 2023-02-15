@@ -23,7 +23,7 @@ namespace GoStay.Data.HotelDto
         public byte? NumChild { get; set; }
         public byte? Palletbed { get; set; }
         public string? PalletbedText { get; set; }
-        public string ViewDirection { get; set; }
+        public string? ViewRoom { get; set; }
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
         public List<string> Pictures { get; set; } = new List<string>();

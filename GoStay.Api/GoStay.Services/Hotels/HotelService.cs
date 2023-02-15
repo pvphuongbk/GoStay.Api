@@ -148,7 +148,8 @@ namespace GoStay.Services.Hotels
 				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
 					.Include(x=>x.HotelRooms.Where(x=>x.Deleted!=1)
 					.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
-						.ThenInclude(x=>x.RoomMamenitis).Include(x=>x.HotelRooms).ThenInclude(x=>x.ViewDirectionNavigation)
+						.ThenInclude(x=>x.RoomMamenitis).Include(x=>x.HotelRooms)
+						.ThenInclude(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
                         .Include(x => x.HotelRooms).ThenInclude(x => x.PalletbedNavigation)
                         .Include(x => x.HotelRooms).ThenInclude(x => x.Pictures.Take(4))
 
@@ -180,7 +181,6 @@ namespace GoStay.Services.Hotels
 												(_serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 1)
 												.Where(x => x.RoomMamenitis.Any(x => x.Idroom == hotelDetailDto.Rooms[i].Id))
 												.OrderBy(x => x.Name).OrderBy(x => x.AdvantageLevel).Take(5).ToList());
-					hotelDetailDto.Rooms[i].ViewDirection = _viewRepository.GetById(hotelRoom[i].ViewDirection)?.ViewDirection1;
                 }
 
                 responseBase.Data = hotelDetailDto;
