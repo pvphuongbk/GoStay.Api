@@ -1,5 +1,6 @@
 ﻿using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
+using GoStay.DataAccess.Entities;
 
 namespace GoStay.Services.Hotels
 {
@@ -10,5 +11,8 @@ namespace GoStay.Services.Hotels
         public ResponseBase GetListForSearchHotel(HotelSearchRequest filter);
         public ResponseBase GetListSuggestHotel(string searchText);
         public ResponseBase GetHotelDetail(int hotelId);
+
+        public ResponseBase GetAllTypeHotel();
+        ResponseBase GetServicesSearch(int type);
     }
 }

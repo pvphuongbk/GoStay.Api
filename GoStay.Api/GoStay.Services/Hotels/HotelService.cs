@@ -193,5 +193,24 @@ namespace GoStay.Services.Hotels
                 return responseBase;
             }
         }
-	}
+
+        public ResponseBase GetAllTypeHotel()
+        {
+            ResponseBase responseBase = new ResponseBase();
+            var listTypeHotel = _typeHotelRepository.FindAll(x => x.Deleted != 1).ToList();
+			responseBase.Data = listTypeHotel;
+            return responseBase;
+        }
+
+        public ResponseBase GetServicesSearch(int type)
+        {
+            ResponseBase responseBase = new ResponseBase();
+
+            var listService = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == type)
+                                                                .OrderBy(x => x.AdvantageLevel).Take(30).ToList();
+            responseBase.Data=listService;
+            return responseBase;
+
+        }
+    }
 }

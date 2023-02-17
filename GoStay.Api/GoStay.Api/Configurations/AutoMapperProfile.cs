@@ -4,6 +4,8 @@ using GoStay.Data.OrderDto;
 using GoStay.Data.ServiceDto;
 using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto.Banner;
+using GoStay.DataDto.Hành_Chính;
 using System.Linq;
 
 namespace GoStay.Api.Configurations
@@ -42,6 +44,12 @@ namespace GoStay.Api.Configurations
 
             CreateMap<Tour, TourContentDto>().ReverseMap();
             CreateMap<TourContentDto, Tour>().ReverseMap();
+
+            CreateMap<Banner, BannerDetailDto>().ReverseMap();
+            CreateMap<BannerDetailDto, Banner>().ReverseMap();
+
+            CreateMap<TinhThanh, TinhThanhBannerDto>().ReverseMap();
+            CreateMap<TinhThanhBannerDto, TinhThanh>().ReverseMap();
 
         }
     }
