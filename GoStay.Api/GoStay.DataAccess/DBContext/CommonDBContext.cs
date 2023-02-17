@@ -314,7 +314,9 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Rating).HasDefaultValueSql("((1))");
 
-				entity.Property(e => e.ReviewScore).HasColumnName("Review_score");
+                entity.Property(e => e.ReviewScore)
+                    .HasColumnType("decimal(2, 1)")
+                    .HasColumnName("Review_score");
 
                 entity.Property(e => e.RoomsScore)
                     .HasColumnType("decimal(2, 1)")
@@ -1001,7 +1003,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
-                entity.Property(e => e.TourName).HasMaxLength(150);
+                entity.Property(e => e.TourName).HasMaxLength(500);
 
                 entity.HasOne(d => d.IdDistrictFromNavigation)
                     .WithMany(p => p.Tours)

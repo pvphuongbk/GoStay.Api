@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GoStay.DataAccess.Base;
+using System;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class Quan
+    public partial class Quan : BaseEntity
     {
         public Quan()
         {
@@ -13,12 +14,10 @@ namespace GoStay.DataAccess.Entities
             Tours = new HashSet<Tour>();
         }
 
-        public int Id { get; set; }
         public int? IdTinhThanh { get; set; }
         public string? Tenquan { get; set; }
         public string? Diengiai { get; set; }
         public int? Stt { get; set; }
-        public int? Deleted { get; set; }
         public int? Numrecord { get; set; }
         public string? SearchKey { get; set; }
         public string? SanitizedName { get; set; }

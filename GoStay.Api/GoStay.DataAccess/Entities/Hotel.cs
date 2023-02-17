@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GoStay.DataAccess.Base;
+using System;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class Hotel
+    public partial class Hotel : BaseEntity
     {
         public Hotel()
         {
@@ -16,7 +17,7 @@ namespace GoStay.DataAccess.Entities
             Pictures = new HashSet<Picture>();
         }
 
-        public int Id { get; set; }
+
         public string? Name { get; set; }
         public string? NameSeo { get; set; }
         public string? CodeCountry { get; set; }
@@ -29,7 +30,6 @@ namespace GoStay.DataAccess.Entities
         public int? Type { get; set; }
         public int? IdPriceRange { get; set; }
         public bool? Meals { get; set; }
-        public decimal? ReviewScore { get; set; }
         public decimal? ServiceScore { get; set; }
         public decimal? ValueScore { get; set; }
         public decimal? SleepQualityScore { get; set; }
@@ -38,7 +38,7 @@ namespace GoStay.DataAccess.Entities
         public decimal? RoomsScore { get; set; }
         public double? LatMap { get; set; }
         public double? LonMap { get; set; }
-        public int? Deleted { get; set; }
+
         public int? NumberReviewers { get; set; }
         public long? IntDate { get; set; }
         public int IdPhuong { get; set; }
@@ -47,11 +47,12 @@ namespace GoStay.DataAccess.Entities
         public int? NumViews { get; set; }
         public string? SearchKey { get; set; }
         public DateTime CreatedDate { get; set; }
+        public decimal? ReviewScore { get; set; }
 
+        public virtual Phuong IdPhuongNavigation { get; set; } = null!;
         public virtual PriceRange? IdPriceRangeNavigation { get; set; }
         public virtual Quan IdQuanNavigation { get; set; } = null!;
         public virtual TinhThanh IdTinhThanhNavigation { get; set; } = null!;
-        public virtual Phuong IdPhuongNavigation { get; set; } = null!;
         public virtual TypeHotel? TypeNavigation { get; set; }
         public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<HotelMameniti> HotelMamenitis { get; set; }

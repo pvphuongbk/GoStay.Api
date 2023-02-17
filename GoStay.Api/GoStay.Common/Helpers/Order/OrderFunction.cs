@@ -60,9 +60,6 @@ namespace GoStay.Common.Helpers.Order
                 CheckOut = orderDetail.CheckOut,
                 DateCreate = orderDetail.DateCreate,
                 Num = orderDetail.Num,
-                Price = orderDetail.Price,
-                Discount = orderDetail.Discount,
-                NewPrice = orderDetail.Price * (100 - (decimal)orderDetail.Discount) / 100,
                 MoreInfo = orderDetail.MoreInfo,
             };
             if (orderDetail.DetailStyle == 1)
@@ -72,6 +69,8 @@ namespace GoStay.Common.Helpers.Order
                 orderDetailInfoDto.Rooms = CreateHotelRoomOrderDto(orderDetail.IdRoomNavigation);
                 orderDetailInfoDto.Price = orderDetailInfoDto.Rooms.PriceValue;
                 orderDetailInfoDto.Discount = orderDetailInfoDto.Rooms.Discount;
+                orderDetailInfoDto.NewPrice = orderDetailInfoDto.Price * (100 - (decimal)orderDetailInfoDto.Discount) / 100;
+
             }
 
             if (orderDetail.DetailStyle == 2)
@@ -81,7 +80,7 @@ namespace GoStay.Common.Helpers.Order
                 orderDetailInfoDto.Tours = CreateTourOrderDto(orderDetail.IdTourNavigation);
                 orderDetailInfoDto.Price = (decimal)orderDetailInfoDto.Tours.Price;
                 orderDetailInfoDto.Discount = orderDetailInfoDto.Tours.Discount;
-
+                orderDetailInfoDto.NewPrice = orderDetailInfoDto.Price * (100 - (decimal)orderDetailInfoDto.Discount) / 100;
             }
             return orderDetailInfoDto;
         }

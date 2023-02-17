@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GoStay.DataAccess.Base;
+using System;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class HotelRoom
+    public partial class HotelRoom : BaseEntity
     {
         public HotelRoom()
         {
@@ -13,7 +14,6 @@ namespace GoStay.DataAccess.Entities
             RoomViews = new HashSet<RoomView>();
         }
 
-        public int Id { get; set; }
         public int? Idhotel { get; set; }
         public string? Name { get; set; }
         public decimal? RoomSize { get; set; }
@@ -21,7 +21,6 @@ namespace GoStay.DataAccess.Entities
         public int? Status { get; set; }
         public byte? RemainNum { get; set; }
         public decimal? PriceValue { get; set; }
-        public int? Deleted { get; set; }
         public double? Discount { get; set; }
         public decimal? NewPrice { get; set; }
         public byte? NumMature { get; set; }

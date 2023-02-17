@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GoStay.DataAccess.Base;
+using System;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class TinhThanh
+    public partial class TinhThanh : BaseEntity
     {
         public TinhThanh()
         {
@@ -11,7 +12,6 @@ namespace GoStay.DataAccess.Entities
             Quans = new HashSet<Quan>();
         }
 
-        public int Id { get; set; }
         public string? TenTt { get; set; }
         public string? Diengiai { get; set; }
         public int? Stt { get; set; }
@@ -19,7 +19,6 @@ namespace GoStay.DataAccess.Entities
 
         public string? Locality { get; set; }
         public string? Tentt2 { get; set; }
-        public int? Deleted { get; set; }
         public int? Numrecord { get; set; }
         public string? SanitizedName { get; set; }
         public string? SearchKey { get; set; }
