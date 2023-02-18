@@ -5,6 +5,7 @@ using GoStay.DataAccess.Interface;
 using GoStay.DataDto.RatingDto;
 using GoStay.Repository.Repositories;
 using GoStay.Services.Ratings;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoStay.Services.Reviews
 {
@@ -41,6 +42,45 @@ namespace GoStay.Services.Reviews
             }
 
             return response;
+        }
+        public ResponseBase GetRatingByHotel(int hotelId)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var exitsRatings = _hotelRatingRepository.FindAll(x => x.IdHotel == hotelId)
+                                                            .Include(x => x.IdUserNavigation)
+                                                            .ToList();
+                var res = new List<GetRatingByHotelDto>();
+                foreach (var exitsRating in exitsRatings)
+                {
+                    if (exitsRating != null)
+                    {
+                        var dto = new GetRatingByHotelDto
+                        {
+                            UserEmail = exitsRating.IdUserNavigation?.Email,
+                            UserId = exitsRating.IdUserNavigation?.UserId,
+                            UserName = exitsRating.IdUserNavigation?.UserName,
+                            LocationScore = exitsRating.LocationScore,
+                            ValueScore = exitsRating.ValueScore,
+                            ServiceScore = exitsRating.ServiceScore,
+                            CleanlinessScore = exitsRating.CleanlinessScore,
+                            RoomsScore = exitsRating.RoomsScore,
+                            Description = exitsRating.Description,
+                        };
+
+                        res.Add(dto);
+                    }
+                }
+                response.Data = res;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = ex.Message;
+                return response;
+            }
         }
         public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto)
         {

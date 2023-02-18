@@ -30,5 +30,12 @@ namespace GoStay.Api.Controllers
             var items = _ratingService.GetRatingByUser(hotelId, userId);
             return items;
         }
+
+        [HttpGet("rating-by-hotel")]
+        public ResponseBase GetRatingByUser(int hotelId)
+        {
+            var items = _ratingService.GetRatingByHotel(hotelId);
+            return items;
+        }
     }
 }
