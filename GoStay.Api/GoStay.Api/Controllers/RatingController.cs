@@ -32,7 +32,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpGet("rating-by-hotel")]
-        public ResponseBase GetRatingByUser(int hotelId)
+        public ResponseBase GetRatingByHotel(int hotelId)
         {
             var items = _ratingService.GetRatingByHotel(hotelId);
             return items;
