@@ -25,23 +25,32 @@ namespace GoStay.Services.Reviews
         public ResponseBase GetRatingByUser(int hotelId, int userId)
         {
             ResponseBase response = new ResponseBase();
-            var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser == userId && x.IdHotel == hotelId).FirstOrDefault();
-            if (exitsRating != null)
+            try
             {
-                var dto = new GetRatingDto
+                var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser == userId && x.IdHotel == hotelId).FirstOrDefault();
+                if (exitsRating != null)
                 {
-                    LocationScore = exitsRating.LocationScore,
-                    ValueScore = exitsRating.ValueScore,
-                    ServiceScore = exitsRating.ServiceScore,
-                    CleanlinessScore = exitsRating.CleanlinessScore,
-                    RoomsScore = exitsRating.RoomsScore,
-                    Description = exitsRating.Description,
-                };
+                    var dto = new GetRatingDto
+                    {
+                        LocationScore = exitsRating.LocationScore,
+                        ValueScore = exitsRating.ValueScore,
+                        ServiceScore = exitsRating.ServiceScore,
+                        CleanlinessScore = exitsRating.CleanlinessScore,
+                        RoomsScore = exitsRating.RoomsScore,
+                        Description = exitsRating.Description,
+                    };
 
-                response.Data = dto;
+                    response.Data = dto;
+                }
+
+                return response;
             }
-
-            return response;
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
         }
         public ResponseBase GetRatingByHotel(int hotelId)
         {
@@ -85,47 +94,56 @@ namespace GoStay.Services.Reviews
         public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto)
         {
             ResponseBase response = new ResponseBase();
-            
-            _icommonUoWRepository.BeginTransaction();
-            var (re, check) = UpdateScoreForHotel(dto);
-            if (!check)
+            try
             {
-                response.Message = "User Id không tồn tại";
+                _icommonUoWRepository.BeginTransaction();
+                var (re, check) = UpdateScoreForHotel(dto);
+                if (!check)
+                {
+                    response.Message = "User Id không tồn tại";
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    return response;
+                }
+
+                var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser == dto.UserId && x.IdHotel == dto.HotelId).FirstOrDefault();
+                if (exitsRating != null)
+                {
+                    exitsRating.LocationScore = dto.LocationScore;
+                    exitsRating.ValueScore = dto.ValueScore;
+                    exitsRating.ServiceScore = dto.ServiceScore;
+                    exitsRating.CleanlinessScore = dto.CleanlinessScore;
+                    exitsRating.RoomsScore = dto.RoomsScore;
+                    exitsRating.Description = dto.Description;
+                    exitsRating.DateUpdate = DateTime.Now;
+                    _hotelRatingRepository.Update(exitsRating);
+                }
+                else
+                {
+                    var item = new HotelRating
+                    {
+                        IdHotel = dto.HotelId,
+                        IdUser = dto.UserId,
+                        Description = dto.Description,
+                        ServiceScore = dto.ServiceScore,
+                        CleanlinessScore = dto.CleanlinessScore,
+                        LocationScore = dto.LocationScore,
+                        RoomsScore = dto.RoomsScore,
+                        ValueScore = dto.ValueScore,
+                        DateReviews = DateTime.Now,
+                    };
+                    _hotelRatingRepository.Insert(item);
+                }
+
+                _icommonUoWRepository.Commit();
+                response.Data = re;
                 return response;
             }
-
-            var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser == dto.UserId && x.IdHotel == dto.HotelId).FirstOrDefault();
-            if(exitsRating != null)
+            catch (Exception e)
             {
-                exitsRating.LocationScore = dto.LocationScore;
-                exitsRating.ValueScore = dto.ValueScore;
-                exitsRating.ServiceScore = dto.ServiceScore;
-                exitsRating.CleanlinessScore = dto.CleanlinessScore;
-                exitsRating.RoomsScore = dto.RoomsScore;
-                exitsRating.Description = dto.Description;
-                exitsRating.DateUpdate = DateTime.Now;
-                _hotelRatingRepository.Update(exitsRating);
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
             }
-            else
-            {
-                var item = new HotelRating
-                {
-                    IdHotel = dto.HotelId,
-                    IdUser = dto.UserId,
-                    Description = dto.Description,
-                    ServiceScore = dto.ServiceScore,
-                    CleanlinessScore = dto.CleanlinessScore,
-                    LocationScore = dto.LocationScore,
-                    RoomsScore = dto.RoomsScore,
-                    ValueScore = dto.ValueScore,
-                    DateReviews = DateTime.Now,   
-                };
-                _hotelRatingRepository.Insert(item);
-            }
-
-            _icommonUoWRepository.Commit();
-            response.Data = re;
-            return response;
         }
 
         private (UpdateRatingResponse,bool) UpdateScoreForHotel(RatingOrUpdateDto dto)
