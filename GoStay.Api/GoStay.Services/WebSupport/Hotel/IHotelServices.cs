@@ -7,7 +7,7 @@ using GoStay.DataDto.HotelDto;
 
 namespace GoStay.Services.WebSupport
 {
-    public interface IHotelServices
+    public interface IHotelService
     {
         public ResponseBase GetHotelList(RequestGetListHotel request);
         public ResponseBase AddRoom(HotelRoom data, int[] view, int[] service);

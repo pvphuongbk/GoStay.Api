@@ -15,10 +15,10 @@ namespace GoStay.Web.Areas.Admin.Controllers
     public class HotelController : Controller
     {
 
-        private readonly IHotelServices _hotelServices;
+        private readonly IHotelService _hotelServices;
         private readonly IMapper _mapper;
 
-        public HotelController(IHotelServices hotelServices, IMapper mapper)
+        public HotelController(IHotelService hotelServices, IMapper mapper)
         {
             _hotelServices = hotelServices;
 
@@ -36,11 +36,11 @@ namespace GoStay.Web.Areas.Admin.Controllers
             return items;
         }
         [HttpPost("add-room")]
-        public ResponseBase AddRoom(string roomDto)
+        public ResponseBase AddRoom(RoomAddDto roomDto)
         {
-            var room = JsonConvert.DeserializeObject<RoomAddDto>(roomDto);
+            //var room = JsonConvert.DeserializeObject<RoomAddDto>(roomDto);
 
-            var hotelRoom = _mapper.Map<RoomAddDto, HotelRoom>(room);
+            var hotelRoom = _mapper.Map<RoomAddDto, HotelRoom>(roomDto);
 
             if (hotelRoom.PriceValue is null)
             {
@@ -54,9 +54,9 @@ namespace GoStay.Web.Areas.Admin.Controllers
             {
                 hotelRoom.Palletbed = 1;
             }
-            hotelRoom.NewPrice = room.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
+            hotelRoom.NewPrice = roomDto.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
 
-            var result = _hotelServices.AddRoom(hotelRoom, room.ViewRoom, room.ServiceRoom);
+            var result = _hotelServices.AddRoom(hotelRoom, roomDto.ViewRoom, roomDto.ServiceRoom);
             return result;
         }
     }

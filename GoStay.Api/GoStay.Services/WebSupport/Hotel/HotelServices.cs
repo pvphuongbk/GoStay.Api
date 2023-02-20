@@ -13,7 +13,7 @@ using ErrorCodeMessage = GoStay.Common.ErrorCodeMessage;
 
 namespace GoStay.Services.WebSupport
 {
-    public class HotelServices : IHotelServices
+    public class HotelService : IHotelService
     {
         private readonly ICommonRepository<Hotel> _hotelRepository;
         private readonly ICommonRepository<HotelRoom> _roomRepository;
@@ -23,7 +23,7 @@ namespace GoStay.Services.WebSupport
         private readonly IMapper _mapper;
 
         private readonly ICommonUoW _commonUoW;
-        public HotelServices(ICommonRepository<Hotel> hotelRepository, ICommonUoW commonUoW, IMapper mapper,
+        public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonUoW commonUoW, IMapper mapper,
             ICommonRepository<HotelRoom> roomRepository, ICommonRepository<RoomView> roomViewRepository, ICommonRepository<RoomMameniti> roomServicesRepository)
         {
             _hotelRepository = hotelRepository;
@@ -82,6 +82,7 @@ namespace GoStay.Services.WebSupport
                 }
                 response.Message= $"{ErrorCodeMessage.Success.Value}";
                 response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = data.Id;
                 return response;
             }
             catch
