@@ -248,7 +248,7 @@ namespace GoStay.Services.Reviews
             UserBoxReview userBoxReview = new UserBoxReview();
             var order = _orderRepository.FindAll(x => x.IdHotel == rating.IdHotel&& x.IdUser == rating.IdUser)
                             .Include(x => x.OrderDetails).ThenInclude(x => x.IdRoomNavigation)
-                            .Include(x => x.IdUserNavigation).OrderByDescending(x=>x.DateCreate).SingleOrDefault();
+                            .Include(x => x.IdUserNavigation).OrderByDescending(x=>x.DateCreate).FirstOrDefault();
 
             //var rating = _hotelRatingRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel).SingleOrDefault();
 
