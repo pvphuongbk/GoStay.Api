@@ -18,8 +18,8 @@ namespace GoStay.DataDto.HotelDto
     }
     public class RequestGetListHotel
     {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
+        public int? PageIndex { get; set; }
+        public int? PageSize { get; set; }
         public int? IdProvince { get; set; }
     }
 }
