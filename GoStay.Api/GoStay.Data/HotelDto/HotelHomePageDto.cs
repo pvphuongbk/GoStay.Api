@@ -34,4 +34,16 @@
         public List<string> Pictures { get; set; } = new List<string>();
 	}
 
+    public class HotelHomePageDtoCompare : IEqualityComparer<HotelHomePageDto>
+    {
+        public bool Equals(HotelHomePageDto x, HotelHomePageDto y)
+        {
+            return x.Id == y.Id ;
+        }
+
+        public int GetHashCode(HotelHomePageDto obj)
+        {
+            return obj.Id.GetHashCode();
+        }
+    }
 }

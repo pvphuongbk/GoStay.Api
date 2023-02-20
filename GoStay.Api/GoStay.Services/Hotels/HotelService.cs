@@ -103,7 +103,7 @@ namespace GoStay.Services.Hotels
 			ResponseBase responseBase = new ResponseBase();
 			try
 			{
-                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).Distinct(new HotelHomePageDtoCompare());
 				return responseBase;
 			}
 			catch (Exception e)

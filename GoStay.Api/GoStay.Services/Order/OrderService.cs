@@ -79,10 +79,17 @@ namespace GoStay.Services.Orders
                 if (orderDetail.DetailStyle == 1)
                 {
                     orderDetailEntity.IdRoom = orderDetail.IdProduct;
+                    var room = _roomRepository.GetById(orderDetail.IdProduct);
+                    orderDetailEntity.Price = room.PriceValue;
+                    orderDetailEntity.Discount = room.Discount;
+
                 }
                 if (orderDetail.DetailStyle == 2)
                 {
                     orderDetailEntity.IdTour = orderDetail.IdProduct;
+                    var tour = _tourRepository.GetById(orderDetail.IdProduct);
+                    orderDetailEntity.Price = (decimal)tour.Price;
+                    orderDetailEntity.Discount = tour.Discount;
                 }
                 _OrderDetailRepository.Insert(orderDetailEntity);
                 _commonUoW.Commit();
@@ -190,10 +197,16 @@ namespace GoStay.Services.Orders
                 if (orderDetail.DetailStyle == 1)
                 {
                     orderDetailEntity.IdRoom = orderDetail.IdProduct;
+                    var room = _roomRepository.GetById(orderDetail.IdProduct);
+                    orderDetailEntity.Price = room.PriceValue;
+                    orderDetailEntity.Discount = room.Discount;
                 }
                 if (orderDetail.DetailStyle == 2)
                 {
                     orderDetailEntity.IdTour = orderDetail.IdProduct;
+                    var tour = _tourRepository.GetById(orderDetail.IdProduct);
+                    orderDetailEntity.Price = (decimal)tour.Price;
+                    orderDetailEntity.Discount = tour.Discount;
                 }
                 _OrderDetailRepository.Insert(orderDetailEntity);
 
