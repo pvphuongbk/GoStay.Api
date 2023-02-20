@@ -37,5 +37,11 @@ namespace GoStay.Api.Controllers
             var items = _ratingService.GetRatingByHotel(hotelId);
             return items;
         }
+        [HttpGet("user-box-review")]
+        public ResponseBase GetUserBoxReview(int idHotel,int idUser)
+        {
+            var items = _ratingService.GetUserBoxReview(idHotel, idUser);
+            return items;
+        }
     }
 }

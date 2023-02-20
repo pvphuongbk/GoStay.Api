@@ -6,6 +6,7 @@ using GoStay.DataDto.RatingDto;
 using GoStay.Repository.Repositories;
 using GoStay.Services.Ratings;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GoStay.Services.Reviews
 {
@@ -14,12 +15,21 @@ namespace GoStay.Services.Reviews
         private readonly ICommonRepository<HotelRating> _hotelRatingRepository;
         private readonly ICommonUoW _icommonUoWRepository;
         private readonly ICommonRepository<Hotel> _hotelRepository;
+        private readonly ICommonRepository<Order> _orderRepository;
+        private readonly ICommonRepository<User> _userRepository;
 
-        public RatingService(ICommonRepository<HotelRating> hotelRatingRepository, ICommonUoW icommonUoWRepository, ICommonRepository<Hotel> hotelRepository)
+        private readonly ICommonRepository<OrderDetail> _orderDetailRepository;
+
+        public RatingService(ICommonRepository<HotelRating> hotelRatingRepository, ICommonUoW icommonUoWRepository,
+            ICommonRepository<Hotel> hotelRepository, ICommonRepository<Order> orderRepository
+            , ICommonRepository<OrderDetail> orderDetailRepository, ICommonRepository<User> userRepository)
         {
             _hotelRatingRepository = hotelRatingRepository;
             _icommonUoWRepository = icommonUoWRepository;
             _hotelRepository = hotelRepository;
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailRepository;
+            _userRepository = userRepository;
         }
         
         public ResponseBase GetRatingByUser(int hotelId, int userId)
@@ -142,6 +152,50 @@ namespace GoStay.Services.Reviews
             {
                 response.Code = ErrorCodeMessage.Exception.Key;
                 response.Message = e.Message;
+                return response;
+            }
+        }
+        public ResponseBase GetUserBoxReview(int idHotel, int idUser)
+        {
+            ResponseBase response = new ResponseBase();
+            UserBoxReview userBoxReview = new UserBoxReview();
+            try
+            {
+                var order = _orderRepository.FindAll(x => x.IdUser == idUser && x.IdHotel == idHotel)
+                            .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdRoomNavigation).OrderByDescending(x=>x.DateCreate);
+                if (order != null)
+                {
+                    var room = order.First().OrderDetails.OrderByDescending(x=>x.DateCreate).FirstOrDefault();
+                    var rating = _hotelRatingRepository.FindAll(x => x.IdUser == idUser && x.IdHotel == idHotel).SingleOrDefault();
+                    var user = _userRepository.GetById(idUser);
+                    userBoxReview.UserId = idUser;
+                    userBoxReview.UserName = user.UserName;
+                    userBoxReview.Avatar = user.Picture;
+                    userBoxReview.RoomName = room.IdRoomNavigation.Name;
+                    userBoxReview.NumMature = room.IdRoomNavigation.NumMature;
+                    userBoxReview.NumChild = room.IdRoomNavigation.NumChild;
+                    userBoxReview.DateReviews = rating.DateReviews;
+                    userBoxReview.DateUpdate = rating.DateUpdate;
+                    userBoxReview.Description = rating.Description;
+                    userBoxReview.LocationScore = rating.LocationScore;
+                    userBoxReview.ValueScore = rating.ValueScore;
+                    userBoxReview.ServiceScore = rating.ServiceScore;
+                    userBoxReview.CleanlinessScore = rating.CleanlinessScore;
+                    userBoxReview.RoomsScore = rating.RoomsScore;
+                    userBoxReview.CheckInDate = (DateTime)room.ChechIn;
+                    userBoxReview.CheckOutDate = (DateTime)room.CheckOut;
+                    response.Data = userBoxReview;
+                    return response;
+                }
+                response.Message = $"{ErrorCodeMessage.NotFound.Value}";
+                response.Data = userBoxReview;
+                return response;
+
+            }
+            catch
+            {
+                response.Message = $"{ErrorCodeMessage.Exception.Value}";
+                response.Data = userBoxReview;
                 return response;
             }
         }
