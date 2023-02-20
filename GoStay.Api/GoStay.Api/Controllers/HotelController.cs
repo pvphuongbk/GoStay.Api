@@ -11,7 +11,7 @@ using GoStay.Services.WebSupport;
 namespace GoStay.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-
+    [Route("[controller]")]
     public class HotelController : Controller
     {
 
