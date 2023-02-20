@@ -38,9 +38,9 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("user-box-review")]
-        public ResponseBase GetUserBoxReview(int idHotel,int idUser)
+        public ResponseBase GetUserBoxReview(int idHotel)
         {
-            var items = _ratingService.GetUserBoxReview(idHotel, idUser);
+            var items = _ratingService.GetUserBoxReview(idHotel);
             return items;
         }
     }

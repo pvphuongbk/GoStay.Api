@@ -2,6 +2,7 @@
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.RatingDto;
 using GoStay.Repository.Repositories;
 using GoStay.Services.Ratings;
@@ -17,12 +18,12 @@ namespace GoStay.Services.Reviews
         private readonly ICommonRepository<Hotel> _hotelRepository;
         private readonly ICommonRepository<Order> _orderRepository;
         private readonly ICommonRepository<User> _userRepository;
-
+        private readonly ICommonUoW _commonUoW;
         private readonly ICommonRepository<OrderDetail> _orderDetailRepository;
 
         public RatingService(ICommonRepository<HotelRating> hotelRatingRepository, ICommonUoW icommonUoWRepository,
             ICommonRepository<Hotel> hotelRepository, ICommonRepository<Order> orderRepository
-            , ICommonRepository<OrderDetail> orderDetailRepository, ICommonRepository<User> userRepository)
+            , ICommonRepository<OrderDetail> orderDetailRepository, ICommonRepository<User> userRepository,ICommonUoW commonUoW)
         {
             _hotelRatingRepository = hotelRatingRepository;
             _icommonUoWRepository = icommonUoWRepository;
@@ -30,6 +31,7 @@ namespace GoStay.Services.Reviews
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
             _userRepository = userRepository;
+            _commonUoW = commonUoW;
         }
         
         public ResponseBase GetRatingByUser(int hotelId, int userId)
@@ -155,47 +157,34 @@ namespace GoStay.Services.Reviews
                 return response;
             }
         }
-        public ResponseBase GetUserBoxReview(int idHotel, int idUser)
+        public ResponseBase GetUserBoxReview(int idHotel)
         {
             ResponseBase response = new ResponseBase();
-            UserBoxReview userBoxReview = new UserBoxReview();
+            List<UserBoxReview> listUserBoxReview = new List<UserBoxReview>();
+            var rating = _hotelRatingRepository.FindAll(x=>x.IdHotel == idHotel);
+
             try
             {
-                var order = _orderRepository.FindAll(x => x.IdUser == idUser && x.IdHotel == idHotel)
-                            .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdRoomNavigation).OrderByDescending(x=>x.DateCreate);
-                if (order != null)
+                
+                if (rating != null)
                 {
-                    var room = order.First().OrderDetails.OrderByDescending(x=>x.DateCreate).FirstOrDefault();
-                    var rating = _hotelRatingRepository.FindAll(x => x.IdUser == idUser && x.IdHotel == idHotel).SingleOrDefault();
-                    var user = _userRepository.GetById(idUser);
-                    userBoxReview.UserId = idUser;
-                    userBoxReview.UserName = user.UserName;
-                    userBoxReview.Avatar = user.Picture;
-                    userBoxReview.RoomName = room.IdRoomNavigation.Name;
-                    userBoxReview.NumMature = room.IdRoomNavigation.NumMature;
-                    userBoxReview.NumChild = room.IdRoomNavigation.NumChild;
-                    userBoxReview.DateReviews = rating.DateReviews;
-                    userBoxReview.DateUpdate = rating.DateUpdate;
-                    userBoxReview.Description = rating.Description;
-                    userBoxReview.LocationScore = rating.LocationScore;
-                    userBoxReview.ValueScore = rating.ValueScore;
-                    userBoxReview.ServiceScore = rating.ServiceScore;
-                    userBoxReview.CleanlinessScore = rating.CleanlinessScore;
-                    userBoxReview.RoomsScore = rating.RoomsScore;
-                    userBoxReview.CheckInDate = (DateTime)room.ChechIn;
-                    userBoxReview.CheckOutDate = (DateTime)room.CheckOut;
-                    response.Data = userBoxReview;
+                    foreach (var item in rating)
+                    {
+                        var user = CreatUserBoxReview(item);
+                        listUserBoxReview.Add(user);
+                    }
+                    response.Data = listUserBoxReview;
                     return response;
                 }
                 response.Message = $"{ErrorCodeMessage.NotFound.Value}";
-                response.Data = userBoxReview;
+                response.Data = listUserBoxReview;
                 return response;
 
             }
             catch
             {
                 response.Message = $"{ErrorCodeMessage.Exception.Value}";
-                response.Data = userBoxReview;
+                response.Data = listUserBoxReview;
                 return response;
             }
         }
@@ -254,5 +243,42 @@ namespace GoStay.Services.Reviews
             var totalScore = hotel.LocationScore + hotel.ValueScore + hotel.ServiceScore + hotel.CleanlinessScore + hotel.RoomsScore;
             hotel.ReviewScore = totalScore / 5;
         }
+        private UserBoxReview CreatUserBoxReview(HotelRating rating)
+        {
+            UserBoxReview userBoxReview = new UserBoxReview();
+            var order = _orderRepository.FindAll(x => x.IdHotel == rating.IdHotel&& x.IdUser == rating.IdUser)
+                            .Include(x => x.OrderDetails).ThenInclude(x => x.IdRoomNavigation)
+                            .Include(x => x.IdUserNavigation).OrderByDescending(x=>x.DateCreate).SingleOrDefault();
+
+            //var rating = _hotelRatingRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel).SingleOrDefault();
+
+            var user = _userRepository.GetById(rating.IdUser);
+            userBoxReview.UserId = rating.IdUser;
+            userBoxReview.UserName = user.UserName;
+            userBoxReview.Avatar = user.Picture;
+            if (order != null)
+            {
+
+                    var room = order.OrderDetails.OrderByDescending(x => x.DateCreate).First();
+
+                    userBoxReview.RoomName = room.IdRoomNavigation.Name;
+                    userBoxReview.NumMature = room.IdRoomNavigation.NumMature;
+                    userBoxReview.NumChild = room.IdRoomNavigation.NumChild;
+                    userBoxReview.DateReviews = rating.DateReviews;
+                    userBoxReview.DateUpdate = rating.DateUpdate;
+                    userBoxReview.Description = rating.Description;
+                    userBoxReview.LocationScore = rating.LocationScore;
+                    userBoxReview.ValueScore = rating.ValueScore;
+                    userBoxReview.ServiceScore = rating.ServiceScore;
+                    userBoxReview.CleanlinessScore = rating.CleanlinessScore;
+                    userBoxReview.RoomsScore = rating.RoomsScore;
+                    userBoxReview.CheckInDate = (DateTime)room.ChechIn;
+                    userBoxReview.CheckOutDate = (DateTime)room.CheckOut;
+
+                return userBoxReview;
+            }
+            return userBoxReview;
+        }
+
     }
 }

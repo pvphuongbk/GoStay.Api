@@ -8,7 +8,7 @@ namespace GoStay.Services.Ratings
         public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto);
         public ResponseBase GetRatingByUser(int hotelId, int userId);
         public ResponseBase GetRatingByHotel(int hotelId);
-        public ResponseBase GetUserBoxReview(int inHotel,int idUser);
+        public ResponseBase GetUserBoxReview(int inHotel);
 
     }
 }
