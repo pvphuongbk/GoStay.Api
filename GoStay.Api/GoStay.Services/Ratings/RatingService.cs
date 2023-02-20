@@ -256,6 +256,14 @@ namespace GoStay.Services.Reviews
             userBoxReview.UserId = rating.IdUser;
             userBoxReview.UserName = user.UserName;
             userBoxReview.Avatar = user.Picture;
+            userBoxReview.DateReviews = rating.DateReviews;
+            userBoxReview.DateUpdate = rating.DateUpdate;
+            userBoxReview.Description = rating.Description;
+            userBoxReview.LocationScore = rating.LocationScore;
+            userBoxReview.ValueScore = rating.ValueScore;
+            userBoxReview.ServiceScore = rating.ServiceScore;
+            userBoxReview.CleanlinessScore = rating.CleanlinessScore;
+            userBoxReview.RoomsScore = rating.RoomsScore;
             if (order != null)
             {
 
@@ -264,14 +272,6 @@ namespace GoStay.Services.Reviews
                     userBoxReview.RoomName = room.IdRoomNavigation.Name;
                     userBoxReview.NumMature = room.IdRoomNavigation.NumMature;
                     userBoxReview.NumChild = room.IdRoomNavigation.NumChild;
-                    userBoxReview.DateReviews = rating.DateReviews;
-                    userBoxReview.DateUpdate = rating.DateUpdate;
-                    userBoxReview.Description = rating.Description;
-                    userBoxReview.LocationScore = rating.LocationScore;
-                    userBoxReview.ValueScore = rating.ValueScore;
-                    userBoxReview.ServiceScore = rating.ServiceScore;
-                    userBoxReview.CleanlinessScore = rating.CleanlinessScore;
-                    userBoxReview.RoomsScore = rating.RoomsScore;
                     userBoxReview.CheckInDate = (DateTime)room.ChechIn;
                     userBoxReview.CheckOutDate = (DateTime)room.CheckOut;
 
