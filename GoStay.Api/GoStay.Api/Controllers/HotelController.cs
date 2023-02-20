@@ -1,18 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using GoStay.Services;
 using GoStay.Data.Base;
 using GoStay.DataDto.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.Hotel;
-using Newtonsoft.Json;
 using GoStay.Services.WebSupport;
 
-namespace GoStay.Web.Areas.Admin.Controllers
+namespace GoStay.Api.Controllers
 {
-    [Area("Admin")]
+    [ApiController]
     [Route("[controller]")]
-    public class HotelController : Controller
+    public class HotelController : ControllerBase
     {
 
         private readonly IHotelService _hotelServices;
@@ -23,10 +21,6 @@ namespace GoStay.Web.Areas.Admin.Controllers
             _hotelServices = hotelServices;
 
             _mapper = mapper;
-        }
-        public IActionResult Index()
-        {
-            return View();
         }
 
         [HttpPost("list")]
