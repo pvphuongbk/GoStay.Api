@@ -264,6 +264,8 @@ namespace GoStay.Services.Reviews
             userBoxReview.ServiceScore = rating.ServiceScore;
             userBoxReview.CleanlinessScore = rating.CleanlinessScore;
             userBoxReview.RoomsScore = rating.RoomsScore;
+            userBoxReview.CheckInDate = null;
+            userBoxReview.CheckOutDate = null;
             if (order != null)
             {
 
