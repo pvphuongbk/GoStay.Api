@@ -13,7 +13,7 @@ namespace GoStay.Services.WebSupport
 {
     public interface IProvinceService
     {
-        ResponseBase GetAllProvince();
+        ResponseBase GetAllProvince(int? IdCountry=1);
         ResponseBase GetProvinceNameById(int IDTinhThanh);
         ResponseBase GetTopProvince();
     }

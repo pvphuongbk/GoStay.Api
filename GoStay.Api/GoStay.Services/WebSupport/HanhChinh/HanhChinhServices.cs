@@ -7,6 +7,7 @@ using GoStay.DataDto.Hành_Chính;
 using AutoMapper;
 using System.Collections.Generic;
 using GoStay.Data.Base;
+using GoStay.DataDto;
 
 namespace GoStay.Services.WebSupport
 {
@@ -24,11 +25,10 @@ namespace GoStay.Services.WebSupport
             _mapper = mapper;
         }
 
-        public ResponseBase GetAllProvince()
+        public ResponseBase GetAllProvince(int? IdCountry=1)
         {
             ResponseBase response = new ResponseBase();
-            var result  = _TinhRepository.FindAll()
-                //.Include(x=>x.IdCountryNavigation)
+            var result  = _TinhRepository.FindAll(x=>x.IdCountry== IdCountry)
                 .OrderBy(x => x.TenTt).OrderBy(x => x.Stt).ToList();
             response.Data = result;
             return response;
@@ -60,13 +60,16 @@ namespace GoStay.Services.WebSupport
     {
         private readonly ICommonRepository<Quan> _QuanRepository;
         private readonly ICommonRepository<TourDistrictTo> _tourDistrictRepository;
+        private IMapper _mapper;
 
         private readonly ICommonUoW _commonUoW;
-        public DistrictService(ICommonRepository<Quan> QuanRepository, ICommonUoW commonUoW, ICommonRepository<TourDistrictTo> tourDistrictRepository)
+        public DistrictService(ICommonRepository<Quan> QuanRepository, ICommonUoW commonUoW, ICommonRepository<TourDistrictTo> tourDistrictRepository
+                                , IMapper mapper)
         {
             _QuanRepository = QuanRepository;
             _commonUoW = commonUoW;
             _tourDistrictRepository = tourDistrictRepository;
+            _mapper = mapper;
         }
         public ResponseBase GetDistrictById(int Id)
         {
@@ -79,8 +82,10 @@ namespace GoStay.Services.WebSupport
         {
             ResponseBase response = new ResponseBase();
 
-            var result= _QuanRepository.FindAll().OrderBy(x => x.Tenquan).OrderBy(x => x.Stt).ToList();
-            response.Data= result;
+            var quans= _QuanRepository.FindAll().Include(x=>x.IdTinhThanhNavigation).OrderBy(x => x.Tenquan).OrderBy(x => x.Stt).ToList();
+            var quansdto = _mapper.Map<List<Quan>, List<QuanDto>>(quans);
+            quansdto.ForEach(x => x.ProvinceName = quans.Where(y => y.Id == x.Id).Single().IdTinhThanhNavigation.TenTt);
+            response.Data= quansdto;
             return response;
         }
 

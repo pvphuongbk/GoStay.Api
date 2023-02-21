@@ -5,6 +5,7 @@ using GoStay.Data.OrderDto;
 using GoStay.Data.ServiceDto;
 using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto;
 using GoStay.DataDto.Banner;
 using GoStay.DataDto.Hành_Chính;
 using GoStay.DataDto.Hotel;
@@ -58,6 +59,7 @@ namespace GoStay.Api.Configurations
             CreateMap<Hotel, HotelDto>().ReverseMap();
             CreateMap<PagingList<Hotel>, PagingList<HotelDto>>().ReverseMap();
 
+            CreateMap<Quan, QuanDto>().ReverseMap();
 
         }
     }

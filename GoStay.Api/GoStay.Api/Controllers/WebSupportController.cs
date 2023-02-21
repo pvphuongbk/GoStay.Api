@@ -35,9 +35,9 @@ namespace GoStay.Api.Controllers
 
         //Province
         [HttpGet("provinces")]
-        public ResponseBase GetAllProvince()
+        public ResponseBase GetAllProvince(int? IdCountry=1)
         {
-            var items = _provinceService.GetAllProvince();
+            var items = _provinceService.GetAllProvince(IdCountry);
             return items;
         }
         [HttpGet("province-name-by-id")]
