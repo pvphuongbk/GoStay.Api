@@ -148,20 +148,18 @@ namespace GoStay.Services.Hotels
 				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
 					.Include(x=>x.HotelRooms.Where(x=>x.Deleted!=1)
 					.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
-						.ThenInclude(x=>x.RoomMamenitis).Include(x=>x.HotelRooms)
+						.ThenInclude(x=>x.RoomMamenitis.OrderByDescending(x=>x.Level).Take(5)).ThenInclude(x=>x.IdservicesNavigation)
+						.Include(x=>x.HotelRooms)
 						.ThenInclude(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
                         .Include(x => x.HotelRooms).ThenInclude(x => x.PalletbedNavigation)
-                        .Include(x => x.HotelRooms).ThenInclude(x => x.Pictures.Take(4))
-
+                        .Include(x => x.HotelRooms).ThenInclude(x => x.Pictures.Where(x=>x.Deleted==0).Take(4))
                     .Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
 					.Include(x=>x.IdQuanNavigation)
 					.Include(x=>x.IdTinhThanhNavigation)
-					.Include(x=>x.HotelMamenitis)
+					.Include(x=>x.HotelMamenitis.OrderByDescending(x => x.Level).Take(4)).ThenInclude(x=>x.IdservicesNavigation)
 					.FirstOrDefault();
-                List<Service> svhotel = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 0)
-                                                .Where(x => x.HotelMamenitis.Any(x => x.Idhotel == hotelId))
-                                                .OrderBy(x => x.Name).OrderBy(x=>x.AdvantageLevel).Take(4).ToList();
 
+                var svhotel = hotel.HotelMamenitis.Select(x=>x.IdservicesNavigation).ToList();
 
 				var hotelRoom = hotel.HotelRooms.ToList();
                 if (hotel==null)
@@ -178,9 +176,8 @@ namespace GoStay.Services.Hotels
                 {
 					hotelDetailDto.Rooms[i].Pictures = hotelRoom[i].Pictures.Select(x=>x.Url).ToList();
 					hotelDetailDto.Rooms[i].Services = _mapper.Map<List<Service>, List<ServiceDetailHotelDto>>
-												(_serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == 1)
-												.Where(x => x.RoomMamenitis.Any(x => x.Idroom == hotelDetailDto.Rooms[i].Id))
-												.OrderBy(x => x.Name).OrderBy(x => x.AdvantageLevel).Take(5).ToList());
+						(hotelRoom[i].RoomMamenitis.Select(x => x.IdservicesNavigation).ToList())
+												;
                 }
 
                 responseBase.Data = hotelDetailDto;
