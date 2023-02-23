@@ -607,6 +607,8 @@ namespace GoStay.Services.Orders
                 {
                     orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listOrderDetail[j]));
                 }
+                orderInfo.TotalPrice = orderInfo.ListOrderDetails.Sum(x => x.Price);
+                orderInfo.TotalNewPrice = orderInfo.ListOrderDetails.Sum(x => x.NewPrice);
 
                 responseBase.Data = orderInfo;
                 return responseBase;

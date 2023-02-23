@@ -108,15 +108,11 @@ namespace GoStay.Common.Helpers.Order
         {
             var tourOrderDto = _mapper.Map<Tour, TourOrderDto>(tourOrderDetail);
             tourOrderDto.TourStyle = tourOrderDetail.IdTourStyleNavigation.TourStyle1;
-
             tourOrderDto.TourTopic = tourOrderDetail.IdTourTopicNavigation.TourTopic1;
-
             tourOrderDto.UserName = _userRepository.GetById(tourOrderDto.IdUser)?.UserName;
             tourOrderDto.ProvinceFrom = tourOrderDetail.IdDistrictFromNavigation.IdTinhThanhNavigation.TenTt;
-
             tourOrderDto.Pictures = _pictureRepository.FindAll(x => x.TourId == tourOrderDetail.Id && x.Type == 2)?.Select(x => x.Url).Take(2).ToList();
             var listTourDetail = tourOrderDetail.TourDetails.ToList();
-
 
             tourOrderDto.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(listTourDetail);
             var listprovinceto = new List<string>();

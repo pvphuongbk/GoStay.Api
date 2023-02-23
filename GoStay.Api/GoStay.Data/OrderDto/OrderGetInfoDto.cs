@@ -34,6 +34,8 @@ namespace GoStay.Data.OrderDto
         public DateTime DateUpdate { get; set; }
         public DateTime DateCreate { get; set; }
 
+        public decimal TotalPrice { get; set; }
+        public decimal TotalNewPrice { get; set; }
         public List<OrderDetailInfoDto> ListOrderDetails { get; set; }
 
     }
@@ -49,9 +51,9 @@ namespace GoStay.Data.OrderDto
         public DateTime? DateCreate { get; set; }
 
         public byte? Num { get; set; }
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
         public double? Discount { get; set; }
-        public decimal? NewPrice { get; set; }
+        public decimal NewPrice { get; set; }
         public string? MoreInfo { get; set; }
 
         public HotelRoomOrderDto Rooms { get; set; }
@@ -77,9 +79,9 @@ namespace GoStay.Data.OrderDto
         public decimal? RoomSize { get; set; }
         public string ViewDirection { get; set; }
         public byte? RemainNum { get; set; }
-        public decimal? PriceValue { get; set; }
+        public decimal PriceValue { get; set; }
         public double? Discount { get; set; }
-        public decimal? NewPrice { get; set; }
+        public decimal NewPrice { get; set; }
 
         public List<string> Pictures { get; set; } = new List<string>();
         public List<ServiceDetailHotelDto> Services { get; set; }
