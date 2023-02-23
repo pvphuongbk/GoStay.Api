@@ -37,20 +37,29 @@ namespace GoStay.Services.WebSupport
         public ResponseBase GetHotelList(RequestGetListHotel request)
         {
             ResponseBase response = new ResponseBase();
-
+            if(request.NameSearch == null)
+            {
+                request.NameSearch = "";
+            }    
+            request.NameSearch = request.NameSearch.RemoveUnicode();
+            request.NameSearch = request.NameSearch.Replace(" ", string.Empty).ToLower();
             PagingList<Hotel> hotel = new PagingList<Hotel>();
             if (request.IdProvince == null|| request.IdProvince ==0)
             {
-                hotel = _hotelRepository.FindAll(x => x.Deleted!=1).Include(x=>x.IdPriceRangeNavigation)
+                hotel = _hotelRepository.FindAll(x => x.Deleted!=1 && x.SearchKey.Contains(request.NameSearch) == true)
+                    .Include(x=>x.IdPriceRangeNavigation).Include(x=>x.TypeNavigation)
                     .ToList().ConvertToPaging(request.PageSize??10, request.PageIndex??1);
             }
             else
             {
-                hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince&&x.Deleted!=1)
-                    .Include(x => x.IdPriceRangeNavigation).ToList().ConvertToPaging(request.PageSize??10, request.PageIndex??1);
+                hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince&&x.Deleted!=1 && x.SearchKey.Contains(request.NameSearch) == true)
+                    .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation)
+                    .ToList().ConvertToPaging(request.PageSize??10, request.PageIndex??1);
             }
             var list = _mapper.Map<PagingList<Hotel>,PagingList<HotelDto>>(hotel);
             list.Items.ForEach(x => x.PriceRange = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().IdPriceRangeNavigation.Title));
+            list.Items.ForEach(x => x.TypeHotel = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().TypeNavigation.Type));
+
             response.Data = list;
             return response;
         }

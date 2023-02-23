@@ -13,6 +13,8 @@ namespace GoStay.DataDto.HotelDto
         public string? Name { get; set; }
         public string? Address { get; set; }
         public int? Type { get; set; }
+        public string? TypeHotel { get; set; }
+
         public int? IdPriceRange { get; set; }
         public string? PriceRange { get; set; }
     }
@@ -21,5 +23,6 @@ namespace GoStay.DataDto.HotelDto
         public int? PageIndex { get; set; }
         public int? PageSize { get; set; }
         public int? IdProvince { get; set; }
+        public string? NameSearch { get; set; }
     }
 }
