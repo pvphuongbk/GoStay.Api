@@ -112,10 +112,19 @@ namespace GoStay.Services.Orders
             ResponseBase responseBase = new ResponseBase();
             try
             {
-
-                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel&& x.Status!=3)
-                    .Include(x=>x.OrderDetails)
-                    .SingleOrDefault();
+                Order ordercheck = null;
+                if (orderDetail.DetailStyle == 1)
+                {
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status != 3)
+                        .Include(x => x.OrderDetails)
+                        .SingleOrDefault();
+                }
+                if (orderDetail.DetailStyle == 2)
+                {
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status != 3)
+                        .Include(x => x.OrderDetails)
+                        .SingleOrDefault();
+                }
 
                 if (ordercheck is null)
                 {
@@ -564,8 +573,22 @@ namespace GoStay.Services.Orders
                 var orderInfo = new OrderGetInfoDto();
                 var listOrderDetail = new List<OrderDetail>();
 
-                var order = _OrderRepository.FindAll(x => x.Id == Id)?.Include(x => x.OrderDetails).Include(x => x.IdPaymentMethodNavigation)
-                    .Include(x => x.StatusNavigation).Include(x => x.IdUserNavigation).SingleOrDefault();
+                var order = _OrderRepository.FindAll(x => x.Id == Id)?
+                    //room
+                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x=>x.IdRoomNavigation)
+                    //tour
+                    .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdTourNavigation).ThenInclude(x=>x.TourDistrictTos)
+                        .ThenInclude(x=>x.IdDistrictToNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
+                    .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdTourNavigation).ThenInclude(x=>x.IdTourStyleNavigation)
+                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdTourTopicNavigation)
+                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.TourDetails)
+                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdDistrictFromNavigation)
+                        .ThenInclude(x=>x.IdTinhThanhNavigation)
+
+                    //exception
+                    .Include(x => x.IdPaymentMethodNavigation)
+                    .Include(x => x.StatusNavigation)
+                    .Include(x => x.IdUserNavigation).SingleOrDefault();
 
                 if (order == null)
                 {
@@ -573,8 +596,7 @@ namespace GoStay.Services.Orders
                     return responseBase;
                 }    
 
-                listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == Id)?.
-                    Include(x => x.IdRoomNavigation).Include(x => x.IdTourNavigation).OrderByDescending(x=>x.DateCreate));
+                listOrderDetail= order.OrderDetails.ToList();
 
                 orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
                 orderInfo.Status =order.Status;

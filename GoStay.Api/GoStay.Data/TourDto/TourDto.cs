@@ -23,6 +23,8 @@ namespace GoStay.Data.TourDto
         public int IdDistrictFrom { get; set; }
         public string ProvinceFrom { get; set; }
         public double Price { get; set; }
+        public double? PriceChild { get; set; }
+
         public byte? Discount { get; set; }
         public double ActualPrice { get; set; }
         public double Rating { get; set; }
@@ -34,6 +36,8 @@ namespace GoStay.Data.TourDto
 
         public List<TourDetailDto> TourDetails { get; set; }
         public List<string> ProvinceTo { get; set; }
+        public List<string> Pictures { get; set; } = new List<string>();
+
     }
     public class TourDetailDto
     {
