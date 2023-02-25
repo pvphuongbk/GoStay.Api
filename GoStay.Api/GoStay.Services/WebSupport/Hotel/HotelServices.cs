@@ -19,12 +19,17 @@ namespace GoStay.Services.WebSupport
         private readonly ICommonRepository<HotelRoom> _roomRepository;
         private readonly ICommonRepository<RoomView> _roomViewsRepository;
         private readonly ICommonRepository<RoomMameniti> _roomServicesRepository;
+        private readonly ICommonRepository<ViewDirection> _viewRepository;
+        private readonly ICommonRepository<Palletbed> _palletbedRepository;
+        private readonly ICommonRepository<Service> _servicesRepository;
+
 
         private readonly IMapper _mapper;
 
         private readonly ICommonUoW _commonUoW;
         public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonUoW commonUoW, IMapper mapper,
-            ICommonRepository<HotelRoom> roomRepository, ICommonRepository<RoomView> roomViewRepository, ICommonRepository<RoomMameniti> roomServicesRepository)
+            ICommonRepository<HotelRoom> roomRepository, ICommonRepository<RoomView> roomViewRepository, ICommonRepository<RoomMameniti> roomServicesRepository,
+            ICommonRepository<ViewDirection> viewRepository, ICommonRepository<Palletbed> palletbedRepository, ICommonRepository<Service> servicesRepository)
         {
             _hotelRepository = hotelRepository;
             _commonUoW = commonUoW;
@@ -32,6 +37,9 @@ namespace GoStay.Services.WebSupport
             _roomRepository = roomRepository;
             _roomViewsRepository = roomViewRepository;
             _roomServicesRepository = roomServicesRepository;
+            _viewRepository = viewRepository;
+            _palletbedRepository = palletbedRepository;
+            _servicesRepository = servicesRepository;
         }
 
         public ResponseBase GetHotelList(RequestGetListHotel request)
@@ -101,6 +109,18 @@ namespace GoStay.Services.WebSupport
                 response.Code = ErrorCodeMessage.AddFail.Key;
                 return response;
             }
+        }
+
+        public ResponseBase SupportAddRoom()
+        {
+            ResponseBase response = new ResponseBase();
+            SupportAddRoom support = new SupportAddRoom();
+            support.views = _viewRepository.FindAll().ToList();
+            support.palletbed = _palletbedRepository.FindAll().ToList();
+            support.servicesRoom = _servicesRepository.FindAll(x=>x.IdStyle==1).ToList();
+
+            response.Data = support;
+            return response;
         }
     }
 }

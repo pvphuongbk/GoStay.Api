@@ -53,5 +53,12 @@ namespace GoStay.Api.Controllers
             var result = _hotelServices.AddRoom(hotelRoom, roomDto.ViewRoom, roomDto.ServiceRoom);
             return result;
         }
+        [HttpGet("support-add-room")]
+        public ResponseBase SupportAddRoom()
+        {
+            var result = _hotelServices.SupportAddRoom();
+            return result;
+        }
+
     }
 }

@@ -11,6 +11,7 @@ namespace GoStay.Services.WebSupport
     {
         public ResponseBase GetHotelList(RequestGetListHotel request);
         public ResponseBase AddRoom(HotelRoom data, int[] view, int[] service);
+        public ResponseBase SupportAddRoom();
 
     }
 
