@@ -36,48 +36,58 @@ namespace GoStay.Api.Controllers
         public ResponseBase AddRoom([FromForm]AddRoomViewModel roomDto)
         {
             ResponseBase response = new ResponseBase();
-            response.Message = "";
-            var hotelRoom = _mapper.Map<AddRoomViewModel, HotelRoom>(roomDto);
-            var viewroom = roomDto.ViewRoom;
-            var serviceroom = roomDto.ServicesRooms;
-            var namealbum = roomDto.NameAlbum;
 
-            hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
-
-            var resultAddroom = _hotelServices.AddRoom(hotelRoom);
-            response.Message = response.Message+ resultAddroom.Message;
-
-            if (viewroom != null)
+            try
             {
-                var resultAddview = _hotelServices.AddViewRoom((int)resultAddroom.Data, viewroom);
-                response.Message = response.Message + " & " + resultAddview.Message;
-            }
-            if (serviceroom != null)
-            {
-                var resultAddservice = _hotelServices.AddServiceRoom((int)resultAddroom.Data, serviceroom);
-                response.Message = response.Message + " & " + resultAddservice.Message;
-            }
-            if (namealbum != null)
-            {
-                var resultAddalbum = _hotelServices.AddAlbumRoom((int)resultAddroom.Data, namealbum);
-                response.Message = response.Message + " & " + resultAddalbum.Message;
+                response.Message = "";
+                var hotelRoom = _mapper.Map<AddRoomViewModel, HotelRoom>(roomDto);
+                var viewroom = roomDto.ViewRoom;
+                var serviceroom = roomDto.ServicesRooms;
+                var namealbum = roomDto.NameAlbum;
 
-                if (roomDto.filesAlbum != null)
+                hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
+
+                var resultAddroom = _hotelServices.AddRoom(hotelRoom);
+                response.Message = response.Message + resultAddroom.Message;
+
+                if (viewroom != null)
                 {
-                    var imgres = _client.PostImgAndGetData(roomDto.filesAlbum, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
-                    var resultAddPicAlbum = _hotelServices.AddPictureRoom((int)resultAddroom.Data, (int)resultAddalbum.Data, 1, imgres);
-                   
-                    response.Message = response.Message + " & " + resultAddPicAlbum.Message;
+                    var resultAddview = _hotelServices.AddViewRoom((int)resultAddroom.Data, viewroom);
+                    response.Message = response.Message + " & " + resultAddview.Message;
                 }
-            }
-            if (roomDto.filesRoom != null)
-            {
-                var imgres = _client.PostImgAndGetData(roomDto.filesRoom, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+                if (serviceroom != null)
+                {
+                    var resultAddservice = _hotelServices.AddServiceRoom((int)resultAddroom.Data, serviceroom);
+                    response.Message = response.Message + " & " + resultAddservice.Message;
+                }
+                if (namealbum != null)
+                {
+                    var resultAddalbum = _hotelServices.AddAlbumRoom((int)resultAddroom.Data, namealbum);
+                    response.Message = response.Message + " & " + resultAddalbum.Message;
 
-                var resultAddPicRoom = _hotelServices.AddPictureRoom((int)resultAddroom.Data, 0, 1,imgres);
-                response.Message = response.Message + " & " + resultAddPicRoom.Message;
+                    if (roomDto.filesAlbum != null)
+                    {
+                        var imgres = _client.PostImgAndGetData(roomDto.filesAlbum, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+                        var resultAddPicAlbum = _hotelServices.AddPictureRoom((int)resultAddroom.Data, (int)resultAddalbum.Data, 1, imgres);
+
+                        response.Message = response.Message + " & " + resultAddPicAlbum.Message;
+                    }
+                }
+                if (roomDto.filesRoom != null)
+                {
+                    var imgres = _client.PostImgAndGetData(roomDto.filesRoom, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+
+                    var resultAddPicRoom = _hotelServices.AddPictureRoom((int)resultAddroom.Data, 0, 1, imgres);
+                    response.Message = response.Message + " & " + resultAddPicRoom.Message;
+                }
+                response.Data = "True";
+                return response;
             }
-            return response;
+            catch
+            {
+                response.Data = "False";
+                return response;
+            }
         }
         [HttpGet("support-add-room")]
         public ResponseBase SupportAddRoom()
