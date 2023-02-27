@@ -66,7 +66,7 @@ namespace GoStay.Api.Controllers
                 }
                 if (fileRooms != null)
                 {
-                    var imgres = _client.PostImgAndGetData(fileRooms, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+                    var imgres = _client.PostImgAndGetData(fileRooms, 1024, (int)resultAddroom.Data, roomDto.Iduser, 1);
                     var date = DateTime.Today.ToString("dd/MM/yyyy hh:mm");
                     var album = _hotelServices.AddAlbumRoom((int)resultAddroom.Data, $"Album{(int)resultAddroom.Data}{date}");
                     var resultAddPicRoom = _hotelServices.AddPictureRoom((int)resultAddroom.Data, (int)album.Data, 1, imgres);
