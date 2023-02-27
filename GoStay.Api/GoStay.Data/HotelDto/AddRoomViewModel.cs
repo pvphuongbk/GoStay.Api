@@ -42,6 +42,6 @@ namespace PartnerGostay.Models
         public byte? Palletbed { get; set; }
         public List<int> ServicesRooms { get; set; }
 
-        public int UserId { get; set; }
+        public int Iduser { get; set; }
     }
 }
