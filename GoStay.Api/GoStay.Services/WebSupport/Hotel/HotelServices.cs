@@ -197,7 +197,7 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
-        public ResponseBase AddPictureRoom(int Obj, int IdAlbum, int type, UploadImagesResponse imagesResponse)
+        public ResponseBase AddPictureRoom(int Obj, int IdAlbum, int type, int userId , UploadImagesResponse imagesResponse)
         {
             ResponseBase response = new ResponseBase();
             response.Message = "Add Picture";
@@ -271,7 +271,7 @@ namespace GoStay.Services.WebSupport
                     pic.Type = type;
                     var path = Path.GetFileNameWithoutExtension(url[i]) + Path.GetExtension(url[i]).Replace("\"", "");
 
-                    pic.Url = $"/uploads/" + sfolder + "/" + Obj + "/" + path;
+                    pic.Url = $"/partner/" + sfolder +$"/{userId}"+ "/" + Obj + "/" + path;
                     pic.IdType = Obj;
                     if (IdAlbum != null && IdAlbum != 0)
                     {
