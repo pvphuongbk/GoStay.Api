@@ -73,11 +73,13 @@ namespace GoStay.Api.Controllers
                     response.Message = response.Message + " & " + resultAddPicRoom.Message;
                 }
                 response.Data = "True";
+                response.Code = ErrorCodeMessage.Success.Key;
                 return response;
             }
             catch
             {
                 response.Data = "False";
+                response.Code = ErrorCodeMessage.Exception.Key;
                 return response;
             }
         }
