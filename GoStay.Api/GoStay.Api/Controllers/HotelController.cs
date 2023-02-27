@@ -7,6 +7,7 @@ using GoStay.DataDto.Hotel;
 using GoStay.Services.WebSupport;
 using PartnerGostay.Models;
 using GoStay.Services;
+using Newtonsoft.Json;
 
 namespace GoStay.Api.Controllers
 {
@@ -31,19 +32,22 @@ namespace GoStay.Api.Controllers
             var items = _hotelServices.GetHotelList(request);
             return items;
         }
+
+
         [HttpPost("add-room")]
         
-        public ResponseBase AddRoom([FromForm]AddRoomViewModel roomDto)
+        public ResponseBase AddRoomPartner(List<IFormFile> fileRooms, string bodyJson)
         {
             ResponseBase response = new ResponseBase();
 
             try
             {
+                var roomDto = JsonConvert.DeserializeObject<AddRoomModel>(bodyJson);
+
                 response.Message = "";
-                var hotelRoom = _mapper.Map<AddRoomViewModel, HotelRoom>(roomDto);
+                var hotelRoom = _mapper.Map<AddRoomModel, HotelRoom>(roomDto);
                 var viewroom = roomDto.ViewRoom;
                 var serviceroom = roomDto.ServicesRooms;
-                var namealbum = roomDto.NameAlbum;
 
                 hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
 
@@ -60,22 +64,9 @@ namespace GoStay.Api.Controllers
                     var resultAddservice = _hotelServices.AddServiceRoom((int)resultAddroom.Data, serviceroom);
                     response.Message = response.Message + " & " + resultAddservice.Message;
                 }
-                if (namealbum != null)
+                if (fileRooms != null)
                 {
-                    var resultAddalbum = _hotelServices.AddAlbumRoom((int)resultAddroom.Data, namealbum);
-                    response.Message = response.Message + " & " + resultAddalbum.Message;
-
-                    if (roomDto.filesAlbum != null)
-                    {
-                        var imgres = _client.PostImgAndGetData(roomDto.filesAlbum, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
-                        var resultAddPicAlbum = _hotelServices.AddPictureRoom((int)resultAddroom.Data, (int)resultAddalbum.Data, 1, imgres);
-
-                        response.Message = response.Message + " & " + resultAddPicAlbum.Message;
-                    }
-                }
-                if (roomDto.filesRoom != null)
-                {
-                    var imgres = _client.PostImgAndGetData(roomDto.filesRoom, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+                    var imgres = _client.PostImgAndGetData(fileRooms, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
 
                     var resultAddPicRoom = _hotelServices.AddPictureRoom((int)resultAddroom.Data, 0, 1, imgres);
                     response.Message = response.Message + " & " + resultAddPicRoom.Message;
