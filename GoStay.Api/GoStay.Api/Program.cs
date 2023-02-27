@@ -8,6 +8,7 @@ using Q101.ServiceCollectionExtensions.ServiceCollectionExtensions;
 using GoStay.Services.Hotels;
 using GoStay.Api.Configurations;
 using GoStay.Common.Helpers.Order;
+using GoStay.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
@@ -31,6 +32,7 @@ builder.Services.RegisterAssemblyTypesByName(typeof(IHotelService).Assembly,
 builder.Services.AddCommonServices();
 
 // Add services to the container.
+builder.Services.AddHttpClient<IMyTypedClientServices, MyTypedClientServices>();
 
 
 builder.Services.AddControllers();

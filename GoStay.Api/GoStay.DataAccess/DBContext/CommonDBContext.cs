@@ -88,11 +88,16 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Name).HasMaxLength(50);
 
-				entity.HasOne(d => d.IdTypeNavigation)
-					.WithMany(p => p.Albums)
-					.HasForeignKey(d => d.IdType)
-					.HasConstraintName("FK_Album_Hotel");
-			});
+                entity.HasOne(d => d.IdHotelNavigation)
+                    .WithMany(p => p.Albums)
+                    .HasForeignKey(d => d.IdHotel)
+                    .HasConstraintName("FK_Album_Hotel");
+
+                entity.HasOne(d => d.IdRoomNavigation)
+                    .WithMany(p => p.Albums)
+                    .HasForeignKey(d => d.IdRoom)
+                    .HasConstraintName("FK_Album_HotelRoom");
+            });
 
 			modelBuilder.Entity<AspModule>(entity =>
 			{

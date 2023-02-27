@@ -14,9 +14,12 @@ namespace GoStay.DataAccess.Entities
 
         public int? TypeAlbum { get; set; }
         public int? IdType { get; set; }
+        public int? IdHotel { get; set; }
+        public int? IdRoom { get; set; }
         public string? Name { get; set; }
 
-        public virtual Hotel? IdTypeNavigation { get; set; }
+        public virtual Hotel? IdHotelNavigation { get; set; }
+        public virtual HotelRoom? IdRoomNavigation { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
     }
 }

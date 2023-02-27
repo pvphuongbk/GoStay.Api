@@ -5,6 +5,8 @@ using GoStay.DataDto.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.Hotel;
 using GoStay.Services.WebSupport;
+using PartnerGostay.Models;
+using GoStay.Services;
 
 namespace GoStay.Api.Controllers
 {
@@ -15,12 +17,12 @@ namespace GoStay.Api.Controllers
 
         private readonly IHotelService _hotelServices;
         private readonly IMapper _mapper;
-
-        public HotelController(IHotelService hotelServices, IMapper mapper)
+        private readonly IMyTypedClientServices _client;
+        public HotelController(IHotelService hotelServices, IMapper mapper, IMyTypedClientServices client)
         {
             _hotelServices = hotelServices;
-
             _mapper = mapper;
+            _client = client;
         }
 
         [HttpPost("list")]
@@ -30,28 +32,52 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpPost("add-room")]
-        public ResponseBase AddRoom(RoomAddDto roomDto)
+        
+        public ResponseBase AddRoom([FromForm]AddRoomViewModel roomDto)
         {
-            //var room = JsonConvert.DeserializeObject<RoomAddDto>(roomDto);
+            ResponseBase response = new ResponseBase();
+            response.Message = "";
+            var hotelRoom = _mapper.Map<AddRoomViewModel, HotelRoom>(roomDto);
+            var viewroom = roomDto.ViewRoom;
+            var serviceroom = roomDto.ServicesRooms;
+            var namealbum = roomDto.NameAlbum;
 
-            var hotelRoom = _mapper.Map<RoomAddDto, HotelRoom>(roomDto);
+            hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
 
-            if (hotelRoom.PriceValue is null)
-            {
-                hotelRoom.PriceValue = 0;
-            }
-            if (hotelRoom.Discount == null)
-            {
-                hotelRoom.Discount = 0;
-            }
-            if (hotelRoom.Palletbed == null)
-            {
-                hotelRoom.Palletbed = 1;
-            }
-            hotelRoom.NewPrice = roomDto.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
+            var resultAddroom = _hotelServices.AddRoom(hotelRoom);
+            response.Message = response.Message+ resultAddroom.Message;
 
-            var result = _hotelServices.AddRoom(hotelRoom, roomDto.ViewRoom, roomDto.ServiceRoom);
-            return result;
+            if (viewroom != null)
+            {
+                var resultAddview = _hotelServices.AddViewRoom((int)resultAddroom.Data, viewroom);
+                response.Message = response.Message + " & " + resultAddview.Message;
+            }
+            if (serviceroom != null)
+            {
+                var resultAddservice = _hotelServices.AddServiceRoom((int)resultAddroom.Data, serviceroom);
+                response.Message = response.Message + " & " + resultAddservice.Message;
+            }
+            if (namealbum != null)
+            {
+                var resultAddalbum = _hotelServices.AddAlbumRoom((int)resultAddroom.Data, namealbum);
+                response.Message = response.Message + " & " + resultAddalbum.Message;
+
+                if (roomDto.filesAlbum != null)
+                {
+                    var imgres = _client.PostImgAndGetData(roomDto.filesAlbum, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+                    var resultAddPicAlbum = _hotelServices.AddPictureRoom((int)resultAddroom.Data, (int)resultAddalbum.Data, 1, imgres);
+                   
+                    response.Message = response.Message + " & " + resultAddPicAlbum.Message;
+                }
+            }
+            if (roomDto.filesRoom != null)
+            {
+                var imgres = _client.PostImgAndGetData(roomDto.filesRoom, 1024, (int)resultAddroom.Data, roomDto.UserId, 1);
+
+                var resultAddPicRoom = _hotelServices.AddPictureRoom((int)resultAddroom.Data, 0, 1,imgres);
+                response.Message = response.Message + " & " + resultAddPicRoom.Message;
+            }
+            return response;
         }
         [HttpGet("support-add-room")]
         public ResponseBase SupportAddRoom()

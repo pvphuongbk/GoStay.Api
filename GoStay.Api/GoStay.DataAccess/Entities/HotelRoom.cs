@@ -8,6 +8,7 @@ namespace GoStay.DataAccess.Entities
     {
         public HotelRoom()
         {
+            Albums = new HashSet<Album>();
             OrderDetails = new HashSet<OrderDetail>();
             Pictures = new HashSet<Picture>();
             RoomMamenitis = new HashSet<RoomMameniti>();
@@ -36,6 +37,7 @@ namespace GoStay.DataAccess.Entities
         public virtual Hotel? IdhotelNavigation { get; set; }
         public virtual Palletbed? PalletbedNavigation { get; set; }
         public virtual ViewDirection? ViewDirectionNavigation { get; set; }
+        public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<RoomMameniti> RoomMamenitis { get; set; }
