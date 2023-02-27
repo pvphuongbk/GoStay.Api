@@ -178,7 +178,7 @@ namespace GoStay.Services.WebSupport
                 }
                 else
                 {
-                    var date = DateTime.Today.Ticks.ToString();
+                    var date = DateTime.Today.ToString("dd/MM/yyyy hh:mm");
                     var data = new Album() { Name = $"AlbumRoom{IdRoom}{date}", IdRoom = IdRoom, TypeAlbum = 1 };
                     _albumRepository.Insert(data);
                     _commonUoW.Commit();
