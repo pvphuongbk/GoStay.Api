@@ -7,7 +7,6 @@ namespace GoStay.DataAccess.Entities
     {
         public ViewDirection()
         {
-            HotelRooms = new HashSet<HotelRoom>();
             RoomViews = new HashSet<RoomView>();
         }
 
@@ -15,7 +14,6 @@ namespace GoStay.DataAccess.Entities
         public string? ViewDirection1 { get; set; }
         public int? Deleted { get; set; }
 
-        public virtual ICollection<HotelRoom> HotelRooms { get; set; }
         public virtual ICollection<RoomView> RoomViews { get; set; }
     }
 }

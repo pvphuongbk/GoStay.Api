@@ -31,5 +31,7 @@ namespace GoStay.DataDto.HotelDto
         public int? PageSize { get; set; }
         public int? IdHotel { get; set; }
         public int? IdUser { get; set; }
+        public int? IdRoom { get; set; }
+        public string? NameSearch { get; set; }
     }
 }

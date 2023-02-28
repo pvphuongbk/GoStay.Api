@@ -27,7 +27,7 @@ namespace GoStay.DataAccess.Entities
         public byte? NumMature { get; set; }
         public byte? NumChild { get; set; }
         public byte? Palletbed { get; set; }
-        public int? ViewDirection { get; set; }
+        public string? SearchKey { get; set; }
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
         public long? IntDate { get; set; }
@@ -36,7 +36,6 @@ namespace GoStay.DataAccess.Entities
 
         public virtual Hotel? IdhotelNavigation { get; set; }
         public virtual Palletbed? PalletbedNavigation { get; set; }
-        public virtual ViewDirection? ViewDirectionNavigation { get; set; }
         public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }

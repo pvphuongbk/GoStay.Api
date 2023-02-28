@@ -85,7 +85,7 @@ namespace GoStay.Services.WebSupport
         {
             ResponseBase response = new ResponseBase();
             List<HotelListUserDto> list = new List<HotelListUserDto>();
-            List<Hotel> temp = new List<Hotel>() { new Hotel() {Id=0,Name="" } };
+
             var hotels = _hotelRepository.FindAll().Include(x=>x.HotelRooms).Where(x=>x.HotelRooms.Any(z=>z.Iduser == IdUser)).ToList();
             if (hotels != null)
             {
@@ -102,9 +102,17 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
 
             PagingList<HotelRoom> rooms = new PagingList<HotelRoom>();
+
+            if (request.NameSearch == null)
+            {
+                request.NameSearch = "";
+            }
+            request.NameSearch = request.NameSearch.RemoveUnicode();
+            request.NameSearch = request.NameSearch.Replace(" ", string.Empty).ToLower();
+
             if (request.IdHotel == null || request.IdHotel == 0)
             {
-                rooms = _roomRepository.FindAll(x => x.Deleted != 1 && x.Iduser == request.IdUser)
+                rooms = _roomRepository.FindAll(x => x.Deleted != 1 && x.Iduser == request.IdUser )
                     .Include(x=>x.PalletbedNavigation)
                     .Include(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
                     .Include(x=>x.RoomMamenitis).ThenInclude(x=>x.IdservicesNavigation)

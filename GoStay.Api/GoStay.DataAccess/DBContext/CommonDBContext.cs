@@ -545,20 +545,18 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.RoomSize).HasColumnType("decimal(6, 2)");
 
+                entity.Property(e => e.SearchKey).HasMaxLength(150);
+
                 entity.HasOne(d => d.IdhotelNavigation)
                     .WithMany(p => p.HotelRooms)
                     .HasForeignKey(d => d.Idhotel)
-                    .HasConstraintName("FK_TBLROOM_TBLHOTEL");
+                    .HasConstraintName("FK_HotelRoom_Hotel");
 
                 entity.HasOne(d => d.PalletbedNavigation)
                     .WithMany(p => p.HotelRooms)
                     .HasForeignKey(d => d.Palletbed)
                     .HasConstraintName("FK_HotelRoom_Palletbed");
 
-                entity.HasOne(d => d.ViewDirectionNavigation)
-                    .WithMany(p => p.HotelRooms)
-                    .HasForeignKey(d => d.ViewDirection)
-                    .HasConstraintName("FK_HotelRoom_ViewDirection");
             });
 
 			modelBuilder.Entity<HotelRoomComment>(entity =>
