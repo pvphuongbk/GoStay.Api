@@ -32,7 +32,7 @@ namespace GoStay.Api.Controllers
             var items = _hotelServices.GetHotelList(request);
             return items;
         }
-        [HttpPost("list-by-user")]
+        [HttpGet("list-by-user")]
         public ResponseBase GetHotelListByUser(int IdUser)
         {
             var items = _hotelServices.GetHotelListByUser(IdUser);

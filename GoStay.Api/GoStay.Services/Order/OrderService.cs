@@ -576,6 +576,11 @@ namespace GoStay.Services.Orders
                 var order = _OrderRepository.FindAll(x => x.Id == Id)?
                     //room
                     .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x=>x.IdRoomNavigation)
+                            .ThenInclude(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
+                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                            .ThenInclude(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
+                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                            .ThenInclude(x => x.PalletbedNavigation)
                     //tour
                     .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdTourNavigation).ThenInclude(x=>x.TourDistrictTos)
                         .ThenInclude(x=>x.IdDistrictToNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
