@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using GoStay.Common;
+using GoStay.Common.Configuration;
 using GoStay.Common.Extention;
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
@@ -113,7 +114,8 @@ namespace GoStay.Services.WebSupport
                         .Include(x => x.PalletbedNavigation)
                         .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
                         .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
-                        .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
+                        .Include(x => x.IdhotelNavigation)
+                        .ConvertToPaging(1, 1);
                 }
                 else
                 {
@@ -130,6 +132,7 @@ namespace GoStay.Services.WebSupport
                             .Include(x => x.PalletbedNavigation)
                             .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
                             .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
+                            .Include(x=>x.IdhotelNavigation)
                             .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
                     }
                     else
@@ -139,6 +142,7 @@ namespace GoStay.Services.WebSupport
                             .Include(x => x.PalletbedNavigation)
                             .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
                             .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
+                            .Include(x => x.IdhotelNavigation)
                             .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
                     }
                 }
@@ -146,6 +150,8 @@ namespace GoStay.Services.WebSupport
                 var list = _mapper.Map<PagingList<HotelRoom>, PagingList<RoomDto>>(rooms);
 
                 list.Items.ForEach(x => x.PalletbedText = (rooms.Items.FindAll(z => z.Id == x.Id).FirstOrDefault().PalletbedNavigation.Text));
+                list.Items.ForEach(x => x.HotelName = (rooms.Items.FindAll(z => z.Id == x.Id).FirstOrDefault().IdhotelNavigation.Name));
+
                 foreach (var room in rooms.Items)
                 {
                     list.Items.Where(x => x.Id == room.Id).FirstOrDefault().ViewsRoom =
@@ -170,6 +176,7 @@ namespace GoStay.Services.WebSupport
             try
             {
                 data.Status = 0;
+                data.SearchKey = data.Name.RemoveUnicode().Replace(" ", string.Empty).ToLower(); 
                 _commonUoW.BeginTransaction();
                 _roomRepository.Insert(data);
                 _commonUoW.Commit();
@@ -187,7 +194,56 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
+        public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                data.IntDate = (long)(System.DateTime.Now - AppConfigs.startDate).TotalSeconds;
+                _commonUoW.BeginTransaction();
+                var listviewold = _roomViewsRepository.FindAll(x => x.IdRoom == data.Id).ToList();
+                _roomViewsRepository.RemoveMultiple(listviewold);
+                if (view != null)
+                {
+                    foreach (var item in view)
+                    {
+                        _roomViewsRepository.Insert(new RoomView() { IdRoom = data.Id, IdView = item });
+                    }
+                }
+                _commonUoW.Commit();
 
+                _commonUoW.BeginTransaction();
+                var listserviceold = _roomServicesRepository.FindAll(x => x.Idroom == data.Id).ToList();
+                _roomServicesRepository.RemoveMultiple(listserviceold);
+                if (service != null)
+                {
+                    foreach (var item in service)
+                    {
+                        _roomServicesRepository.Insert(new RoomMameniti() { Idroom = data.Id, Idservices = item });
+                    }
+                }
+                _commonUoW.Commit();
+
+                _commonUoW.BeginTransaction();
+                var hotel = _hotelRepository.GetById(data.Idhotel);
+                hotel.IntDate = data.IntDate;
+                var temp = _roomRepository.FindAll().Where(x => x.Id == data.Id).Take(1).AsNoTracking();
+                data.CreatedDate = temp.FirstOrDefault().CreatedDate;
+                data.RemainNum = temp.FirstOrDefault().RemainNum;
+                _roomRepository.Update(data);
+                _hotelRepository.Update(hotel);
+                _commonUoW.Commit();
+                response.Message="Edit Room Success";
+                return response;
+            }
+            catch
+            {
+                _commonUoW.RollBack();
+                response.Message = "Edit Room Fail";
+                response.Code = ErrorCodeMessage.AddFail.Key;
+                return response;
+            }
+        }
         public ResponseBase SupportAddRoom()
         {
             ResponseBase response = new ResponseBase();

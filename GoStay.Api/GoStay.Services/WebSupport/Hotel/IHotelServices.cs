@@ -20,6 +20,7 @@ namespace GoStay.Services.WebSupport
         public string AddNewPicture(Picture picture);
         public ResponseBase GetRoomList(RequestGetListRoom request);
         public ResponseBase GetHotelListByUser(int IdUser);
+        public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service);
     }
 
 }

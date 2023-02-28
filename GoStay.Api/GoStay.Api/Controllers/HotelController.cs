@@ -94,6 +94,46 @@ namespace GoStay.Api.Controllers
                 return response;
             }
         }
+
+        [HttpPost("edit-room")]
+
+        public ResponseBase EditRoomPartner(List<IFormFile> fileRooms, string bodyJson)
+        {
+            ResponseBase response = new ResponseBase();
+
+            try
+            {
+                var roomDto = JsonConvert.DeserializeObject<AddRoomModel>(bodyJson);
+
+                response.Message = "";
+                var hotelRoom = _mapper.Map<AddRoomModel, HotelRoom>(roomDto);
+                var viewroom = roomDto.ViewRoom;
+                var serviceroom = roomDto.ServicesRooms;
+
+                hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
+
+                var resultAddroom = _hotelServices.EditRoom(hotelRoom, viewroom, serviceroom);
+                response.Message = response.Message + resultAddroom.Message;
+
+                if (fileRooms != null)
+                {
+                    var imgres = _client.PostImgAndGetData(fileRooms, 1024, hotelRoom.Id, (int)hotelRoom.Iduser, 1);
+                    var date = DateTime.Today.ToString("dd/MM/yyyy hh:mm");
+                    var album = _hotelServices.AddAlbumRoom(hotelRoom.Id, $"Album{hotelRoom.Id}{date}");
+                    var resultAddPicRoom = _hotelServices.AddPictureRoom(hotelRoom.Id, (int)album.Data, 1, (int)hotelRoom.Iduser, imgres);
+                    response.Message = response.Message + " & " + resultAddPicRoom.Message;
+                }
+                response.Data = "True";
+                response.Code = ErrorCodeMessage.Success.Key;
+                return response;
+            }
+            catch
+            {
+                response.Data = "False";
+                response.Code = ErrorCodeMessage.Exception.Key;
+                return response;
+            }
+        }
         [HttpGet("support-add-room")]
         public ResponseBase SupportAddRoom()
         {

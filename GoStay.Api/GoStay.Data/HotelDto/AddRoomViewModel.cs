@@ -27,7 +27,7 @@ namespace PartnerGostay.Models
     }
     public class AddRoomModel
     {
-
+        public int Id{ get; set; }
         public int IdHotel { get; set; }
         public string Name { get; set; }
         public int RoomSize { get; set; }
