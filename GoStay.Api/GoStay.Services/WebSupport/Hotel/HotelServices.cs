@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
+using System.Security.Cryptography.X509Certificates;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using ErrorCodeMessage = GoStay.Common.ErrorCodeMessage;
 
 namespace GoStay.Services.WebSupport
@@ -78,6 +80,59 @@ namespace GoStay.Services.WebSupport
             response.Data = list;
             return response;
         }
+
+        public ResponseBase GetHotelListByUser(int IdUser)
+        {
+            ResponseBase response = new ResponseBase();
+            List<HotelListUserDto> list = new List<HotelListUserDto>();
+            List<Hotel> temp = new List<Hotel>() { new Hotel() {Id=0,Name="" } };
+            var hotels = _hotelRepository.FindAll().Include(x=>x.HotelRooms).Where(x=>x.HotelRooms.Any(z=>z.Iduser == IdUser)).ToList();
+            if (hotels != null)
+            {
+                foreach(var item in hotels)
+                {
+                    list.Add(new HotelListUserDto { Id = item.Id, Name = item.Name });
+                }    
+            }
+            response.Data = list;
+            return response;
+        }
+        public ResponseBase GetRoomList(RequestGetListRoom request)
+        {
+            ResponseBase response = new ResponseBase();
+
+            PagingList<HotelRoom> rooms = new PagingList<HotelRoom>();
+            if (request.IdHotel == null || request.IdHotel == 0)
+            {
+                rooms = _roomRepository.FindAll(x => x.Deleted != 1 && x.Iduser == request.IdUser)
+                    .Include(x=>x.PalletbedNavigation)
+                    .Include(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
+                    .Include(x=>x.RoomMamenitis).ThenInclude(x=>x.IdservicesNavigation)
+                    .ToList().ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
+            }
+            else
+            {
+                rooms = _roomRepository.FindAll(x => x.Deleted != 1 && x.Iduser == request.IdUser&& x.Idhotel == request.IdHotel)
+                    .Include(x => x.PalletbedNavigation)
+                    .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
+                    .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
+                    .ToList().ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
+            }
+            var list = _mapper.Map<PagingList<HotelRoom>, PagingList<RoomDto>>(rooms);
+
+            list.Items.ForEach(x => x.PalletbedText = (rooms.Items.FindAll(z=>z.Id == x.Id).FirstOrDefault().PalletbedNavigation.Text));
+            foreach (var room in rooms.Items)
+            {
+                list.Items.Where(x => x.Id == room.Id).FirstOrDefault().ViewsRoom =
+                    _mapper.Map<List<ViewDirection>, List<ViewRoomDto>>(room.RoomViews.Select(x => x.IdViewNavigation).ToList());
+                list.Items.Where(x => x.Id == room.Id).FirstOrDefault().ServicesRoom =
+                    _mapper.Map<List<Service>, List<ServiceRoomDto>>(room.RoomMamenitis.Select(x => x.IdservicesNavigation).ToList());
+            }    
+
+            response.Data = list;
+            return response;
+        }
+
         public ResponseBase AddRoom(HotelRoom data)
         {
             ResponseBase response = new ResponseBase();

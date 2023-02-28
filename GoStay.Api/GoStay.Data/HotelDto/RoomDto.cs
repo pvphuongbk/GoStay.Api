@@ -45,4 +45,38 @@ namespace GoStay.DataDto.Hotel
         public int? IdUser { get; set; }
 
     }
+    public class RoomDto
+    {
+        public int Id { get; set; }
+        public int Idhotel { get; set; }
+        public int Iduser { get; set; }
+        public string Name { get; set; }
+        public decimal RoomSize { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+        public decimal PriceValue { get; set; }
+        public double Discount { get; set; }
+        public byte NumMature { get; set; }
+        public byte NumChild { get; set; }
+        public byte Palletbed { get; set; }
+        public string PalletbedText { get; set; }
+        public List<ViewRoomDto> ViewsRoom { get; set; }
+        public List<ServiceRoomDto> ServicesRoom { get; set; }
+
+    }
+    public class ViewRoomDto
+    {
+        public int Id { get; set; }
+        public string? ViewDirection1 { get; set; }
+    }
+    public class ServiceRoomDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+    }
+    public class HotelListUserDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

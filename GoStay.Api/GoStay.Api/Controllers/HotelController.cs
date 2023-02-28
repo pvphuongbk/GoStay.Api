@@ -32,8 +32,19 @@ namespace GoStay.Api.Controllers
             var items = _hotelServices.GetHotelList(request);
             return items;
         }
+        [HttpPost("list-by-user")]
+        public ResponseBase GetHotelListByUser(int IdUser)
+        {
+            var items = _hotelServices.GetHotelListByUser(IdUser);
+            return items;
+        }
 
-
+        [HttpPost("list-room-by-user")]
+        public ResponseBase GetRoomList(RequestGetListRoom request)
+        {
+            var items = _hotelServices.GetRoomList(request);
+            return items;
+        }
         [HttpPost("add-room")]
         
         public ResponseBase AddRoomPartner(List<IFormFile> fileRooms, string bodyJson)
