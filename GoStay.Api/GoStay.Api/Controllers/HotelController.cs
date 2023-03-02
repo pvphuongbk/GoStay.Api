@@ -8,6 +8,7 @@ using GoStay.Services.WebSupport;
 using PartnerGostay.Models;
 using GoStay.Services;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace GoStay.Api.Controllers
 {
@@ -103,19 +104,20 @@ namespace GoStay.Api.Controllers
 
             try
             {
-                var roomDto = JsonConvert.DeserializeObject<AddRoomModel>(bodyJson);
+                var roomDto = JsonConvert.DeserializeObject<EditRoomModel>(bodyJson);
 
                 response.Message = "";
-                var hotelRoom = _mapper.Map<AddRoomModel, HotelRoom>(roomDto);
+                var hotelRoom = _mapper.Map<EditRoomModel, HotelRoom>(roomDto);
                 var viewroom = roomDto.ViewRoom;
                 var serviceroom = roomDto.ServicesRooms;
+                var picturesRemove = roomDto.PicturesRoomRemove;
 
                 hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
 
-                var resultAddroom = _hotelServices.EditRoom(hotelRoom, viewroom, serviceroom);
+                var resultAddroom = _hotelServices.EditRoom(hotelRoom, viewroom, serviceroom, picturesRemove);
                 response.Message = response.Message + resultAddroom.Message;
 
-                if (fileRooms != null)
+                if (fileRooms != null && fileRooms.Count()>0)
                 {
                     var imgres = _client.PostImgAndGetData(fileRooms, 1024, hotelRoom.Id, (int)hotelRoom.Iduser, 1);
                     var date = DateTime.Today.ToString("dd/MM/yyyy hh:mm");
@@ -123,8 +125,8 @@ namespace GoStay.Api.Controllers
                     var resultAddPicRoom = _hotelServices.AddPictureRoom(hotelRoom.Id, (int)album.Data, 1, (int)hotelRoom.Iduser, imgres);
                     response.Message = response.Message + " & " + resultAddPicRoom.Message;
                 }
-                response.Data = "True";
-                response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = resultAddroom.Message;
+                response.Code = resultAddroom.Code;
                 return response;
             }
             catch

@@ -3,6 +3,7 @@ using GoStay.Common;
 using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto.Hotel;
 using GoStay.DataDto.HotelDto;
 using Microsoft.AspNetCore.Http;
 
@@ -20,7 +21,7 @@ namespace GoStay.Services.WebSupport
         public string AddNewPicture(Picture picture);
         public ResponseBase GetRoomList(RequestGetListRoom request);
         public ResponseBase GetHotelListByUser(int IdUser);
-        public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service);
+        public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service, List<int> picture);
     }
 
 }

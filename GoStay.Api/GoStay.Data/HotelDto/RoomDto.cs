@@ -64,12 +64,19 @@ namespace GoStay.DataDto.Hotel
         public string PalletbedText { get; set; }
         public List<ViewRoomDto> ViewsRoom { get; set; }
         public List<ServiceRoomDto> ServicesRoom { get; set; }
+        public List<PictureRoomDto> PicturesRoom { get; set; }
+
 
     }
     public class ViewRoomDto
     {
         public int Id { get; set; }
         public string? ViewDirection1 { get; set; }
+    }
+    public class PictureRoomDto
+    {
+        public int Id { get; set; }
+        public string? UrlOut { get; set; }
     }
     public class ServiceRoomDto
     {

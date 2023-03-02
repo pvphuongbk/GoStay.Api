@@ -64,7 +64,9 @@ namespace GoStay.Api.Configurations
 
             CreateMap<Quan, QuanDto>().ReverseMap();
             CreateMap<AddRoomModel, HotelRoom>().ReverseMap();
+            CreateMap<EditRoomModel, HotelRoom>().ReverseMap();
 
+            
             CreateMap<HotelRoom, RoomDto>().ReverseMap();
             CreateMap<PagingList<HotelRoom>, PagingList<RoomDto>>().ReverseMap();
 
@@ -72,6 +74,8 @@ namespace GoStay.Api.Configurations
             CreateMap<Service, ServiceRoomDto>().ReverseMap();
 
             CreateMap<Hotel, HotelListUserDto>().ReverseMap();
+            CreateMap<Picture, PictureRoomDto>().ReverseMap();
+
 
         }
     }

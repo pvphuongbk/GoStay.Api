@@ -589,7 +589,7 @@ namespace GoStay.Services.Orders
                     .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.TourDetails)
                     .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdDistrictFromNavigation)
                         .ThenInclude(x=>x.IdTinhThanhNavigation)
-
+                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdStartTimeNavigation)
                     //exception
                     .Include(x => x.IdPaymentMethodNavigation)
                     .Include(x => x.StatusNavigation)

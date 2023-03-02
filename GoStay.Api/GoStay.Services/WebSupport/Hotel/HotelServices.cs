@@ -56,26 +56,26 @@ namespace GoStay.Services.WebSupport
         public ResponseBase GetHotelList(RequestGetListHotel request)
         {
             ResponseBase response = new ResponseBase();
-            if(request.NameSearch == null)
+            if (request.NameSearch == null)
             {
                 request.NameSearch = "";
-            }    
+            }
             request.NameSearch = request.NameSearch.RemoveUnicode();
             request.NameSearch = request.NameSearch.Replace(" ", string.Empty).ToLower();
             PagingList<Hotel> hotel = new PagingList<Hotel>();
-            if (request.IdProvince == null|| request.IdProvince ==0)
+            if (request.IdProvince == null || request.IdProvince == 0)
             {
-                hotel = _hotelRepository.FindAll(x => x.Deleted!=1 && x.SearchKey.Contains(request.NameSearch) == true)
-                    .Include(x=>x.IdPriceRangeNavigation).Include(x=>x.TypeNavigation)
-                    .ConvertToPaging(request.PageSize??10, request.PageIndex??1);
+                hotel = _hotelRepository.FindAll(x => x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
+                    .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation)
+                    .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
             else
             {
-                hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince&&x.Deleted!=1 && x.SearchKey.Contains(request.NameSearch) == true)
+                hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince && x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation)
-                    .ConvertToPaging(request.PageSize??10, request.PageIndex??1);
+                    .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
-            var list = _mapper.Map<PagingList<Hotel>,PagingList<HotelDto>>(hotel);
+            var list = _mapper.Map<PagingList<Hotel>, PagingList<HotelDto>>(hotel);
             list.Items.ForEach(x => x.PriceRange = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().IdPriceRangeNavigation.Title));
             list.Items.ForEach(x => x.TypeHotel = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().TypeNavigation.Type));
 
@@ -88,14 +88,14 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
             List<HotelListUserDto> list = new List<HotelListUserDto>();
 
-            var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x=>x.Iduser == IdUser));
-            if(hotels != null)
+            var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x => x.Iduser == IdUser));
+            if (hotels != null)
             {
                 foreach (var hotel in hotels)
                 {
                     list.Add(new HotelListUserDto { Id = hotel.Id, Name = hotel.Name });
-                }    
-            }    
+                }
+            }
             response.Data = list;
             return response;
         }
@@ -115,6 +115,7 @@ namespace GoStay.Services.WebSupport
                         .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
                         .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
                         .Include(x => x.IdhotelNavigation)
+                        .Include(x => x.Pictures)
                         .ConvertToPaging(1, 1);
                 }
                 else
@@ -132,7 +133,8 @@ namespace GoStay.Services.WebSupport
                             .Include(x => x.PalletbedNavigation)
                             .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
                             .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
-                            .Include(x=>x.IdhotelNavigation)
+                            .Include(x => x.IdhotelNavigation)
+                            .Include(x => x.Pictures)
                             .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
                     }
                     else
@@ -143,6 +145,7 @@ namespace GoStay.Services.WebSupport
                             .Include(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
                             .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
                             .Include(x => x.IdhotelNavigation)
+                            .Include(x => x.Pictures)
                             .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
                     }
                 }
@@ -158,6 +161,8 @@ namespace GoStay.Services.WebSupport
                         _mapper.Map<List<ViewDirection>, List<ViewRoomDto>>(room.RoomViews.Select(x => x.IdViewNavigation).ToList());
                     list.Items.Where(x => x.Id == room.Id).FirstOrDefault().ServicesRoom =
                         _mapper.Map<List<Service>, List<ServiceRoomDto>>(room.RoomMamenitis.Select(x => x.IdservicesNavigation).ToList());
+                    list.Items.Where(x => x.Id == room.Id).FirstOrDefault().PicturesRoom =
+                        _mapper.Map<List<Picture>, List<PictureRoomDto>>(room.Pictures.ToList());
                 }
 
                 response.Data = list;
@@ -176,12 +181,12 @@ namespace GoStay.Services.WebSupport
             try
             {
                 data.Status = 0;
-                data.SearchKey = data.Name.RemoveUnicode().Replace(" ", string.Empty).ToLower(); 
+                data.SearchKey = data.Name.RemoveUnicode().Replace(" ", string.Empty).ToLower();
                 _commonUoW.BeginTransaction();
                 _roomRepository.Insert(data);
                 _commonUoW.Commit();
 
-                response.Message= "Add Room Success";
+                response.Message = "Add Room Success";
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Data = data.Id;
                 return response;
@@ -194,7 +199,7 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
-        public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service)
+        public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service, List<int> picture)
         {
             ResponseBase response = new ResponseBase();
             try
@@ -202,7 +207,10 @@ namespace GoStay.Services.WebSupport
                 data.IntDate = (long)(System.DateTime.Now - AppConfigs.startDate).TotalSeconds;
                 _commonUoW.BeginTransaction();
                 var listviewold = _roomViewsRepository.FindAll(x => x.IdRoom == data.Id).ToList();
-                _roomViewsRepository.RemoveMultiple(listviewold);
+                if (listviewold != null)
+                {
+                    _roomViewsRepository.RemoveMultiple(listviewold);
+                }
                 if (view != null)
                 {
                     foreach (var item in view)
@@ -214,12 +222,26 @@ namespace GoStay.Services.WebSupport
 
                 _commonUoW.BeginTransaction();
                 var listserviceold = _roomServicesRepository.FindAll(x => x.Idroom == data.Id).ToList();
-                _roomServicesRepository.RemoveMultiple(listserviceold);
+                if (listserviceold != null)
+                {
+                    _roomServicesRepository.RemoveMultiple(listserviceold);
+                }
                 if (service != null)
                 {
                     foreach (var item in service)
                     {
                         _roomServicesRepository.Insert(new RoomMameniti() { Idroom = data.Id, Idservices = item });
+                    }
+                }
+                _commonUoW.Commit();
+
+                _commonUoW.BeginTransaction();
+
+                if (picture != null)
+                {
+                    foreach (var item in picture)
+                    {
+                        DeletePicture(item);
                     }
                 }
                 _commonUoW.Commit();
@@ -233,14 +255,15 @@ namespace GoStay.Services.WebSupport
                 _roomRepository.Update(data);
                 _hotelRepository.Update(hotel);
                 _commonUoW.Commit();
-                response.Message="Edit Room Success";
+                response.Message = "Edit Room Success";
+                response.Code = ErrorCodeMessage.Success.Key;
                 return response;
             }
             catch
             {
                 _commonUoW.RollBack();
                 response.Message = "Edit Room Fail";
-                response.Code = ErrorCodeMessage.AddFail.Key;
+                response.Code = ErrorCodeMessage.EditFail.Key;
                 return response;
             }
         }
@@ -250,7 +273,7 @@ namespace GoStay.Services.WebSupport
             SupportAddRoom support = new SupportAddRoom();
             support.views = _viewRepository.FindAll().ToList();
             support.palletbed = _palletbedRepository.FindAll().ToList();
-            support.servicesRoom = _servicesRepository.FindAll(x=>x.IdStyle==1).ToList();
+            support.servicesRoom = _servicesRepository.FindAll(x => x.IdStyle == 1).ToList();
 
             response.Data = support;
             return response;
@@ -310,9 +333,9 @@ namespace GoStay.Services.WebSupport
             {
                 _commonUoW.BeginTransaction();
                 var checkName = _albumRepository.FindAll(x => x.Name == albumName && x.IdType == IdRoom);
-                if (checkName != null&& checkName.Count()<1)
+                if (checkName != null && checkName.Count() < 1)
                 {
-                    var data = new Album() { Name = albumName, IdRoom= IdRoom, TypeAlbum = 1 };
+                    var data = new Album() { Name = albumName, IdRoom = IdRoom, TypeAlbum = 1 };
                     _albumRepository.Insert(data);
                     _commonUoW.Commit();
                     response.Data = data.Id;
@@ -328,8 +351,8 @@ namespace GoStay.Services.WebSupport
                     response.Data = data;
                     response.Message = "Album Name Existed";
                     response.Code = ErrorCodeMessage.Success.Key;
-                }    
-                
+                }
+
                 return response;
             }
             catch
@@ -340,7 +363,7 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
-        public ResponseBase AddPictureRoom(int Obj, int IdAlbum, int type, int userId , UploadImagesResponse imagesResponse)
+        public ResponseBase AddPictureRoom(int Obj, int IdAlbum, int type, int userId, UploadImagesResponse imagesResponse)
         {
             ResponseBase response = new ResponseBase();
             response.Message = "Add Picture";
@@ -414,7 +437,7 @@ namespace GoStay.Services.WebSupport
                     pic.Type = type;
                     var path = Path.GetFileNameWithoutExtension(url[i]) + Path.GetExtension(url[i]).Replace("\"", "");
 
-                    pic.Url = $"/partner/" + sfolder +$"/{userId}"+ "/" + Obj + "/" + path;
+                    pic.Url = $"/partner/" + sfolder + $"/{userId}" + "/" + Obj + "/" + path;
                     pic.IdType = Obj;
                     if (IdAlbum != null && IdAlbum != 0)
                     {
@@ -459,6 +482,18 @@ namespace GoStay.Services.WebSupport
             {
                 _commonUoW.RollBack();
                 return "Add Picture Fail";
+            }
+        }
+        public string DeletePicture(int Id)
+        {
+            try
+            {
+                _pictureRepository.Remove(Id);
+                return "Success";
+            }
+            catch
+            {
+                return "Exception, Fail";
             }
         }
     }
