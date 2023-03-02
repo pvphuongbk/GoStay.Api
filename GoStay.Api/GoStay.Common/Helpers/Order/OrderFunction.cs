@@ -111,7 +111,10 @@ namespace GoStay.Common.Helpers.Order
             tourOrderDto.TourTopic = tourOrderDetail.IdTourTopicNavigation.TourTopic1;
             tourOrderDto.UserName = _userRepository.GetById(tourOrderDto.IdUser)?.UserName;
             tourOrderDto.ProvinceFrom = tourOrderDetail.IdDistrictFromNavigation.IdTinhThanhNavigation.TenTt;
-            tourOrderDto.StartTime = tourOrderDetail.IdStartTimeNavigation.StartDate;
+            if (tourOrderDetail.IdStartTimeNavigation != null)
+            {
+                tourOrderDto.StartTime = tourOrderDetail.IdStartTimeNavigation.StartDate;
+            }
             tourOrderDto.Pictures = _pictureRepository.FindAll(x => x.TourId == tourOrderDetail.Id && x.Type == 2)?.Select(x => x.Url).Take(2).ToList();
             var listTourDetail = tourOrderDetail.TourDetails.ToList();
 
