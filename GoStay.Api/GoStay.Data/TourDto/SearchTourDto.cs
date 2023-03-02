@@ -58,7 +58,7 @@ namespace GoStay.Data.TourDto
         public int Discount { get; set; }
         public double ActualPrice { get; set; }
         public int Total { get; set; }
-
+        public int TotalPicture { get; set; }
         private string Urls
         {
             set

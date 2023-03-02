@@ -18,6 +18,7 @@
         public int? PalletbedRoom { get; set; }
         public long? IntDate { get; set; }
         public int Total { get; set; }
+        public int TotalPicture { get; set; }
         private string Urls 
         {
             set
