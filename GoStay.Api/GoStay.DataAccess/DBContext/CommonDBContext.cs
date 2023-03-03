@@ -527,7 +527,9 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
 
-                entity.Property(e => e.Iduser).HasColumnName("IDUser");
+                entity.Property(e => e.Iduser)
+                    .HasColumnName("IDUser")
+                    .HasDefaultValueSql("((9))");
 
                 entity.Property(e => e.IntDate)
                     .HasColumnName("intDate")
@@ -550,6 +552,7 @@ namespace GoStay.DataAccess.DBContext
                 entity.HasOne(d => d.IdhotelNavigation)
                     .WithMany(p => p.HotelRooms)
                     .HasForeignKey(d => d.Idhotel)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HotelRoom_Hotel");
 
                 entity.HasOne(d => d.PalletbedNavigation)
@@ -743,6 +746,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.DetailStyle).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.IdOrder).HasDefaultValueSql("((469))");
+
                 entity.Property(e => e.MoreInfo).HasMaxLength(500);
 
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
@@ -756,11 +761,13 @@ namespace GoStay.DataAccess.DBContext
                 entity.HasOne(d => d.IdRoomNavigation)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.IdRoom)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderDetail_HotelRoom");
 
                 entity.HasOne(d => d.IdTourNavigation)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.IdTour)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderDetail_Tours");
             });
 
@@ -786,7 +793,7 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.ToTable("Palletbed");
 
-                entity.Property(e => e.Text).HasMaxLength(50);
+                entity.Property(e => e.Text).HasMaxLength(200);
             });
 
             modelBuilder.Entity<Phuong>(entity =>
