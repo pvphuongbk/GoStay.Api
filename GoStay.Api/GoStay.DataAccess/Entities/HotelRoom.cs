@@ -15,15 +15,15 @@ namespace GoStay.DataAccess.Entities
             RoomViews = new HashSet<RoomView>();
         }
 
-        public int? Idhotel { get; set; }
-        public string? Name { get; set; }
+        public int Idhotel { get; set; }
+        public string Name { get; set; } = null!;
         public decimal? RoomSize { get; set; }
         public string? Description { get; set; }
-        public int? Status { get; set; }
+        public int Status { get; set; }
         public byte? RemainNum { get; set; }
-        public decimal? PriceValue { get; set; }
+        public decimal PriceValue { get; set; }
         public double? Discount { get; set; }
-        public decimal? NewPrice { get; set; }
+        public decimal NewPrice { get; set; }
         public byte? NumMature { get; set; }
         public byte? NumChild { get; set; }
         public byte? Palletbed { get; set; }
@@ -31,10 +31,11 @@ namespace GoStay.DataAccess.Entities
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
         public long? IntDate { get; set; }
-        public int? Iduser { get; set; }
+        public int Iduser { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int RoomStatus { get; set; }
 
-        public virtual Hotel? IdhotelNavigation { get; set; }
+        public virtual Hotel IdhotelNavigation { get; set; } = null!;
         public virtual Palletbed? PalletbedNavigation { get; set; }
         public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

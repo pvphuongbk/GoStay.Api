@@ -18,7 +18,7 @@ namespace GoStay.DataAccess.Entities
         }
 
 
-        public string? Name { get; set; }
+        public string Name { get; set; } = null!;
         public string? NameSeo { get; set; }
         public string? CodeCountry { get; set; }
         public string? Address { get; set; }
