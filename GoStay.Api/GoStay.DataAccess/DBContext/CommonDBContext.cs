@@ -747,6 +747,9 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.DetailStyle).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.IdOrder).HasDefaultValueSql("((469))");
+                entity.Property(e => e.IdRoom).HasDefaultValueSql("((4888))");
+                entity.Property(e => e.IdTour).HasDefaultValueSql("((115))");
+
 
                 entity.Property(e => e.MoreInfo).HasMaxLength(500);
 
