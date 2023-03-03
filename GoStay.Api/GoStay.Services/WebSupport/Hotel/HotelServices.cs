@@ -182,6 +182,7 @@ namespace GoStay.Services.WebSupport
             {
                 data.Status = 0;
                 data.SearchKey = data.Name.RemoveUnicode().Replace(" ", string.Empty).ToLower();
+                data.RoomStatus = 0;
                 _commonUoW.BeginTransaction();
                 _roomRepository.Insert(data);
                 _commonUoW.Commit();
@@ -204,6 +205,7 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
             try
             {
+                data.Status = 0;
                 data.IntDate = (long)(System.DateTime.Now - AppConfigs.startDate).TotalSeconds;
                 _commonUoW.BeginTransaction();
                 var listviewold = _roomViewsRepository.FindAll(x => x.IdRoom == data.Id).ToList();

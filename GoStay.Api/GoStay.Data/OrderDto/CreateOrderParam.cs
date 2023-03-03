@@ -51,7 +51,7 @@ namespace GoStay.Data.OrderDto
     {
         public int Id { get; set; }
         public int IdOrder { get; set; }
-        public int? IdProduct { get; set; }
+        public int IdProduct { get; set; }
         public DateTime? ChechIn { get; set; }
         public DateTime? CheckOut { get; set; }
         public byte? Num { get; set; }

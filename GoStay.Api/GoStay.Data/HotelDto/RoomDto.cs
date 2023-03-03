@@ -56,6 +56,7 @@ namespace GoStay.DataDto.Hotel
         public decimal RoomSize { get; set; }
         public string Description { get; set; }
         public int Status { get; set; }
+        public int RoomStatus { get; set; }
         public decimal PriceValue { get; set; }
         public double Discount { get; set; }
         public byte NumMature { get; set; }
