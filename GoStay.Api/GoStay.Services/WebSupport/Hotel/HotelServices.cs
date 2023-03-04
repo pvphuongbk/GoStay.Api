@@ -66,13 +66,13 @@ namespace GoStay.Services.WebSupport
             if (request.IdProvince == null || request.IdProvince == 0)
             {
                 hotel = _hotelRepository.FindAll(x => x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
-                    .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation)
+                    .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation).OrderByDescending(x => x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
             else
             {
                 hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince && x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
-                    .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation)
+                    .Include(x => x.IdPriceRangeNavigation).Include(x => x.TypeNavigation).OrderByDescending(x=>x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
             var list = _mapper.Map<PagingList<Hotel>, PagingList<HotelDto>>(hotel);
@@ -88,7 +88,7 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
             List<HotelListUserDto> list = new List<HotelListUserDto>();
 
-            var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x => x.Iduser == IdUser));
+            var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x => x.Iduser == IdUser)).OrderByDescending(x => x.Id);
             if (hotels != null)
             {
                 foreach (var hotel in hotels)
@@ -180,7 +180,14 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
             try
             {
-                data.Status = 0;
+                if (data.Iduser == 9)
+                {
+                    data.Status = 1;//đc duyệt
+                }
+                else
+                {
+                    data.Status = 0;//chờ duyệt
+                }
                 data.SearchKey = data.Name.RemoveUnicode().Replace(" ", string.Empty).ToLower();
                 data.RoomStatus = 0;
                 _commonUoW.BeginTransaction();
@@ -205,7 +212,14 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
             try
             {
-                data.Status = 0;
+                if (data.Iduser == 9)
+                {
+                    data.Status = 1;//đc duyệt
+                }
+                else
+                {
+                    data.Status = 0;//chờ duyệt
+                }
                 data.IntDate = (long)(System.DateTime.Now - AppConfigs.startDate).TotalSeconds;
                 _commonUoW.BeginTransaction();
                 var listviewold = _roomViewsRepository.FindAll(x => x.IdRoom == data.Id).ToList();
