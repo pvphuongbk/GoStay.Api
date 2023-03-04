@@ -94,7 +94,10 @@ namespace GoStay.Common.Helpers.Order
             hotelRoomOrderDto.Rating = hotel.Rating;
             hotelRoomOrderDto.ReviewScore = (int?)hotel.ReviewScore;
             hotelRoomOrderDto.NumberReviewers = hotel.NumberReviewers;
-            hotelRoomOrderDto.ViewDirection = roomOrderDetail.RoomViews.FirstOrDefault().IdViewNavigation.ViewDirection1;
+            if (roomOrderDetail.RoomViews != null && roomOrderDetail.RoomViews.Count()>0)
+            {
+                hotelRoomOrderDto.ViewDirection = roomOrderDetail.RoomViews.FirstOrDefault().IdViewNavigation.ViewDirection1;
+            }
             hotelRoomOrderDto.Pictures = _pictureRepository.FindAll(x => x.HotelRoomId == roomOrderDetail.Id && x.Type==1)?.Select(x=>x.Url).Take(1).ToList();
             hotelRoomOrderDto.Pictures.AddRange(_pictureRepository.FindAll(x => x.HotelId == hotel.Id && x.Type == 0)?.Select(x => x.Url).Take(1).ToList());
             hotelRoomOrderDto.PalletbedText = roomOrderDetail.PalletbedNavigation.Text;
