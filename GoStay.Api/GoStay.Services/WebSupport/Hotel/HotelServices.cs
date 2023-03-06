@@ -493,10 +493,45 @@ namespace GoStay.Services.WebSupport
                 var room = _roomRepository.FindAll(x => x.Iduser == param.UserId && x.Id == param.RoomId).SingleOrDefault();
                 if (room != null)
                 {
-                    room.Status = param.Status;
+                    room.RoomStatus = param.Status;
                     _roomRepository.Update(room);
                     _commonUoW.Commit();
                     response.Message = "Update Status Success";
+                    response.Code = ErrorCodeMessage.Success.Key;
+                    return response;
+                }
+                else
+                {
+                    _commonUoW.Commit();
+                    response.Message = "Valid Error";
+                    response.Code = ErrorCodeMessage.NoObject.Key;
+                    return response;
+                }
+            }
+            catch
+            {
+                _commonUoW.RollBack();
+                response.Message = "Exception";
+                response.Code = ErrorCodeMessage.InternalExeption.Key;
+                return response;
+            }
+
+        }
+        public ResponseBase UpdateRoomDiscount(UpdateDiscountRoomParam param)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+
+                var room = _roomRepository.FindAll(x => x.Iduser == param.UserId && x.Id == param.RoomId).SingleOrDefault();
+                if (room != null)
+                {
+                    room.Discount = param.Discount;
+                    room.NewPrice = room.PriceValue * (decimal)(100 - room.Discount) / 100;
+                    _roomRepository.Update(room);
+                    _commonUoW.Commit();
+                    response.Message = "Update Discount Success";
                     response.Code = ErrorCodeMessage.Success.Key;
                     return response;
                 }

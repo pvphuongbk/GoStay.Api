@@ -19,4 +19,10 @@ namespace GoStay.DataDto.HotelDto
         public int UserId { get; set; }
         public int Status { get; set; }
     }
+    public class UpdateDiscountRoomParam
+    {
+        public int RoomId { get; set; }
+        public int UserId { get; set; }
+        public int Discount { get; set; }
+    }
 }

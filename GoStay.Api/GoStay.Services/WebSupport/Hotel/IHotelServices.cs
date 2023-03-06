@@ -23,6 +23,8 @@ namespace GoStay.Services.WebSupport
         public ResponseBase GetHotelListByUser(int IdUser);
         public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service, List<int> picture);
         public ResponseBase UpdateRoomStatus(UpdateStatusRoomParam param);
+        public ResponseBase UpdateRoomDiscount(UpdateDiscountRoomParam param);
+
     }
 
 }

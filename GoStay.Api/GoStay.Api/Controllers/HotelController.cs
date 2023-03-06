@@ -149,5 +149,11 @@ namespace GoStay.Api.Controllers
             var result = _hotelServices.UpdateRoomStatus(param);
             return result;
         }
+        [HttpPut("update-room-discount")]
+        public ResponseBase UpdateRoomDiscount(UpdateDiscountRoomParam param)
+        {
+            var result = _hotelServices.UpdateRoomDiscount(param);
+            return result;
+        }
     }
 }
