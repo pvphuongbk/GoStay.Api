@@ -483,6 +483,40 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
+        public ResponseBase UpdateRoomStatus(UpdateStatusRoomParam param)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+
+                var room = _roomRepository.FindAll(x => x.Iduser == param.UserId && x.Id == param.RoomId).SingleOrDefault();
+                if (room != null)
+                {
+                    room.Status = param.Status;
+                    _roomRepository.Update(room);
+                    _commonUoW.Commit();
+                    response.Message = "Update Status Success";
+                    response.Code = ErrorCodeMessage.Success.Key;
+                    return response;
+                }
+                else
+                {
+                    _commonUoW.Commit();
+                    response.Message = "Valid Error";
+                    response.Code = ErrorCodeMessage.NoObject.Key;
+                    return response;
+                }
+            }
+            catch
+            {
+                _commonUoW.RollBack();
+                response.Message = "Exception";
+                response.Code = ErrorCodeMessage.InternalExeption.Key;
+                return response;
+            }
+
+        }
         public string AddNewPicture(Picture picture)
         {
             try
@@ -512,6 +546,7 @@ namespace GoStay.Services.WebSupport
                 return "Exception, Fail";
             }
         }
+
     }
 }
 

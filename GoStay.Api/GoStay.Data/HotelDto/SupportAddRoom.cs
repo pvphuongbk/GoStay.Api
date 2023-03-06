@@ -13,4 +13,10 @@ namespace GoStay.DataDto.HotelDto
         public List<Service> servicesRoom { get; set; }
         public List<Palletbed> palletbed { get; set; }
     }
+    public class UpdateStatusRoomParam
+    {
+        public int RoomId { get; set; }
+        public int UserId { get; set; }
+        public int Status { get; set; }
+    }
 }

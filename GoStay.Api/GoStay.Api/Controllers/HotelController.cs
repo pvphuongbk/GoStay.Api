@@ -9,6 +9,7 @@ using PartnerGostay.Models;
 using GoStay.Services;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using GoStay.Data.OrderDto;
 
 namespace GoStay.Api.Controllers
 {
@@ -142,6 +143,11 @@ namespace GoStay.Api.Controllers
             var result = _hotelServices.SupportAddRoom();
             return result;
         }
-
+        [HttpPut("update-room-status")]
+        public ResponseBase UpdateRoomStatus(UpdateStatusRoomParam param)
+        {
+            var result = _hotelServices.UpdateRoomStatus(param);
+            return result;
+        }
     }
 }
