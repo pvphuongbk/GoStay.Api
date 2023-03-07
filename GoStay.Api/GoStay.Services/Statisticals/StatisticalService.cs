@@ -1,8 +1,11 @@
-﻿using GoStay.Data.Base;
+﻿using GoStay.Common.Enums;
+using GoStay.Data.Base;
 using GoStay.Data.Statistical;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.Utilities;
+using GoStay.DataDto.Statistical;
+using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
@@ -143,6 +146,99 @@ namespace GoStay.Services.Statisticals
                 responseBase.Message = e.Message;
                 return responseBase;
             }
+        }
+
+        public Task<ResponseBase> GetAllOrderPriceByUser(int userID)
+        {
+            return Task.Run(delegate
+            {
+                ResponseBase responseBase = new ResponseBase();
+                try
+                {
+
+                    PriceDetailByUserDto data = new PriceDetailByUserDto();
+                    var allValue = StatisticalRepository.GetAllOrderPriceByUser(userID);
+                    data.HandlingValue = allValue.Where(x => x.Status == 1).Sum(x => x.Value);
+                    var waitingPaying = allValue.Where(x => x.Status == 2).Sum(x => x.Value);
+                    data.ActualValue = allValue.Where(x => x.Status == 3).Sum(x => x.Value);
+                    data.TotalValue = data.ActualValue + waitingPaying;
+                    data.PendingValue = waitingPaying;
+
+                    responseBase.Data = data;
+                    return responseBase;
+                }
+                catch (Exception e)
+                {
+                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    responseBase.Message = e.Message;
+                    return responseBase;
+                }
+            });
+        }
+
+        public Task<ResponseBase> GetPriceChartByUser(PriceChartType type,int userID, int year,int month)
+        {
+            return Task.Run(delegate
+            {
+                ResponseBase responseBase = new ResponseBase();
+                try
+                {
+
+                    Dictionary<int, decimal> dic = new Dictionary<int, decimal>();
+                    if (type == PriceChartType.InYear)
+                    {
+                        var datas = StatisticalRepository.GetPriceChartByUserInYear(userID, year);
+
+                        for(DateTime date = new DateTime(year,1,1); date < new DateTime(year + 1, 1, 1); date = date.AddMonths(1))
+                        {
+                            var value = datas.FirstOrDefault(x => x.Keys.Month == date.Month);
+                            var price = value == null ? 0 : value.Value;
+                            dic.Add(date.Month, price);
+                        }
+                    }
+                    if (type == PriceChartType.InMonth)
+                    {
+                        var datas = StatisticalRepository.GetPriceChartByUserInMonth(userID, year, month);
+
+                        for (DateTime date = new DateTime(year, month, 1); date < new DateTime(year, month + 1, 1); date = date.AddDays(1))
+                        {
+                            var value = datas.FirstOrDefault(x => x.Keys.Day == date.Day);
+                            var price = value == null ? 0 : value.Value;
+                            dic.Add(date.Day, price);
+                        }
+                    }
+
+                    responseBase.Data = dic;
+                    return responseBase;
+                }
+                catch (Exception e)
+                {
+                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    responseBase.Message = e.Message;
+                    return responseBase;
+                }
+            });
+        }
+
+        public Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize)
+        {
+            return Task.Run(delegate
+            {
+                ResponseBase responseBase = new ResponseBase();
+                try
+                {
+
+                    var datas = StatisticalRepository.GetAllOrderByUser(userID, pageIndex, pageSize);
+                    responseBase.Data = datas;
+                    return responseBase;
+                }
+                catch (Exception e)
+                {
+                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    responseBase.Message = e.Message;
+                    return responseBase;
+                }
+            });
         }
     }
 }

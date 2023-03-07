@@ -12,7 +12,9 @@
         public static string sq_SuggestSearchTour = "sq_SuggestSearchTour";
         //order
         public static string sq_SearchListOrder = "sq_SearchListOrder";
-
-
+        public static string sq_GetAllOrderPriceByUser = "sq_GetAllOrderPriceByUser";
+        public static string sq_GetPriceChartByUserInMonth = "sq_GetPriceChartByUserInMonth";
+        public static string sq_GetPriceChartByUserInYear = "sq_GetPriceChartByUserInYear";
+        public static string sq_GetAllOrderByUser = "sq_GetAllOrderByUser";
     }
 }
