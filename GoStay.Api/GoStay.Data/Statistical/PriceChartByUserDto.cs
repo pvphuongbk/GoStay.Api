@@ -4,5 +4,6 @@
     {
         public decimal Value { get; set; }
         public DateTime Keys { get; set; }
+        public int Status { get; set; }
     }
 }

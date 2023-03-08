@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using GoStay.Common.Constants;
+using GoStay.DataAccess.Entities;
 using GoStay.DataDto.Statistical;
 using GoStay.Repository.DapperHelper;
 
@@ -7,12 +8,14 @@ namespace GoStay.Repository.Repositories
 {
     public class StatisticalRepository
     {
-        public static List<PriceByUserDto> GetAllOrderPriceByUser(int userID)
+        public static List<PriceDetailByUserDto> GetAllOrderPriceByUser(PriceDetailByUserRequest request)
         {
             var p = new DynamicParameters();
-            p.Add("@UserId", userID, System.Data.DbType.Int32);
+            p.Add("@UserId", request.UserID, System.Data.DbType.Int32);
+            p.Add("@StartDate", request.StartDate, System.Data.DbType.DateTime);
+            p.Add("@EndDate", request.EndDate, System.Data.DbType.DateTime);
 
-            return DapperExtensions.QueryDapperStoreProc<PriceByUserDto>(Procedures.sq_GetAllOrderPriceByUser, p).ToList();
+            return DapperExtensions.QueryDapperStoreProc<PriceDetailByUserDto>(Procedures.sq_GetAllOrderPriceByUser, p).ToList();
         }
 
         public static List<PriceChartByUserDto> GetPriceChartByUserInYear(int userID, int year)

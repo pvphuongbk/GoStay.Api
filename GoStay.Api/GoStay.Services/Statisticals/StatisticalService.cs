@@ -148,22 +148,14 @@ namespace GoStay.Services.Statisticals
             }
         }
 
-        public Task<ResponseBase> GetAllOrderPriceByUser(int userID)
+        public Task<ResponseBase> GetAllOrderPriceByUser(PriceDetailByUserRequest request)
         {
             return Task.Run(delegate
             {
                 ResponseBase responseBase = new ResponseBase();
                 try
                 {
-
-                    PriceDetailByUserDto data = new PriceDetailByUserDto();
-                    var allValue = StatisticalRepository.GetAllOrderPriceByUser(userID);
-                    data.HandlingValue = allValue.Where(x => x.Status == 1).Sum(x => x.Value);
-                    var waitingPaying = allValue.Where(x => x.Status == 2).Sum(x => x.Value);
-                    data.ActualValue = allValue.Where(x => x.Status == 3).Sum(x => x.Value);
-                    data.TotalValue = data.ActualValue + waitingPaying;
-                    data.PendingValue = waitingPaying;
-
+                    var data = StatisticalRepository.GetAllOrderPriceByUser(request);
                     responseBase.Data = data;
                     return responseBase;
                 }
@@ -183,32 +175,41 @@ namespace GoStay.Services.Statisticals
                 ResponseBase responseBase = new ResponseBase();
                 try
                 {
-
-                    Dictionary<int, decimal> dic = new Dictionary<int, decimal>();
+                    Dictionary<int, Dictionary<int, decimal>> resultDic = new Dictionary<int, Dictionary<int, decimal>>();
                     if (type == PriceChartType.InYear)
                     {
                         var datas = StatisticalRepository.GetPriceChartByUserInYear(userID, year);
-
-                        for(DateTime date = new DateTime(year,1,1); date < new DateTime(year + 1, 1, 1); date = date.AddMonths(1))
+                        for(var status = 1; status <= 3; status ++)
                         {
-                            var value = datas.FirstOrDefault(x => x.Keys.Month == date.Month);
-                            var price = value == null ? 0 : value.Value;
-                            dic.Add(date.Month, price);
+                            Dictionary<int, decimal> dic = new Dictionary<int, decimal>();
+                            for (DateTime date = new DateTime(year, 1, 1); date < new DateTime(year + 1, 1, 1); date = date.AddMonths(1))
+                            {
+                                var value = datas.FirstOrDefault(x => x.Keys.Month == date.Month && x.Status == status);
+                                var price = value == null ? 0 : value.Value;
+                                dic.Add(date.Month, price);
+                            }
+
+                            resultDic.Add(status, dic);
                         }
                     }
-                    if (type == PriceChartType.InMonth)
+                    else if (type == PriceChartType.InMonth)
                     {
                         var datas = StatisticalRepository.GetPriceChartByUserInMonth(userID, year, month);
-
-                        for (DateTime date = new DateTime(year, month, 1); date < new DateTime(year, month + 1, 1); date = date.AddDays(1))
+                        for (var status = 1; status <= 3; status++)
                         {
-                            var value = datas.FirstOrDefault(x => x.Keys.Day == date.Day);
-                            var price = value == null ? 0 : value.Value;
-                            dic.Add(date.Day, price);
+                            Dictionary<int, decimal> dic = new Dictionary<int, decimal>();
+                            for (DateTime date = new DateTime(year, month, 1); date < new DateTime(year, month + 1, 1); date = date.AddDays(1))
+                            {
+                                var value = datas.FirstOrDefault(x => x.Keys.Day == date.Day && x.Status == status);
+                                var price = value == null ? 0 : value.Value;
+                                dic.Add(date.Day, price);
+                            }
+
+                            resultDic.Add(status, dic);
                         }
                     }
 
-                    responseBase.Data = dic;
+                    responseBase.Data = resultDic;
                     return responseBase;
                 }
                 catch (Exception e)
