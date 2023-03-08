@@ -4,6 +4,7 @@ using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.DataDto.Statistical;
 using GoStay.Services.Hotels;
 using GoStay.Services.Statisticals;
 using Microsoft.AspNetCore.Mvc;
@@ -35,10 +36,10 @@ namespace GoStay.Api.Controllers
             var items = _statisticalService.GetRoomInMonthByDay(month, year);
             return items;
         }
-        [HttpGet("price-by-user")]
-        public Task<ResponseBase> GetAllOrderPriceByUser(int userID)
+        [HttpPost("price-by-user")]
+        public Task<ResponseBase> GetAllOrderPriceByUser(PriceDetailByUserRequest request)
         {
-            var items = _statisticalService.GetAllOrderPriceByUser(userID);
+            var items = _statisticalService.GetAllOrderPriceByUser(request);
             return items;
         }
         [HttpGet("price-char-by-user")]
