@@ -653,7 +653,7 @@ namespace GoStay.Services.WebSupport
                 {
                     foreach (var service in services)
                     {
-                        list.Add(new ServiceRoomDto { Id = service.Id, Name = service.Name });
+                        list.Add(new ServiceRoomDto { Id = service.Id, Name = service.Name,AdvantageLevel= service.AdvantageLevel });
                     }
                 }
                 response.Message = "Success";

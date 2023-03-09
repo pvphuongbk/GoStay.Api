@@ -83,6 +83,8 @@ namespace GoStay.DataDto.Hotel
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public byte? AdvantageLevel { get; set; }
+
     }
     public class HotelListUserDto
     {
