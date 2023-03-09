@@ -162,9 +162,9 @@ namespace GoStay.Api.Controllers
             return result;
         }
         [HttpGet("pictures-hotel")]
-        public ResponseBase GetPicturesHotel(int IdRoom)
+        public ResponseBase GetPicturesHotel(int IdHotel)
         {
-            var result = _hotelServices.GetPicturesHotel(IdRoom);
+            var result = _hotelServices.GetPicturesHotel(IdHotel);
             return result;
         }
         [HttpGet("services-room")]
