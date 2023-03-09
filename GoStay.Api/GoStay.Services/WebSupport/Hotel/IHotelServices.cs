@@ -25,6 +25,7 @@ namespace GoStay.Services.WebSupport
         public ResponseBase UpdateRoomStatus(UpdateStatusRoomParam param);
         public ResponseBase UpdateRoomDiscount(UpdateDiscountRoomParam param);
         ResponseBase GetPicturesRoom(int IdRoom);
+        ResponseBase GetPicturesHotel(int IdHotel);
         ResponseBase GetServicesRoom(int IdRoom);
 
     }

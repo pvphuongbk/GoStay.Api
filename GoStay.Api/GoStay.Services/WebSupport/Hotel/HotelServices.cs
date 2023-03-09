@@ -611,6 +611,35 @@ namespace GoStay.Services.WebSupport
 
             }
         }
+        public ResponseBase GetPicturesHotel(int IdHotel)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                List<PictureRoomDto> list = new List<PictureRoomDto>();
+
+                var pictures = _pictureRepository.FindAll(x => x.HotelId == IdHotel && x.Deleted != 1).OrderByDescending(x => x.Size);
+                if (pictures != null)
+                {
+                    foreach (var picture in pictures)
+                    {
+                        list.Add(new PictureRoomDto { Id = picture.Id, UrlOut = picture.UrlOut });
+                    }
+                }
+                response.Message = "Success";
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = list;
+                return response;
+            }
+            catch
+            {
+                response.Message = "Exception";
+                response.Code = ErrorCodeMessage.InternalExeption.Key;
+                return response;
+
+            }
+        }
 
         public ResponseBase GetServicesRoom(int IdRoom)
         {
