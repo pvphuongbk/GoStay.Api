@@ -582,6 +582,64 @@ namespace GoStay.Services.WebSupport
             }
         }
 
+        public ResponseBase GetPicturesRoom(int IdRoom)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                List<PictureRoomDto> list = new List<PictureRoomDto>();
+
+                var pictures = _pictureRepository.FindAll(x => x.HotelRoomId == IdRoom && x.Deleted != 1).OrderByDescending(x => x.Size);
+                if (pictures != null)
+                {
+                    foreach (var picture in pictures)
+                    {
+                        list.Add(new PictureRoomDto { Id = picture.Id, UrlOut = picture.UrlOut });
+                    }
+                }
+                response.Message = "Success";
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = list;
+                return response;
+            }
+            catch
+            {
+                response.Message = "Exception";
+                response.Code = ErrorCodeMessage.InternalExeption.Key;
+                return response;
+
+            }
+        }
+
+        public ResponseBase GetServicesRoom(int IdRoom)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                List<ServiceRoomDto> list = new List<ServiceRoomDto>();
+
+                var services = _roomServicesRepository.FindAll(x => x.Idroom == IdRoom).Select(x => x.IdservicesNavigation);
+                if (services != null)
+                {
+                    foreach (var service in services)
+                    {
+                        list.Add(new ServiceRoomDto { Id = service.Id, Name = service.Name });
+                    }
+                }
+                response.Message = "Success";
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = list;
+                return response;
+            }
+            catch
+            {
+                response.Message = "Exception";
+                response.Code = ErrorCodeMessage.InternalExeption.Key;
+                return response;
+
+            }
+        }
     }
 }
 

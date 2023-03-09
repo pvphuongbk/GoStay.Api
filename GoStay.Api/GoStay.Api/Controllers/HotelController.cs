@@ -155,5 +155,18 @@ namespace GoStay.Api.Controllers
             var result = _hotelServices.UpdateRoomDiscount(param);
             return result;
         }
+        [HttpGet("pictures-room")]
+        public ResponseBase GetPicturesRoom(int IdRoom)
+        {
+            var result = _hotelServices.GetPicturesRoom(IdRoom);
+            return result;
+        }
+        [HttpGet("services-room")]
+        public ResponseBase GetServicesRoom(int IdRoom)
+        {
+            var result = _hotelServices.GetServicesRoom(IdRoom);
+            return result;
+        }
+
     }
 }
