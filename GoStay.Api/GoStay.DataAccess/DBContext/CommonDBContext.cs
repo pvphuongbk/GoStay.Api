@@ -1073,7 +1073,7 @@ namespace GoStay.DataAccess.DBContext
                     .IsFixedLength();
 
                 entity.Property(e => e.Phone)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .IsFixedLength();
 
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");

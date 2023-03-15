@@ -18,6 +18,7 @@ namespace GoStay.DataAccess.Entities
         public string? PassportNumber { get; set; }
         public int IdTicket { get; set; }
         public decimal Price { get; set; }
+        public bool IsContact { get; set; }
 
         public virtual OrderTicketDetail IdTicketNavigation { get; set; } = null!;
     }
