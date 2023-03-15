@@ -8,6 +8,7 @@ namespace GoStay.DataAccess.Entities
         public User()
         {
             HotelRatings = new HashSet<HotelRating>();
+            OrderTickets = new HashSet<OrderTicket>();
             Orders = new HashSet<Order>();
         }
 
@@ -31,6 +32,7 @@ namespace GoStay.DataAccess.Entities
         public string? Picture { get; set; }
 
         public virtual ICollection<HotelRating> HotelRatings { get; set; }
+        public virtual ICollection<OrderTicket> OrderTickets { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 

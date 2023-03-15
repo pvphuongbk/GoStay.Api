@@ -40,6 +40,8 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
         public virtual DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
+        public virtual DbSet<OrderTicket> OrderTickets { get; set; } = null!;
+        public virtual DbSet<OrderTicketDetail> OrderTicketDetails { get; set; } = null!;
         public virtual DbSet<Palletbed> Palletbeds { get; set; } = null!;
         public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
         public virtual DbSet<Picture> Pictures { get; set; } = null!;
@@ -48,6 +50,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
         public virtual DbSet<RoomView> RoomViews { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
+        public virtual DbSet<TicketPassenger> TicketPassengers { get; set; } = null!;
         public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
         public virtual DbSet<Tour> Tours { get; set; } = null!;
         public virtual DbSet<TourDetail> TourDetails { get; set; } = null!;
@@ -792,6 +795,98 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Status).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<OrderTicket>(entity =>
+            {
+                entity.ToTable("OrderTicket");
+
+                entity.Property(e => e.DataFlightSession)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateCreate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("datetime");
+
+                entity.Property(e => e.FlightSession)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IdPtthanhToan).HasColumnName("IdPTThanhToan");
+
+                entity.Property(e => e.Ordercode)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Session)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.HasOne(d => d.IdPtthanhToanNavigation)
+                    .WithMany(p => p.OrderTickets)
+                    .HasForeignKey(d => d.IdPtthanhToan)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderTicket_OrderPhuongThucTT");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.OrderTickets)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderTicket_users");
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.OrderTickets)
+                    .HasForeignKey(d => d.Status)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderTicket_OrderStatus");
+            });
+
+            modelBuilder.Entity<OrderTicketDetail>(entity =>
+            {
+                entity.ToTable("OrderTicketDetail");
+
+                entity.Property(e => e.AirlineCode).HasMaxLength(10);
+
+                entity.Property(e => e.AirlineName).HasMaxLength(50);
+
+                entity.Property(e => e.Barrage).HasMaxLength(100);
+
+                entity.Property(e => e.Class)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.DateCreate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DepartureDate).HasColumnType("datetime");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.EndPoint).HasMaxLength(50);
+
+                entity.Property(e => e.FlightNumber).HasMaxLength(10);
+
+                entity.Property(e => e.IssueFee).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.ServiceFee).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StartPoint).HasMaxLength(50);
+
+                entity.HasOne(d => d.IdOrderNavigation)
+                    .WithMany(p => p.OrderTicketDetails)
+                    .HasForeignKey(d => d.IdOrder)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderTicketDetail_OrderTicket");
+            });
+
             modelBuilder.Entity<Palletbed>(entity =>
             {
                 entity.ToTable("Palletbed");
@@ -953,6 +1048,46 @@ namespace GoStay.DataAccess.DBContext
 			});
 
            
+            modelBuilder.Entity<TicketPassenger>(entity =>
+            {
+                entity.ToTable("TicketPassenger");
+
+                entity.Property(e => e.Birthday).HasMaxLength(20);
+
+                entity.Property(e => e.Email).HasMaxLength(50);
+
+                entity.Property(e => e.FirstName).HasMaxLength(20);
+
+                entity.Property(e => e.LastName).HasMaxLength(20);
+
+                entity.Property(e => e.PassportExpiryDate)
+                    .HasMaxLength(20)
+                    .IsFixedLength();
+
+                entity.Property(e => e.PassportIssueCountry)
+                    .HasMaxLength(20)
+                    .IsFixedLength();
+
+                entity.Property(e => e.PassportNumber)
+                    .HasMaxLength(20)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.IdTicketNavigation)
+                    .WithMany(p => p.TicketPassengers)
+                    .HasForeignKey(d => d.IdTicket)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TicketPassenger_OrderTicketDetail");
+            });
 
 			modelBuilder.Entity<TinhThanh>(entity =>
 			{

@@ -3,6 +3,7 @@ using GoStay.Common;
 using GoStay.Data.HotelDto;
 using GoStay.Data.OrderDto;
 using GoStay.Data.ServiceDto;
+using GoStay.Data.Ticket;
 using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto;
@@ -65,7 +66,6 @@ namespace GoStay.Api.Configurations
             CreateMap<Quan, QuanDto>().ReverseMap();
             CreateMap<AddRoomModel, HotelRoom>().ReverseMap();
             CreateMap<EditRoomModel, HotelRoom>().ReverseMap();
-
             
             CreateMap<HotelRoom, RoomDto>().ReverseMap();
             CreateMap<PagingList<HotelRoom>, PagingList<RoomDto>>().ReverseMap();
@@ -76,7 +76,13 @@ namespace GoStay.Api.Configurations
             CreateMap<Hotel, HotelListUserDto>().ReverseMap();
             CreateMap<Picture, PictureRoomDto>().ReverseMap();
 
+            CreateMap<OrderTicketDetailDto, OrderTicketDetail>().ReverseMap();
+            CreateMap<OrderTicketDto, OrderTicket>().ReverseMap();
+            CreateMap<TicketPassengerDto, TicketPassenger>().ReverseMap();
 
+            CreateMap<OrderTicket, OrderTicketShowDto>().ReverseMap();
+            CreateMap<OrderTicketDetail, OrderTicketDetailShowDto>().ReverseMap();
+            CreateMap<TicketPassenger, TicketPassengerShowDto>().ReverseMap();
         }
     }
 }

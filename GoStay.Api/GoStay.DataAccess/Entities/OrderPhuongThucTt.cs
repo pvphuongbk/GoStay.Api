@@ -7,12 +7,14 @@ namespace GoStay.DataAccess.Entities
     {
         public OrderPhuongThucTt()
         {
+            OrderTickets = new HashSet<OrderTicket>();
             Orders = new HashSet<Order>();
         }
 
         public byte Id { get; set; }
         public string? PhuongThuc { get; set; }
 
+        public virtual ICollection<OrderTicket> OrderTickets { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

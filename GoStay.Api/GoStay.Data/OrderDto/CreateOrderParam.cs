@@ -1,4 +1,5 @@
-﻿using GoStay.DataAccess.Entities;
+﻿using GoStay.Data.Ticket;
+using GoStay.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace GoStay.Data.OrderDto
         public OrderDto order { get; set; }
         public OrderDetailDto orderDetail { get; set; }
     }
+
     public class InsertOrderParam
     {
         public OrderDto order { get; set; }
