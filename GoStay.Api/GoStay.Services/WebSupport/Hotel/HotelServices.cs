@@ -68,7 +68,6 @@ namespace GoStay.Services.WebSupport
                 hotel = _hotelRepository.FindAll(x => x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation)
                     .Include(x => x.TypeNavigation)
-                    .Include(x=>x.Pictures)
                     .OrderByDescending(x => x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
@@ -77,14 +76,12 @@ namespace GoStay.Services.WebSupport
                 hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince && x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation)
                     .Include(x => x.TypeNavigation)
-                    .Include(x => x.Pictures)
                     .OrderByDescending(x=>x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
             var list = _mapper.Map<PagingList<Hotel>, PagingList<HotelDto>>(hotel);
             list.Items.ForEach(x => x.PriceRange = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().IdPriceRangeNavigation.Title));
             list.Items.ForEach(x => x.TypeHotel = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().TypeNavigation.Type));
-            list.Items.ForEach(x => x.ImageUrl = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().Pictures.FirstOrDefault().UrlOut));
 
             response.Data = list;
             return response;
