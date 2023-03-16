@@ -110,4 +110,26 @@
         public bool IsContact { get; set; }
 
     }
+    public class OrderTicketAdminDto
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public int IdUser { get; set; }
+        public byte Status { get; set; }
+        public string StatusText { get; set; }
+        public string? Ordercode { get; set; }
+        public OrderTicketDetailAdminDto TicketDetail { get; set; }
+    }
+    public class OrderTicketDetailAdminDto
+    {
+        public int Id { get; set; }
+        public decimal Price { get; set; }
+        public string StartPoint { get; set; } = null!;
+        public string EndPoint { get; set; } = null!;
+        public string DepartureDateText { get; set; }
+        public string StartDateText { get; set; }
+        public string EndDateText { get; set; }
+        public string AirlineName { get; set; } = null!;
+        public int PassengersCount { get; set; }
+    }
 }

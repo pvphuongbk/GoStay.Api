@@ -83,6 +83,10 @@ namespace GoStay.Api.Configurations
             CreateMap<OrderTicket, OrderTicketShowDto>().ReverseMap();
             CreateMap<OrderTicketDetail, OrderTicketDetailShowDto>().ReverseMap();
             CreateMap<TicketPassenger, TicketPassengerShowDto>().ReverseMap();
+
+            CreateMap<OrderTicket, OrderTicketAdminDto>().ReverseMap();
+            CreateMap<OrderTicketDetail, OrderTicketDetailAdminDto>().ReverseMap();
+
         }
     }
 }
