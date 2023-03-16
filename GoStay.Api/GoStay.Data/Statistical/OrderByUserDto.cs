@@ -15,6 +15,8 @@
         public string Avatar { get; set; }
         public string Phone { get; set; }
         public int TotalCount { get; set; }
+        public int TotalPage{ get; set; }
+
         public string UserName { get; set; }
 
     }

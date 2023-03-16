@@ -230,6 +230,7 @@ namespace GoStay.Services.Statisticals
                 {
 
                     var datas = StatisticalRepository.GetAllOrderByUser(userID, pageIndex, pageSize);
+                    datas.ForEach(x => x.TotalPage = (x.TotalCount+ pageSize-1) / pageSize);
                     responseBase.Data = datas;
                     return responseBase;
                 }
