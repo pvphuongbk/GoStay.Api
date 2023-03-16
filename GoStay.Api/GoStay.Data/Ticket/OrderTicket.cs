@@ -135,5 +135,6 @@
         public string FlightNumber { get; set; } = null!;
         public string? Barrage { get; set; }
         public string? Class { get; set; }
+        public int TotalObj { get; set; }
     }
 }
