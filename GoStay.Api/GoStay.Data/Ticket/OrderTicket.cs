@@ -126,10 +126,14 @@
         public decimal Price { get; set; }
         public string StartPoint { get; set; } = null!;
         public string EndPoint { get; set; } = null!;
-        public string DepartureDateText { get; set; }
-        public string StartDateText { get; set; }
-        public string EndDateText { get; set; }
         public string AirlineName { get; set; } = null!;
         public int PassengersCount { get; set; }
+        public DateTime DepartureDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string AirlineCode { get; set; } = null!;
+        public string FlightNumber { get; set; } = null!;
+        public string? Barrage { get; set; }
+        public string? Class { get; set; }
     }
 }
