@@ -5,6 +5,7 @@ using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace GoStay.Services.OrderTickets
@@ -31,6 +32,43 @@ namespace GoStay.Services.OrderTickets
             _userRepository = userRepository;
             _passengerRepository = passengerRepository;
         }
+        public ResponseBase GetAllOrderTicket(int pageIndex, int pageSize)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                List<OrderTicketAdminDto> ListData = new List<OrderTicketAdminDto>();
+                var listOrder = _OrderTicketRepository.FindAll()
+                                .Include(x => x.StatusNavigation)
+                                .Include(x => x.OrderTicketDetails).ThenInclude(x => x.TicketPassengers)
+                                .Include(x => x.IdUserNavigation)
+                                .Include(x => x.IdPtthanhToanNavigation)
+                                .OrderBy(x => x.DateCreate);
+                var count = listOrder.Count();
+                int take = pageSize;
+                int skip = pageSize*(pageIndex-1);
+
+                if (pageIndex*pageSize > count)
+                {
+                    take = pageIndex * pageSize - count;
+                }
+                var orders = listOrder.Skip(skip).Take(take);
+                ListData = _mapper.Map<List<OrderTicket>,List<OrderTicketAdminDto>>(orders.ToList());
+                ListData.ForEach(x => x.TicketDetail = _mapper.Map<OrderTicketDetail, OrderTicketDetailAdminDto>
+                                (orders.Where(z => z.Id == x.Id).SingleOrDefault().OrderTicketDetails.SingleOrDefault()));
+                responseBase.Data = ListData;
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                return responseBase;
+            }
+            catch(Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
         public ResponseBase CreateOrderTicket(OrderTicketDto order, OrderTicketDetailDto orderDetail)
         {
             ResponseBase responseBase = new ResponseBase();

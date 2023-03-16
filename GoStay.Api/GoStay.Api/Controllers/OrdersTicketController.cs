@@ -38,6 +38,11 @@ namespace GoStay.Api.Controllers
             var items = _orderService.GetOrderTicketbyId(Id);
             return items;
         }
-
+        [HttpGet("all-order-ticket")]
+        public ResponseBase GetAllOrderTicket(int pageIndex, int pageSize)
+        {
+            var items = _orderService.GetAllOrderTicket(pageIndex, pageSize);
+            return items;
+        }
     }
 }
