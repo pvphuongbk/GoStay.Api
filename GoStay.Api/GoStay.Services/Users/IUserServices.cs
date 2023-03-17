@@ -5,6 +5,9 @@ namespace GoStay.Services.Users
 {
 	public interface IUserService
 	{
+        ResponseBase GetAllUser();
+        ResponseBase SetAuthor(int UserId, int UserType);
+
         ResponseBase UserLogin(string email, string? password, Common.Enums.UserType enumType);
         ResponseBase CheckUserByPhone(string phoneNumber);
         ResponseBase RegisterUserPhone(User user);

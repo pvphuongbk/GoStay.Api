@@ -2,6 +2,7 @@
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
 
 namespace GoStay.Services.Users
 {
@@ -15,7 +16,54 @@ namespace GoStay.Services.Users
 			_commonUoW = commonUoW;
 		}
 
-		public ResponseBase CheckUserByPhone(string phoneNumber)
+        public ResponseBase GetAllUser()
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var users = _userRepository.FindAll(x => x.UserType != 0);
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = users.ToList();
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+        }
+        public ResponseBase SetAuthor(int UserId,int UserType)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var user = _userRepository.FindAll(x => x.UserId == UserId).SingleOrDefault();
+                if(user == null)
+                {
+                    response.Code = ErrorCodeMessage.Exception.Key;
+                    response.Message = "User not exist";
+                    return response;
+                }
+                user.UserType = UserType;
+                _userRepository.Update(user);
+                _commonUoW.Commit();
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = user;
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+        }
+        public ResponseBase CheckUserByPhone(string phoneNumber)
 		{
             ResponseBase response = new ResponseBase();
             var user = _userRepository.FindAll(x => x.MobileNo == phoneNumber).FirstOrDefault();

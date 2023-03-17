@@ -33,12 +33,12 @@ namespace GoStay.Services.OrderTickets
             _userRepository = userRepository;
             _passengerRepository = passengerRepository;
         }
-        public ResponseBase GetAllOrderTicket(int pageIndex, int pageSize)
+        public ResponseBase GetAllOrderTicket(int UserId,int pageIndex, int pageSize)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var result = OrderTicketRepository.GetListOrderTicket(pageIndex, pageSize);
+                var result = OrderTicketRepository.GetListOrderTicket(UserId, pageIndex, pageSize);
                 result.ForEach(x => x.TotalPage = (x.TotalCount + pageSize - 1) / pageSize);
                 responseBase.Data = result;
                 return responseBase;
