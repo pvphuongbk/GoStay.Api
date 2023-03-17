@@ -38,7 +38,9 @@ namespace GoStay.Services.OrderTickets
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                responseBase.Data = OrderTicketRepository.GetListOrderTicket(pageIndex, pageSize);
+                var result = OrderTicketRepository.GetListOrderTicket(pageIndex, pageSize);
+                result.ForEach(x => x.TotalPage = (x.TotalCount + pageSize - 1) / pageSize);
+                responseBase.Data = result;
                 return responseBase;
             }
             catch (Exception e)

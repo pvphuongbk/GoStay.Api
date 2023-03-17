@@ -132,6 +132,9 @@
         public string? Class { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public int TotalCount { get; set; }
+        public int TotalPage { get; set; }
+
 
     }
 }
