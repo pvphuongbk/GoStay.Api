@@ -123,6 +123,8 @@
         public string StartPoint { get; set; } = null!;
         public string EndPoint { get; set; } = null!;
         public string AirlineName { get; set; } = null!;
+        public DateTime DateCreate { get; set; }
+
         public DateTime DepartureDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -134,7 +136,9 @@
         public string Phone { get; set; }
         public int TotalCount { get; set; }
         public int TotalPage { get; set; }
-
+        public int Adult { get; set; }
+        public int Child { get; set; }
+        public int Infant { get; set; }
 
     }
 }
