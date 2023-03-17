@@ -680,6 +680,44 @@ namespace GoStay.Services.WebSupport
 
             }
         }
+        public ResponseBase SetMapHotel(SetMapHotelRequest param)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+
+                var hotel = _hotelRepository.FindAll(x => x.Id == param.HotelId).SingleOrDefault();
+                if (hotel == null )
+                {
+                    _commonUoW.Commit();
+                    response.Message = "Update Map Fail";
+                    response.Code = ErrorCodeMessage.InternalExeption.Key;
+                    response.Data = "fail";
+                    return response;
+                }
+                hotel.LonMap = param.LON;
+                hotel.LatMap = param.LAT;
+                _hotelRepository.Update(hotel);
+
+                _commonUoW.Commit();
+                response.Message = "Update Success";
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = "success";
+
+                return response;
+
+            }
+            catch
+            {
+                _commonUoW.RollBack();
+                response.Message = "Exception";
+                response.Code = ErrorCodeMessage.InternalExeption.Key;
+                response.Data = "fail";
+                return response;
+            }
+
+        }
     }
 }
 

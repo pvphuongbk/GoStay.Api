@@ -27,6 +27,8 @@ namespace GoStay.Services.WebSupport
         ResponseBase GetPicturesRoom(int IdRoom);
         ResponseBase GetPicturesHotel(int IdHotel);
         ResponseBase GetServicesRoom(int IdRoom);
+        ResponseBase SetMapHotel(SetMapHotelRequest param);
+
 
     }
 

@@ -9,10 +9,9 @@ namespace GoStay.Repository.Repositories
 {
     public class OrderTicketRepository
     {
-        public static List<OrderTicketAdminDto> GetListOrderTicket(int UserId,int pageIndex, int pageSize)
+        public static List<OrderTicketAdminDto> GetListOrderTicket(int pageIndex, int pageSize)
         {
             var p = new DynamicParameters();
-            p.Add("@UserId", UserId, System.Data.DbType.Int32);
             p.Add("@pageIndex", pageIndex, System.Data.DbType.Int32);
             p.Add("@pageSize", pageSize, System.Data.DbType.Int32);
 
