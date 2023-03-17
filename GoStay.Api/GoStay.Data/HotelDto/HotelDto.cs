@@ -17,9 +17,11 @@ namespace GoStay.DataDto.HotelDto
 
         public int? IdPriceRange { get; set; }
         public string? PriceRange { get; set; }
+        public int RoomCount { get; set; }
     }
     public class RequestGetListHotel
     {
+        public int UserId { get; set; }
         public int? PageIndex { get; set; }
         public int? PageSize { get; set; }
         public int? IdProvince { get; set; }
