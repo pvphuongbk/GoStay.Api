@@ -40,6 +40,11 @@ namespace GoStay.Services.OrderTickets
             {
                 var result = OrderTicketRepository.GetListOrderTicket(UserId, pageIndex, pageSize);
                 result.ForEach(x => x.TotalPage = (x.TotalCount + pageSize - 1) / pageSize);
+                result.ForEach(x => x.Adult = _passengerRepository.FindAll(p=>p.IdTicket==x.IdTicket && p.Type=="Adult").Count());
+                result.ForEach(x => x.Child = _passengerRepository.FindAll(p => p.IdTicket == x.IdTicket && p.Type == "Child").Count());
+                result.ForEach(x => x.Infant = _passengerRepository.FindAll(p => p.IdTicket == x.IdTicket && p.Type == "Infant").Count());
+
+
                 responseBase.Data = result;
                 return responseBase;
             }
