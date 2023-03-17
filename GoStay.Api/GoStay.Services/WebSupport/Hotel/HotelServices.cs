@@ -68,6 +68,7 @@ namespace GoStay.Services.WebSupport
                 hotel = _hotelRepository.FindAll(x => x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation)
                     .Include(x => x.TypeNavigation)
+                    .Include(x=>x.HotelRooms.Where(z=>z.Iduser== request.UserId))
                     .OrderByDescending(x => x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
@@ -76,12 +77,16 @@ namespace GoStay.Services.WebSupport
                 hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince && x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation)
                     .Include(x => x.TypeNavigation)
+                    .Include(x => x.HotelRooms.Where(z => z.Iduser == request.UserId))
                     .OrderByDescending(x=>x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
             var list = _mapper.Map<PagingList<Hotel>, PagingList<HotelDto>>(hotel);
             list.Items.ForEach(x => x.PriceRange = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().IdPriceRangeNavigation.Title));
             list.Items.ForEach(x => x.TypeHotel = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().TypeNavigation.Type));
+            list.Items.ForEach(x => x.RoomCount = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().HotelRooms
+                                                    .Count()));
+
 
             response.Data = list;
             return response;
@@ -92,12 +97,14 @@ namespace GoStay.Services.WebSupport
             ResponseBase response = new ResponseBase();
             List<HotelListUserDto> list = new List<HotelListUserDto>();
 
-            var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x => x.Iduser == IdUser)).OrderByDescending(x => x.Id);
+            var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x => x.Iduser == IdUser))
+                            .Include(x=>x.HotelRooms.Where(r=>r.Iduser== IdUser))
+                            .OrderByDescending(x => x.Id);
             if (hotels != null)
             {
                 foreach (var hotel in hotels)
                 {
-                    list.Add(new HotelListUserDto { Id = hotel.Id, Name = hotel.Name });
+                    list.Add(new HotelListUserDto { Id = hotel.Id, Name = hotel.Name,RoomCount = hotel.HotelRooms.Count() });
                 }
             }
             response.Data = list;

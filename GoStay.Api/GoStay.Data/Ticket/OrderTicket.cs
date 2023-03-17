@@ -116,18 +116,13 @@
         public string? Title { get; set; }
         public int IdUser { get; set; }
         public byte Status { get; set; }
-        public string StatusText { get; set; }
         public string? Ordercode { get; set; }
-        public OrderTicketDetailAdminDto TicketDetail { get; set; }
-    }
-    public class OrderTicketDetailAdminDto
-    {
-        public int Id { get; set; }
+
+        public int IdTicket { get; set; }
         public decimal Price { get; set; }
         public string StartPoint { get; set; } = null!;
         public string EndPoint { get; set; } = null!;
         public string AirlineName { get; set; } = null!;
-        public int PassengersCount { get; set; }
         public DateTime DepartureDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -135,6 +130,8 @@
         public string FlightNumber { get; set; } = null!;
         public string? Barrage { get; set; }
         public string? Class { get; set; }
-        public int TotalObj { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+
     }
 }

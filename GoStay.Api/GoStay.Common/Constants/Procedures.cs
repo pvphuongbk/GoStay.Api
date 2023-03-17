@@ -16,5 +16,8 @@
         public static string sq_GetPriceChartByUserInMonth = "sq_GetPriceChartByUserInMonth";
         public static string sq_GetPriceChartByUserInYear = "sq_GetPriceChartByUserInYear";
         public static string sq_GetAllOrderByUser = "sq_GetAllOrderByUser";
+        //ticket
+        public static string sq_GetAllOrderTicket = "sq_GetAllOrderTicket";
+
     }
 }
