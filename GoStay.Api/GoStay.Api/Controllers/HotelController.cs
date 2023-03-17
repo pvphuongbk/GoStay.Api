@@ -28,6 +28,13 @@ namespace GoStay.Api.Controllers
             _client = client;
         }
 
+        [HttpPut("set-map")]
+        public ResponseBase SetMapHotel(SetMapHotelRequest request)
+        {
+            var items = _hotelServices.SetMapHotel(request);
+            return items;
+        }
+
         [HttpPost("list")]
         public ResponseBase GetHotelList(RequestGetListHotel request)
         {

@@ -57,8 +57,6 @@ namespace GoStay.Api.Configurations
             CreateMap<TinhThanh, TinhThanhBannerDto>().ReverseMap();
             CreateMap<TinhThanhBannerDto, TinhThanh>().ReverseMap(); 
 
-            CreateMap<RoomAddDto, HotelRoom>().ReverseMap();
-            CreateMap<AddRoomViewModel, HotelRoom>().ReverseMap();
 
             CreateMap<Hotel, HotelDto>().ReverseMap();
             CreateMap<PagingList<Hotel>, PagingList<HotelDto>>().ReverseMap();
