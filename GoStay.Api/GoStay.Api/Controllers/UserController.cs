@@ -1,6 +1,7 @@
 
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto.User;
 using GoStay.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
@@ -16,6 +17,21 @@ namespace GoStay.Api.Controllers
 		{
             _userServices=userServices;
         }
+
+        [HttpGet("all-user")]
+        public ResponseBase GetAllUser()
+        {
+            var items = _userServices.GetAllUser();
+            return items;
+        }
+
+        [HttpPost("set-author")]
+        public ResponseBase SetAuthor(SetAuthorParam param)
+        {
+            var items = _userServices.SetAuthor(param.UserId,param.Usertype);
+            return items;
+        }
+
         [HttpGet("login")]
         public ResponseBase UserLogin(string email, string? password, Common.Enums.UserType enumType)
         {
