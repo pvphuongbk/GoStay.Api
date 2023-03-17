@@ -693,6 +693,7 @@ namespace GoStay.Services.WebSupport
                     _commonUoW.Commit();
                     response.Message = "Update Map Fail";
                     response.Code = ErrorCodeMessage.InternalExeption.Key;
+                    response.Data = "fail";
                     return response;
                 }
                 hotel.LonMap = param.LON;
@@ -702,6 +703,8 @@ namespace GoStay.Services.WebSupport
                 _commonUoW.Commit();
                 response.Message = "Update Success";
                 response.Code = ErrorCodeMessage.Success.Key;
+                response.Data = "success";
+
                 return response;
 
             }
@@ -710,6 +713,7 @@ namespace GoStay.Services.WebSupport
                 _commonUoW.RollBack();
                 response.Message = "Exception";
                 response.Code = ErrorCodeMessage.InternalExeption.Key;
+                response.Data = "fail";
                 return response;
             }
 
