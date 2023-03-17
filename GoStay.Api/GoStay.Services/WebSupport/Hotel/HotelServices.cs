@@ -68,7 +68,7 @@ namespace GoStay.Services.WebSupport
                 hotel = _hotelRepository.FindAll(x => x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation)
                     .Include(x => x.TypeNavigation)
-                    .Include(x=>x.HotelRooms.Where(z=>z.Iduser== request.UserId))
+                    .Include(x=>x.HotelRooms.Where(z=>z.Iduser== request.UserId && z.Deleted !=1))
                     .OrderByDescending(x => x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
@@ -77,7 +77,7 @@ namespace GoStay.Services.WebSupport
                 hotel = _hotelRepository.FindAll(x => x.IdTinhThanh == request.IdProvince && x.Deleted != 1 && x.SearchKey.Contains(request.NameSearch) == true)
                     .Include(x => x.IdPriceRangeNavigation)
                     .Include(x => x.TypeNavigation)
-                    .Include(x => x.HotelRooms.Where(z => z.Iduser == request.UserId))
+                    .Include(x => x.HotelRooms.Where(z => z.Iduser == request.UserId && z.Deleted != 1))
                     .OrderByDescending(x=>x.Id)
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
@@ -98,7 +98,7 @@ namespace GoStay.Services.WebSupport
             List<HotelListUserDto> list = new List<HotelListUserDto>();
 
             var hotels = _hotelRepository.FindAll(x => x.HotelRooms.Any(x => x.Iduser == IdUser))
-                            .Include(x=>x.HotelRooms.Where(r=>r.Iduser== IdUser))
+                            .Include(x=>x.HotelRooms.Where(r=>r.Iduser== IdUser && r.Deleted != 1))
                             .OrderByDescending(x => x.Id);
             if (hotels != null)
             {
