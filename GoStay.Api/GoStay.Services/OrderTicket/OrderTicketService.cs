@@ -42,6 +42,7 @@ namespace GoStay.Services.OrderTickets
                 if(UserId!=null && result !=null)
                 {
                     result = result.Where(x => x.IdUser == UserId).ToList();
+                    result.ForEach(x=>x.TotalCount= result.Count());
                 }    
                 result.ForEach(x => x.TotalPage = (x.TotalCount + pageSize - 1) / pageSize);
                 result.ForEach(x => x.Adult = _passengerRepository.FindAll(p=>p.IdTicket==x.IdTicket && p.Type=="Adult").Count());
