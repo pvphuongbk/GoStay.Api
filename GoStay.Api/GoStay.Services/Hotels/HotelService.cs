@@ -96,9 +96,24 @@ namespace GoStay.Services.Hotels
 				return responseBase;
 			}
 		}
+        public ResponseBase GetListHotelHomePage()
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                HotelSearchRequest filter = new HotelSearchRequest() { PageIndex=1,PageSize=10};
+                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).OrderByDescending(x=>x.IntDate);
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
 
-
-		public ResponseBase GetListForSearchHotel(HotelSearchRequest filter)
+        public ResponseBase GetListForSearchHotel(HotelSearchRequest filter)
 		{
 			ResponseBase responseBase = new ResponseBase();
 			try

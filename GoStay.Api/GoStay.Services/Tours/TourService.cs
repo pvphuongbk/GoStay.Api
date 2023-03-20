@@ -58,7 +58,29 @@ namespace GoStay.Services.Tours
             response.Data = TourRepository.GetPagingListTours(request);
             return response;
         }
+        public ResponseBase GetTourHomePage()
+        {
 
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var Data =new List<SearchTourDto>();
+                for (int i=1;i<=6;i++)
+                {
+                    SearchTourRequest request = new SearchTourRequest() { IdTourStyle = new int[] {i}, PageIndex = 1, PageSize = 4 };
+                    var data = TourRepository.GetPagingListTours(request);
+                    Data.AddRange(data);
+                }
+                response.Data = Data;
+                return response;
+            }
+            catch
+            {
+                response.Data = new TourContentDto();
+                return response;
+            }
+
+        }
         public ResponseBase GetTourContent(int Id)
         {
             

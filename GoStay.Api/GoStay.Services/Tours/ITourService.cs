@@ -8,6 +8,6 @@ namespace GoStay.Services.Tours
         ResponseBase SuggestTour(string searchText);
         ResponseBase SearchTour(SearchTourRequest request);
         public ResponseBase GetTourContent(int Id);
-
+        public ResponseBase GetTourHomePage();
     }
 }

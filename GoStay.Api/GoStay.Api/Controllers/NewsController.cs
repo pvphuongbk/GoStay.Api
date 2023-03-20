@@ -1,0 +1,65 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using GoStay.Data.Base;
+using PartnerGostay.Models;
+using GoStay.Services;
+using Newtonsoft.Json;
+using GoStay.Services.Newss;
+using GoStay.DataDto.News;
+
+namespace GoStay.Api.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class NewsController : ControllerBase
+    {
+
+        private readonly INewsService _newsServices;
+        private readonly IMapper _mapper;
+        private readonly IMyTypedClientServices _client;
+        public NewsController(INewsService newsServices, IMapper mapper, IMyTypedClientServices client)
+        {
+            _newsServices = newsServices;
+            _mapper = mapper;
+            _client = client;
+        }
+
+        [HttpPost("list")]
+        public ResponseBase GetListNews(GetListNewsParam param)
+        {
+            var items = _newsServices.GetListNews(param);
+            return items;
+        }
+        [HttpGet("news")]
+        public ResponseBase GetNews(int Id)
+        {
+            var items = _newsServices.GetNews(Id);
+            return items;
+        }
+
+        [HttpPost("add-news")]
+        public ResponseBase AddNews(string bodyJson)
+        {
+            var newsDto = JsonConvert.DeserializeObject<NewsDto>(bodyJson);
+            var item = _newsServices.AddNews(newsDto);
+            return item;
+
+        }
+
+        [HttpPut("edit-news")]
+        public ResponseBase EditNews(string bodyJson)
+        {
+            var newsDto = JsonConvert.DeserializeObject<NewsDto>(bodyJson);
+            var item = _newsServices.EditNews(newsDto);
+            return item;
+
+        }
+        [HttpPut("delete-news")]
+        public ResponseBase DeleteNews(int Id)
+        {
+            var item = _newsServices.DeleteNews(Id);
+            return item;
+        }
+
+    }
+}

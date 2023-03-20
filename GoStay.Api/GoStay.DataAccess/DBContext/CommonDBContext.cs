@@ -35,7 +35,6 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<NearbyHotel> NearbyHotels { get; set; } = null!;
         public virtual DbSet<News> News { get; set; } = null!;
         public virtual DbSet<NewsCategory> NewsCategories { get; set; } = null!;
-        public virtual DbSet<NewsGallery> NewsGalleries { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
@@ -640,8 +639,6 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<News>(entity =>
             {
-                entity.Property(e => e.Content).HasColumnType("ntext");
-
                 entity.Property(e => e.DateCreate).HasColumnType("datetime");
 
                 entity.Property(e => e.DateEdit).HasColumnType("datetime");
@@ -652,11 +649,17 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Title).HasMaxLength(150);
 
-                entity.HasOne(d => d.IdcatNavigation)
+                entity.HasOne(d => d.IdCategoryNavigation)
                     .WithMany(p => p.News)
-                    .HasForeignKey(d => d.Idcat)
+                    .HasForeignKey(d => d.IdCategory)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_News_NewsCategory");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.News)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_News_users");
             });
 
             modelBuilder.Entity<NewsCategory>(entity =>
@@ -672,26 +675,6 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
             });
 
-            modelBuilder.Entity<NewsGallery>(entity =>
-            {
-                entity.ToTable("NewsGallery");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Idpic).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.IdnewsNavigation)
-                    .WithMany(p => p.NewsGalleries)
-                    .HasForeignKey(d => d.Idnews)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_NewsGallery_News");
-
-                entity.HasOne(d => d.IdpicNavigation)
-                    .WithMany(p => p.NewsGalleries)
-                    .HasForeignKey(d => d.Idpic)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_NewsGallery_Pictures");
-            });
 
             modelBuilder.Entity<Order>(entity =>
             {
@@ -816,7 +799,7 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.IdPtthanhToan).HasColumnName("IdPTThanhToan");
 
                 entity.Property(e => e.Ordercode)
-                    .HasMaxLength(20)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Session)
@@ -848,14 +831,14 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.ToTable("OrderTicketDetail");
 
-                entity.Property(e => e.AirlineCode).HasMaxLength(10);
+                entity.Property(e => e.AirlineCode).HasMaxLength(30);
 
                 entity.Property(e => e.AirlineName).HasMaxLength(50);
 
                 entity.Property(e => e.Barrage).HasMaxLength(100);
 
                 entity.Property(e => e.Class)
-                    .HasMaxLength(10)
+                    .HasMaxLength(30)
                     .IsFixedLength();
 
                 entity.Property(e => e.DateCreate)
@@ -868,7 +851,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.EndPoint).HasMaxLength(50);
 
-                entity.Property(e => e.FlightNumber).HasMaxLength(10);
+                entity.Property(e => e.FlightNumber).HasMaxLength(30);
 
                 entity.Property(e => e.IssueFee).HasColumnType("decimal(18, 0)");
 
@@ -945,6 +928,11 @@ namespace GoStay.DataAccess.DBContext
                     .WithMany(p => p.Pictures)
                     .HasForeignKey(d => d.IdAlbum)
                     .HasConstraintName("FK_Pictures_Album");
+
+                entity.HasOne(d => d.News)
+                    .WithMany(p => p.Pictures)
+                    .HasForeignKey(d => d.NewsId)
+                    .HasConstraintName("FK_Pictures_News");
 
                 entity.HasOne(d => d.Tour)
                     .WithMany(p => p.Pictures)

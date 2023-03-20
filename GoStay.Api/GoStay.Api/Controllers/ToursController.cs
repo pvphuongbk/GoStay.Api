@@ -14,11 +14,18 @@ namespace GoStay.Api.Controllers
         {
             _tourService = tourService;
         }
-
+        
         [HttpGet("suggest")]
         public ResponseBase SuggestTour(string searchText)
         {
             var items = _tourService.SuggestTour(searchText);
+            return items;
+        }
+
+        [HttpGet("tour-homepage")]
+        public ResponseBase GetTourHomePage()
+        {
+            var items = _tourService.GetTourHomePage();
             return items;
         }
 

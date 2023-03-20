@@ -39,8 +39,14 @@ namespace GoStay.Api.Controllers
 			return items;
 		}
 
+        [HttpPost("hotel-homepage")]
+        public ResponseBase GetListHotelHomePage()
+        {
+            var items = _hotelService.GetListHotelHomePage();
+            return items;
+        }
         [HttpPost("hotel-search")]
-		public ResponseBase GetListForSearchHotel(HotelSearchRequest filter)
+		public ResponseBase GetListHotelHomePage(HotelSearchRequest filter)
 		{
             var items = _hotelService.GetListForSearchHotel(filter);
 			return items;
