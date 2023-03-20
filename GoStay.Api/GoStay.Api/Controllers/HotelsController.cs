@@ -39,10 +39,10 @@ namespace GoStay.Api.Controllers
 			return items;
 		}
 
-        [HttpPost("hotel-homepage")]
-        public ResponseBase GetListHotelHomePage()
+        [HttpGet("hotel-homepage")]
+        public ResponseBase GetListHotelHomePage(int IdProvince)
         {
-            var items = _hotelService.GetListHotelHomePage();
+            var items = _hotelService.GetListHotelHomePage(IdProvince);
             return items;
         }
         [HttpPost("hotel-search")]

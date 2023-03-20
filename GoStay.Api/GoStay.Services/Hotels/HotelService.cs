@@ -96,14 +96,23 @@ namespace GoStay.Services.Hotels
 				return responseBase;
 			}
 		}
-        public ResponseBase GetListHotelHomePage()
+        public ResponseBase GetListHotelHomePage(int IdProvince)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                HotelSearchRequest filter = new HotelSearchRequest() { PageIndex=1,PageSize=10};
-                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).OrderByDescending(x=>x.IntDate);
-                return responseBase;
+                if (IdProvince == 0)
+                {
+                    HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10 };
+                    responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).OrderByDescending(x => x.IntDate);
+                    return responseBase;
+                }
+                else
+                {
+                    HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10, IdTinhThanh = IdProvince};
+                    responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).OrderByDescending(x => x.IntDate);
+                    return responseBase;
+                }
             }
             catch (Exception e)
             {
