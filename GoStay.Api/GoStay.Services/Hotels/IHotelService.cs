@@ -14,6 +14,6 @@ namespace GoStay.Services.Hotels
 
         public ResponseBase GetAllTypeHotel();
         ResponseBase GetServicesSearch(int type);
-        public ResponseBase GetListHotelHomePage();
+        public ResponseBase GetListHotelHomePage(int IdProvince);
     }
 }
