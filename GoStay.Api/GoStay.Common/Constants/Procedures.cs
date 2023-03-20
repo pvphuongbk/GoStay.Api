@@ -18,6 +18,8 @@
         public static string sq_GetAllOrderByUser = "sq_GetAllOrderByUser";
         //ticket
         public static string sq_GetAllOrderTicket = "sq_GetAllOrderTicket";
-
+        //new
+        public static string sq_GetListForSearchNews = "sq_GetListForSearchNews";
+        
     }
 }

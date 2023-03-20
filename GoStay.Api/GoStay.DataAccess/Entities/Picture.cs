@@ -8,11 +8,7 @@ namespace GoStay.DataAccess.Entities
 {
     public partial class Picture : BaseEntity
     {
-
-        public Picture()
-        {
-            NewsGalleries = new HashSet<NewsGallery>();
-        }
+        public int Id { get; set; }
         public string? Url { get; set; }
         public string UrlOut
         {
@@ -37,8 +33,8 @@ namespace GoStay.DataAccess.Entities
         public virtual Hotel? Hotel { get; set; }
         public virtual HotelRoom? HotelRoom { get; set; }
         public virtual Album? IdAlbumNavigation { get; set; }
-		public virtual Tour? Tour { get; set; }
-        public virtual ICollection<NewsGallery> NewsGalleries { get; set; }
+        public virtual News? News { get; set; }
+        public virtual Tour? Tour { get; set; }
     }
     public class PictureDto
     {

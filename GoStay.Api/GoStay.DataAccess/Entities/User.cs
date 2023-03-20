@@ -32,6 +32,7 @@ namespace GoStay.DataAccess.Entities
         public string? Picture { get; set; }
 
         public virtual ICollection<HotelRating> HotelRatings { get; set; }
+        public virtual ICollection<News> News { get; set; }
         public virtual ICollection<OrderTicket> OrderTickets { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
