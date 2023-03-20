@@ -38,18 +38,16 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("add-news")]
-        public ResponseBase AddNews(string bodyJson)
+        public ResponseBase AddNews(NewsDto newsDto)
         {
-            var newsDto = JsonConvert.DeserializeObject<NewsDto>(bodyJson);
             var item = _newsServices.AddNews(newsDto);
             return item;
 
         }
 
         [HttpPut("edit-news")]
-        public ResponseBase EditNews(string bodyJson)
+        public ResponseBase EditNews(NewsDto newsDto)
         {
-            var newsDto = JsonConvert.DeserializeObject<NewsDto>(bodyJson);
             var item = _newsServices.EditNews(newsDto);
             return item;
 
