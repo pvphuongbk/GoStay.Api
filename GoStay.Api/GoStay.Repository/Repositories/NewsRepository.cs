@@ -18,7 +18,7 @@ namespace GoStay.Repository.Repositories
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
 
-            return DapperExtensions.QueryDapperStoreProc<NewSearchOutDto>(Procedures.sq_SearchListOrder, p).ToList();
+            return DapperExtensions.QueryDapperStoreProc<NewSearchOutDto>(Procedures.sq_GetListForSearchNews, p).ToList();
         }
     }
 }

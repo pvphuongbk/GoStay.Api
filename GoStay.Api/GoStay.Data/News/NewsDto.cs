@@ -41,6 +41,8 @@ namespace GoStay.DataDto.News
         public string Content { get; set; }
         public DateTime DateCreate { get; set; }
         public string Category { get; set; }
+        public int IdCategory { get; set; }
+
         public string UserName { get; set; }
         public int Total { get; set; }
         public int TotalPicture { get; set; }
