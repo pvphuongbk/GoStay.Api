@@ -5,6 +5,9 @@ namespace GoStay.Data.TourDto
     public class SearchTourDto
     {
         public int Id { get; set; }
+        public int IdTourStyle { get; set; }
+        public int IdTourTopic { get; set; }
+
         public string TourName { get; set; }
         public string TourStyle { get; set; }
         public string TourTopic { get; set; }

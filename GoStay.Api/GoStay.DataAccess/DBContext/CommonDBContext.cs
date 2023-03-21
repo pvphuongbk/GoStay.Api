@@ -643,9 +643,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.DateEdit).HasColumnType("datetime");
 
-                entity.Property(e => e.Keysearch)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Keysearch).HasMaxLength(150);
 
                 entity.Property(e => e.Title).HasMaxLength(150);
 
