@@ -73,8 +73,8 @@ namespace GoStay.Common.Helpers
                     Lat_map = hotel.LatMap,
                     Lon_map = hotel.LonMap,
                     Rating = hotel.Rating,
-                    Review_score = (hotel.ReviewScore == null || hotel.NumberReviewers == null) ? -1 :
-                                    (double)(hotel.ReviewScore / hotel.NumberReviewers),
+                    Review_score = (hotel.ReviewScore == null ) ? -1 :
+                                    (double)(hotel.ReviewScore),
                     Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList(),
 
 

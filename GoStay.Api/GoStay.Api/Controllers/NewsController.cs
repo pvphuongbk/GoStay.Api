@@ -42,7 +42,6 @@ namespace GoStay.Api.Controllers
         {
             var item = _newsServices.AddNews(newsDto);
             return item;
-
         }
 
         [HttpPut("edit-news")]
@@ -50,10 +49,10 @@ namespace GoStay.Api.Controllers
         {
             var item = _newsServices.EditNews(newsDto);
             return item;
-
         }
+
         [HttpPut("delete-news")]
-        public ResponseBase DeleteNews(int Id)
+        public ResponseBase DeleteNews([FromBody]int Id)
         {
             var item = _newsServices.DeleteNews(Id);
             return item;
