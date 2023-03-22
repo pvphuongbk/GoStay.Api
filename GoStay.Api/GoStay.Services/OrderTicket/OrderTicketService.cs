@@ -78,7 +78,6 @@ namespace GoStay.Services.OrderTickets
                 orderDetailEntity.StartDate = DateTime.ParseExact(orderDetail.StartDateText, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
                 orderDetailEntity.EndDate = DateTime.ParseExact(orderDetail.EndDateText, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
-
                 decimal Price = 0;
                 foreach (var passenger in orderDetail.Passengers)
                 {
