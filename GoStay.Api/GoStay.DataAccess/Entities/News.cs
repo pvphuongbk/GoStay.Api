@@ -18,8 +18,10 @@ namespace GoStay.DataAccess.Entities
         public byte Status { get; set; }
         public string? Keysearch { get; set; }
         public string Title { get; set; } = null!;
+        public string? Description { get; set; }
         public string? Content { get; set; }
         public int Deleted { get; set; }
+        public string? PictureTitle { get; set; }
 
         public virtual NewsCategory IdCategoryNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
