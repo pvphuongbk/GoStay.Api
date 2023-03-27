@@ -37,6 +37,7 @@ namespace GoStay.Data.HotelDto
         public List<HotelRoomDto> Rooms { get; set; }
         public List<ServiceDetailHotelDto> Services { get; set; }
         public List<string> Pictures { get; set; } = new List<string>();
+        public int TotalPicture { get; set; }
 
     }
 }
