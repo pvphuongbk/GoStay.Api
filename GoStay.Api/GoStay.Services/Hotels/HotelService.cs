@@ -177,7 +177,7 @@ namespace GoStay.Services.Hotels
 						.ThenInclude(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
                         .Include(x => x.HotelRooms).ThenInclude(x => x.PalletbedNavigation)
                         .Include(x => x.HotelRooms).ThenInclude(x => x.Pictures.Where(x=>x.Deleted==0).Take(4))
-                    .Include(x=>x.Pictures.Where(x=>x.Deleted==0))
+                    .Include(x=>x.Pictures.Where(x=>x.Deleted==0).Take(5))
 					.Include(x=>x.IdQuanNavigation)
 					.Include(x=>x.IdTinhThanhNavigation)
 					.Include(x=>x.HotelMamenitis.OrderByDescending(x => x.Level).Take(4)).ThenInclude(x=>x.IdservicesNavigation)
@@ -203,7 +203,7 @@ namespace GoStay.Services.Hotels
 						(hotelRoom[i].RoomMamenitis.Select(x => x.IdservicesNavigation).ToList())
 												;
                 }
-
+                hotelDetailDto.TotalPicture = _pictureRepository.FindAll(x=>x.HotelId== hotelId && x.Deleted!=1).Count();
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
             }
