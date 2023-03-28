@@ -77,6 +77,8 @@ namespace GoStay.Services.Newss
                     IdUser = news.IdUser,
                     Title = news.Title,
                     Content = news.Content,
+                    PictureTitle = news.PictureTitle,
+                    Description = news.Description,
                     Category = news.IdCategoryNavigation.Category,
                     Pictures = news.Pictures.Select(x => x.UrlOut).ToList()
 
@@ -112,6 +114,8 @@ namespace GoStay.Services.Newss
                     Status = (byte)news.Status,
                     Title = news.Title,
                     Keysearch = news.Keysearch,
+                    Description = news.Description,
+                    PictureTitle = news.PictureTitle,
                     DateCreate = DateTime.UtcNow,
                     DateEdit = DateTime.UtcNow,
                     Deleted = 0,
@@ -148,15 +152,85 @@ namespace GoStay.Services.Newss
                     response.Data = news.Id;
                     return response;
                 }
-                newsEntity.Content = news.Content;
                 newsEntity.IdCategory = (int)news.IdCategory;
                 newsEntity.IdUser = (int)news.IdUser;
                 newsEntity.Status = (byte)news.Status;
                 newsEntity.Title = news.Title;
+                newsEntity.Description = news.Description;
                 newsEntity.Keysearch = news.Keysearch;
-                newsEntity.DateCreate = DateTime.UtcNow;
                 newsEntity.DateEdit = DateTime.UtcNow;
                 newsEntity.Deleted = 0;
+                _newsRepository.Update(newsEntity);
+                _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsEntity.Id;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+
+        public ResponseBase EditContentNews(string content, int NewsId)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var newsEntity = _newsRepository.GetById(NewsId);
+                if (newsEntity == null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    response.Data = NewsId;
+                    return response;
+                }
+                newsEntity.Content = content;
+                newsEntity.DateEdit = DateTime.UtcNow;
+
+                _newsRepository.Update(newsEntity);
+                _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsEntity.Id;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+        public ResponseBase EditPictureTitleNews(string url, int NewsId)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var newsEntity = _newsRepository.GetById(NewsId);
+                if (newsEntity == null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    response.Data = NewsId;
+                    return response;
+                }
+                newsEntity.PictureTitle = url;
+                newsEntity.DateEdit = DateTime.UtcNow;
+
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
                 response.Code = ErrorCodeMessage.Success.Key;
