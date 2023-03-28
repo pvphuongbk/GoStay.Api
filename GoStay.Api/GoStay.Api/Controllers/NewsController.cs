@@ -51,6 +51,19 @@ namespace GoStay.Api.Controllers
             return item;
         }
 
+        [HttpPut("edit-content-news")]
+        public ResponseBase EditContentNews(EditNewsContentParam param)
+        {
+            var item = _newsServices.EditContentNews(param.Content, param.NewsId);
+            return item;
+        }
+
+        [HttpPut("edit-picturetitle-news")]
+        public ResponseBase EditPictureTitleNews(EditNewsPictureTitleParam param)
+        {
+            var item = _newsServices.EditPictureTitleNews(param.Url,param.NewsId);
+            return item;
+        }
         [HttpPut("delete-news")]
         public ResponseBase DeleteNews([FromBody]int Id)
         {

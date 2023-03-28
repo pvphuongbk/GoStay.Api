@@ -11,6 +11,8 @@ namespace GoStay.DataDto.News
         public string? Keysearch { get; set; }
         public string? Title { get; set; } = null!;
         public string? Content { get; set; }
+        public string? PictureTitle { get; set; }
+        public string? Description { get; set; }
     }
     public partial class NewsDetailDto
     {
@@ -22,6 +24,8 @@ namespace GoStay.DataDto.News
         public string? Title { get; set; } = null!;
         public string? Content { get; set; }
         public string Category { get; set; }
+        public string? PictureTitle { get; set; }
+        public string? Description { get; set; }
         public List<string> Pictures { get; set; } = new List<string>();
     }
     public class GetListNewsParam
@@ -40,9 +44,12 @@ namespace GoStay.DataDto.News
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime DateCreate { get; set; }
-        public string Category { get; set; }
         public int IdCategory { get; set; }
 
+        public string? PictureTitle { get; set; }
+        public string? Description { get; set; }
+
+        public string Category { get; set; }
         public string UserName { get; set; }
         public int Total { get; set; }
         public int TotalPicture { get; set; }
@@ -62,5 +69,15 @@ namespace GoStay.DataDto.News
         }
         public List<string> Pictures { get; set; } = new List<string>();
 
+    }
+    public class EditNewsContentParam
+    {
+        public string Content { get; set; }
+        public int NewsId { get; set; }
+    }
+    public class EditNewsPictureTitleParam
+    {
+        public string Url { get; set; }
+        public int NewsId { get; set; }
     }
 }
