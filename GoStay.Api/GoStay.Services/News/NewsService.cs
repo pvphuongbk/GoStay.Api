@@ -16,19 +16,22 @@ namespace GoStay.Services.Newss
     public class NewsService : INewsService
     {
         private readonly ICommonRepository<News> _newsRepository;
+        private readonly ICommonRepository<User> _userRepository;
+
         private readonly ICommonRepository<NewsCategory> _newsCategoryRepository;
         private readonly IMapper _mapper;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonUoW _commonUoW;
 
         public NewsService(ICommonRepository<News> newsRepository, IMapper mapper, ICommonUoW commonUoW,
-            ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository)
+            ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository, ICommonRepository<User> userRepository)
         {
             _mapper = mapper;
             _pictureRepository = pictureRepository;
             _newsCategoryRepository = newsCategoryRepository;
             _newsRepository = newsRepository;
             _commonUoW = commonUoW;
+            _userRepository = userRepository;
         }
         public ResponseBase GetListNews(GetListNewsParam param)
         {
@@ -109,8 +112,11 @@ namespace GoStay.Services.Newss
                     Description = news.Description,
                     Category = news.IdCategoryNavigation.Category,
                     LangId  = news.LangId,
-                    IdTopic =news.IdTopic
+                    IdTopic =news.IdTopic,
+                    DateCreate = news.DateCreate,
                 };
+                newsDetail.UserName = _userRepository.FindAll(x => x.UserId == newsDetail.IdUser).SingleOrDefault().UserName;
+
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = newsDetail;

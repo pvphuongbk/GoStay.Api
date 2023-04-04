@@ -7,6 +7,7 @@ namespace GoStay.DataDto.News
         public int? Id { get; set; }
         public int? IdCategory { get; set; }
         public int? IdUser { get; set; }
+
         public string? Keysearch { get; set; }
         public string? Title { get; set; } = null!;
         public string? Description { get; set; }
@@ -27,6 +28,8 @@ namespace GoStay.DataDto.News
         public string? Description { get; set; }
         public int? LangId { get; set; }
         public int? IdTopic { get; set; }
+        public string? UserName { get; set; }
+        public DateTime DateCreate { get; set; }
     }
     public class GetListNewsParam
     {
