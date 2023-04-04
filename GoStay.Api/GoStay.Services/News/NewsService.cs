@@ -108,8 +108,8 @@ namespace GoStay.Services.Newss
                     PictureTitle = news.PictureTitle,
                     Description = news.Description,
                     Category = news.IdCategoryNavigation.Category,
-                    Pictures = news.Pictures.Select(x => x.UrlOut).ToList()
-
+                    LangId  = news.LangId,
+                    IdTopic =news.IdTopic
                 };
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -136,10 +136,9 @@ namespace GoStay.Services.Newss
                 _commonUoW.BeginTransaction();
                 var newsEntity = new News()
                 {
-                    Content = news.Content,
                     IdCategory = (int)news.IdCategory,
                     IdUser = (int)news.IdUser,
-                    Status = (byte)news.Status,
+                    Status = 0,
                     Title = news.Title,
                     Keysearch = news.Keysearch,
                     Description = news.Description,
@@ -147,6 +146,9 @@ namespace GoStay.Services.Newss
                     DateCreate = DateTime.UtcNow,
                     DateEdit = DateTime.UtcNow,
                     Deleted = 0,
+                    LangId = (int)news.LangId,
+                    IdTopic = (int)news.IdTopic,
+
                 };
                 _newsRepository.Insert(newsEntity);
                 _commonUoW.Commit();
@@ -182,12 +184,14 @@ namespace GoStay.Services.Newss
                 }
                 newsEntity.IdCategory = (int)news.IdCategory;
                 newsEntity.IdUser = (int)news.IdUser;
-                newsEntity.Status = (byte)news.Status;
                 newsEntity.Title = news.Title;
                 newsEntity.Description = news.Description;
                 newsEntity.Keysearch = news.Keysearch;
                 newsEntity.DateEdit = DateTime.UtcNow;
-                newsEntity.Deleted = 0;
+                newsEntity.LangId = (int)news.LangId;
+                newsEntity.IdTopic = (int)news.IdTopic;
+                newsEntity.PictureTitle = news.PictureTitle;
+
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
                 response.Code = ErrorCodeMessage.Success.Key;

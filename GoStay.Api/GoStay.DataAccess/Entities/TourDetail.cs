@@ -12,6 +12,7 @@ namespace GoStay.DataAccess.Entities
         public string? Details { get; set; }
         public int? Deleted { get; set; }
         public byte? Stt { get; set; }
+        public int? LangId { get; set; }
 
         public virtual TourDetailsStyle? IdStyleNavigation { get; set; }
         public virtual Tour? IdToursNavigation { get; set; }

@@ -22,9 +22,13 @@ namespace GoStay.DataAccess.Entities
         public string? Content { get; set; }
         public int Deleted { get; set; }
         public string? PictureTitle { get; set; }
+        public int LangId { get; set; }
+        public int IdTopic { get; set; }
 
         public virtual NewsCategory IdCategoryNavigation { get; set; } = null!;
+        public virtual NewsTopic IdTopicNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
+        public virtual Language Lang { get; set; } = null!;
         public virtual ICollection<Picture> Pictures { get; set; }
     }
 }
