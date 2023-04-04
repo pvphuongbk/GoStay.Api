@@ -8,6 +8,7 @@ namespace GoStay.DataAccess.Entities
         public User()
         {
             HotelRatings = new HashSet<HotelRating>();
+            News = new HashSet<News>();
             OrderTickets = new HashSet<OrderTicket>();
             Orders = new HashSet<Order>();
         }

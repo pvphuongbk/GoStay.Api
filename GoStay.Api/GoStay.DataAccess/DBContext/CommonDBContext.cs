@@ -31,10 +31,12 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<HotelRoom> HotelRooms { get; set; } = null!;
         public virtual DbSet<HotelRoomComment> HotelRoomComments { get; set; } = null!;
         public virtual DbSet<KhuVuc> KhuVucs { get; set; } = null!;
+        public virtual DbSet<Language> Languages { get; set; } = null!;
         public virtual DbSet<MulltiKeyValue> MulltiKeyValues { get; set; } = null!;
         public virtual DbSet<NearbyHotel> NearbyHotels { get; set; } = null!;
         public virtual DbSet<News> News { get; set; } = null!;
         public virtual DbSet<NewsCategory> NewsCategories { get; set; } = null!;
+        public virtual DbSet<NewsTopic> NewsTopics { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderPhuongThucTt> OrderPhuongThucTts { get; set; } = null!;
@@ -610,9 +612,18 @@ namespace GoStay.DataAccess.DBContext
 					.HasColumnName("TENKV");
 			});
 
-			modelBuilder.Entity<MulltiKeyValue>(entity =>
-			{
-				entity.ToTable("MulltiKeyValue");
+            modelBuilder.Entity<Language>(entity =>
+            {
+                entity.ToTable("Language");
+
+                entity.Property(e => e.Language1)
+                    .HasMaxLength(50)
+                    .HasColumnName("Language");
+            });
+
+            modelBuilder.Entity<MulltiKeyValue>(entity =>
+            {
+                entity.ToTable("MulltiKeyValue");
 
 				entity.Property(e => e.Icon)
 					.HasMaxLength(50)
@@ -645,7 +656,13 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Description).HasMaxLength(500);
 
+                entity.Property(e => e.IdTopic).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Keysearch).HasMaxLength(150);
+
+                entity.Property(e => e.LangId)
+                    .HasColumnName("LangID")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.PictureTitle).HasMaxLength(50);
 
@@ -657,11 +674,23 @@ namespace GoStay.DataAccess.DBContext
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_News_NewsCategory");
 
+                entity.HasOne(d => d.IdTopicNavigation)
+                    .WithMany(p => p.News)
+                    .HasForeignKey(d => d.IdTopic)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_News_NewsTopic");
+
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.News)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_News_users");
+
+                entity.HasOne(d => d.Lang)
+                    .WithMany(p => p.News)
+                    .HasForeignKey(d => d.LangId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_News_Language");
             });
 
             modelBuilder.Entity<NewsCategory>(entity =>
@@ -677,6 +706,12 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
             });
 
+            modelBuilder.Entity<NewsTopic>(entity =>
+            {
+                entity.ToTable("NewsTopic");
+
+                entity.Property(e => e.Topic).HasMaxLength(100);
+            });
 
             modelBuilder.Entity<Order>(entity =>
             {
@@ -1174,6 +1209,10 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<TourDetail>(entity =>
             {
+                entity.Property(e => e.LangId)
+                    .HasColumnName("LangID")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Title).HasMaxLength(200);
 
                 entity.HasOne(d => d.IdStyleNavigation)
