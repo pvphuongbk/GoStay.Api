@@ -53,6 +53,34 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase GetListNewsHomePage()
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+
+                var listNews = new List<NewSearchOutDto>();
+                var categories = _newsCategoryRepository.FindAll().Select(x=>x.Id);
+                foreach(var Id in categories)
+                {
+                    listNews.AddRange(NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 }));
+                }
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = listNews;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
         public ResponseBase GetNews(int Id)
         {
 
