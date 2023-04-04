@@ -60,15 +60,15 @@ namespace GoStay.Services.Newss
             try
             {
 
-                var listNews = new List<NewSearchOutDto>();
+                var dicNews = new Dictionary<int,List<NewSearchOutDto>>();
                 var categories = _newsCategoryRepository.FindAll().Select(x=>x.Id);
                 foreach(var Id in categories)
                 {
-                    listNews.AddRange(NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 }));
+                    dicNews.Add(Id,NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 }));
                 }
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
-                response.Data = listNews;
+                response.Data = dicNews;
                 return response;
 
             }
