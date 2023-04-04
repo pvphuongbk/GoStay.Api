@@ -30,6 +30,12 @@ namespace GoStay.Api.Controllers
             var items = _newsServices.GetListNews(param);
             return items;
         }
+        [HttpGet("list-homepage")]
+        public ResponseBase GetListNewsHomePage()
+        {
+            var items = _newsServices.GetListNewsHomePage();
+            return items;
+        }
         [HttpGet("news")]
         public ResponseBase GetNews(int Id)
         {
