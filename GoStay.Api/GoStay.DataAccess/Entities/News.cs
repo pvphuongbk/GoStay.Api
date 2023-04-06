@@ -7,6 +7,7 @@ namespace GoStay.DataAccess.Entities
     {
         public News()
         {
+            NewsTopics = new HashSet<NewsTopic>();
             Pictures = new HashSet<Picture>();
         }
 
@@ -23,12 +24,13 @@ namespace GoStay.DataAccess.Entities
         public int Deleted { get; set; }
         public string? PictureTitle { get; set; }
         public int LangId { get; set; }
-        public int IdTopic { get; set; }
+        public int? Click { get; set; }
+        public string? Tag { get; set; }
 
         public virtual NewsCategory IdCategoryNavigation { get; set; } = null!;
-        public virtual NewsTopic IdTopicNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
         public virtual Language Lang { get; set; } = null!;
+        public virtual ICollection<NewsTopic> NewsTopics { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
     }
 }
