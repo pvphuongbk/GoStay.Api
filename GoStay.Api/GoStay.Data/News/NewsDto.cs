@@ -7,13 +7,11 @@ namespace GoStay.DataDto.News
         public int? Id { get; set; }
         public int? IdCategory { get; set; }
         public int? IdUser { get; set; }
-
         public string? Keysearch { get; set; }
         public string? Title { get; set; } = null!;
         public string? Description { get; set; }
-        public string? PictureTitle { get; set; }
         public int? LangId { get; set; }
-        public int? IdTopic { get; set; }
+        public List<int>? IdTopics { get; set; }
     }
     public partial class NewsDetailDto
     {
@@ -27,7 +25,11 @@ namespace GoStay.DataDto.News
         public string? PictureTitle { get; set; }
         public string? Description { get; set; }
         public int? LangId { get; set; }
-        public int? IdTopic { get; set; }
+        public string? Language { get; set; }
+        public List<int>? IdTopics { get; set; }
+        public List<string>? Topics { get; set; }
+
+        public string? Tag { get; set; }
         public string? UserName { get; set; }
         public DateTime DateCreate { get; set; }
     }
@@ -59,26 +61,24 @@ namespace GoStay.DataDto.News
         public int Total { get; set; }
         public int TotalPicture { get; set; }
 
-        private string Urls
+        private string ListTopic
         {
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    Pictures = new List<string>();
+                    Topics = new List<string>();
                 else
                 {
-                    Pictures = value.Split(';').ToList();
+                    Topics = value.Split(';').ToList();
 
                 }
             }
         }
-        public List<string> Pictures { get; set; } = new List<string>();
-        public string Topic { get; set; }
-        public int IdTopic { get; set; }
-
+        public List<string> Topics { get; set; } = new List<string>();
         public string Language { get; set; }
         public int LangId { get; set; }
-
+        public string Tag { get; set; }
+        public int Click { get; set; }
     }
     public class EditNewsContentParam
     {

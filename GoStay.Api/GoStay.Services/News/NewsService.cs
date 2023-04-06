@@ -19,12 +19,15 @@ namespace GoStay.Services.Newss
         private readonly ICommonRepository<User> _userRepository;
 
         private readonly ICommonRepository<NewsCategory> _newsCategoryRepository;
+        private readonly ICommonRepository<NewsTopic> _newsTopicRepository;
+        private readonly ICommonRepository<TopicNews> _topicRepository;
         private readonly IMapper _mapper;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonUoW _commonUoW;
 
         public NewsService(ICommonRepository<News> newsRepository, IMapper mapper, ICommonUoW commonUoW,
-            ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository, ICommonRepository<User> userRepository)
+            ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository, ICommonRepository<User> userRepository
+            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository)
         {
             _mapper = mapper;
             _pictureRepository = pictureRepository;
@@ -32,6 +35,8 @@ namespace GoStay.Services.Newss
             _newsRepository = newsRepository;
             _commonUoW = commonUoW;
             _userRepository = userRepository;
+            _newsTopicRepository = newsTopicRepository;
+            _topicRepository = topicRepository;
         }
         public ResponseBase GetListNews(GetListNewsParam param)
         {
@@ -92,7 +97,9 @@ namespace GoStay.Services.Newss
             {
                 var news = _newsRepository.FindAll(x=>x.Id == Id)
                             .Include(x=>x.IdCategoryNavigation)
-                            .Include(x=>x.Pictures).Include(x=>x.IdUserNavigation)
+                            .Include(x=>x.IdUserNavigation)
+                            .Include(x=>x.NewsTopics)
+                            .Include(x=>x.Lang)
                             .SingleOrDefault();
                 if( news == null)
                 {
@@ -111,11 +118,14 @@ namespace GoStay.Services.Newss
                     PictureTitle = news.PictureTitle,
                     Description = news.Description,
                     Category = news.IdCategoryNavigation.Category,
-                    LangId  = news.LangId,
-                    IdTopic =news.IdTopic,
+                    LangId = news.LangId,
                     DateCreate = news.DateCreate,
+                    Language = news.Lang.Language1,
+                    IdTopics = news.NewsTopics.Select(x => x.IdNewsTopic).ToList(),
+                    Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
+                    Tag = news.Tag,
+                    UserName = news.IdUserNavigation.UserName,
                 };
-                newsDetail.UserName = _userRepository.FindAll(x => x.UserId == newsDetail.IdUser).SingleOrDefault().UserName;
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -148,16 +158,28 @@ namespace GoStay.Services.Newss
                     Title = news.Title,
                     Keysearch = news.Keysearch,
                     Description = news.Description,
-                    PictureTitle = news.PictureTitle,
                     DateCreate = DateTime.UtcNow,
                     DateEdit = DateTime.UtcNow,
                     Deleted = 0,
                     LangId = (int)news.LangId,
-                    IdTopic = (int)news.IdTopic,
 
                 };
+                
                 _newsRepository.Insert(newsEntity);
                 _commonUoW.Commit();
+
+                _commonUoW.BeginTransaction();
+
+                if (news.IdTopics.Count > 0)
+                {
+                    foreach (var IdTopic in news.IdTopics)
+                    {
+                        _newsTopicRepository.Insert(new NewsTopic() { IdNews = newsEntity.Id, IdNewsTopic = IdTopic });
+
+                    }
+                }
+                _commonUoW.Commit();
+
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = newsEntity.Id;
@@ -195,11 +217,24 @@ namespace GoStay.Services.Newss
                 newsEntity.Keysearch = news.Keysearch;
                 newsEntity.DateEdit = DateTime.UtcNow;
                 newsEntity.LangId = (int)news.LangId;
-                newsEntity.IdTopic = (int)news.IdTopic;
-                newsEntity.PictureTitle = news.PictureTitle;
+
 
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
+                _commonUoW.BeginTransaction();
+
+                _newsTopicRepository.RemoveMultiple(_newsTopicRepository.FindAll(x=>x.IdNews==news.Id));
+
+                if (news.IdTopics.Count > 0)
+                {
+                    foreach (var IdTopic in news.IdTopics)
+                    {
+                        _newsTopicRepository.Insert(new NewsTopic() { IdNews = newsEntity.Id, IdNewsTopic = IdTopic });
+
+                    }
+                }
+                _commonUoW.Commit();
+
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = newsEntity.Id;
