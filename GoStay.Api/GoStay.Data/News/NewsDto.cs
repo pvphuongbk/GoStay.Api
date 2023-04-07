@@ -66,15 +66,14 @@ namespace GoStay.DataDto.News
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    Topics = new List<string>();
+                    Topics = new List<int>();
                 else
                 {
-                    Topics = value.Split(';').ToList();
-
+                    Topics = Array.ConvertAll<string, int>(value.Split(';').ToArray(), int.Parse).ToList();
                 }
             }
         }
-        public List<string> Topics { get; set; } = new List<string>();
+        public List<int> Topics { get; set; } = new List<int>();
         public string Language { get; set; }
         public int LangId { get; set; }
         public string Tag { get; set; }
