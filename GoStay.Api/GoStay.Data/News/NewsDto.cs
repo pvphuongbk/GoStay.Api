@@ -28,7 +28,7 @@ namespace GoStay.DataDto.News
         public string? Language { get; set; }
         public List<int>? IdTopics { get; set; }
         public List<string>? Topics { get; set; }
-
+        public string Slug { get; set; }
         public string? Tag { get; set; }
         public string? UserName { get; set; }
         public DateTime DateCreate { get; set; }
@@ -79,6 +79,7 @@ namespace GoStay.DataDto.News
         public int LangId { get; set; }
         public string Tag { get; set; }
         public int Click { get; set; }
+        public string Slug { get; set; }
     }
     public class EditNewsContentParam
     {

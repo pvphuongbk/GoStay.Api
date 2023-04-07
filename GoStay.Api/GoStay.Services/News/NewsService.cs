@@ -46,6 +46,7 @@ namespace GoStay.Services.Newss
             {
 
                 var listNews = NewsRepository.SearchListNews(param);
+                listNews.ForEach(x=>x.Slug=(x.Title.RemoveUnicode().Replace(" ", "-").Replace(",",string.Empty).Replace("--", string.Empty).ToLower()));
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = listNews;
@@ -70,9 +71,12 @@ namespace GoStay.Services.Newss
 
                 var dicNews = new Dictionary<int,List<NewSearchOutDto>>();
                 var categories = _newsCategoryRepository.FindAll().Select(x=>x.Id);
+
                 foreach(var Id in categories)
                 {
-                    dicNews.Add(Id,NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 }));
+                    var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 });
+                    data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                    dicNews.Add(Id,data);
                 }
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -125,6 +129,7 @@ namespace GoStay.Services.Newss
                     Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
                     Tag = news.Tag,
                     UserName = news.IdUserNavigation.UserName,
+                    Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()
                 };
 
                 response.Code = ErrorCodeMessage.Success.Key;
