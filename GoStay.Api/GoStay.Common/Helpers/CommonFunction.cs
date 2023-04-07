@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoStay.Common.Extention;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
@@ -77,8 +78,8 @@ namespace GoStay.Common.Helpers
                                     (double)(hotel.ReviewScore),
                     Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList(),
 
-
-                    NumberReviewers = hotel.NumberReviewers
+					Slug= hotel.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower(),
+					NumberReviewers = hotel.NumberReviewers
                 };
 
                 var room = hotel.HotelRooms.Where(x => x.Discount != null).MaxBy(x => x.Discount);

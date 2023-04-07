@@ -48,14 +48,18 @@ namespace GoStay.Services.Tours
             // Remove unicode
             searchText = searchText.RemoveUnicode();
             searchText = searchText.Replace(" ", string.Empty).ToLower();
-            response.Data = TourRepository.SuggestTour(searchText);
+            var Data = TourRepository.SuggestTour(searchText);
+            Data.ForEach(x => x.Slug = (x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+            response.Data=Data;
             return response;
         }
 
         public ResponseBase SearchTour(SearchTourRequest request)
         {
             ResponseBase response = new ResponseBase();
-            response.Data = TourRepository.GetPagingListTours(request);
+            var Data = TourRepository.GetPagingListTours(request);
+            Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+            response.Data = Data;
             return response;
         }
         public ResponseBase GetTourHomePage()
@@ -69,8 +73,10 @@ namespace GoStay.Services.Tours
                 {
                     SearchTourRequest request = new SearchTourRequest() { IdTourStyle = new int[] {i}, PageIndex = 1, PageSize = 4 };
                     var data = TourRepository.GetPagingListTours(request);
+                    
                     Data.AddRange(data);
                 }
+                Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
                 response.Data = Data;
                 return response;
             }
@@ -115,7 +121,7 @@ namespace GoStay.Services.Tours
                 tourContent.Pictures = tour.Pictures.Where(x=>x.Deleted!=1).Select(x=>x.Url).ToList();
 
                 tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(_tourDetailRepository.FindAll(x => x.IdTours == Id&& x.Deleted!=1).OrderBy(x=>x.Stt).ToList());
-
+                tourContent.Slug= tourContent.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
                 response.Data = tourContent;
                 return response;
             }

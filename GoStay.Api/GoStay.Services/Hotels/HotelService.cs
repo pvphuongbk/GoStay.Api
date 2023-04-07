@@ -104,13 +104,17 @@ namespace GoStay.Services.Hotels
                 if (IdProvince == 0)
                 {
                     HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10 };
-                    responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).OrderByDescending(x => x.IntDate);
+                    var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                    Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                    responseBase.Data = Data;
                     return responseBase;
                 }
                 else
                 {
                     HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10, IdTinhThanh = IdProvince};
-                    responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter).OrderByDescending(x => x.IntDate);
+                    var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                    Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                    responseBase.Data = Data;
                     return responseBase;
                 }
             }
@@ -127,8 +131,10 @@ namespace GoStay.Services.Hotels
 			ResponseBase responseBase = new ResponseBase();
 			try
 			{
-                responseBase.Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-				return responseBase;
+                var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                responseBase.Data = Data;
+                return responseBase;
 			}
 			catch (Exception e)
 			{
@@ -150,6 +156,7 @@ namespace GoStay.Services.Hotels
 				foreach (var item in listData.Where(x=>x.Type== LocationDropdown.Hotel))
 				{
 					item.HotelTypeName = _typeHotelRepository.FindAll().SingleOrDefault(x => x.Id == item.HotelType).Type;
+                    item.Slug = item.Value.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
 					item.NumRecord = 0;
                 }
                 responseBase.Data = listData;
@@ -204,6 +211,7 @@ namespace GoStay.Services.Hotels
 												;
                 }
                 hotelDetailDto.TotalPicture = _pictureRepository.FindAll(x=>x.HotelId== hotelId && x.Deleted!=1).Count();
+                hotelDetailDto.Slug = hotelDetailDto.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
             }
