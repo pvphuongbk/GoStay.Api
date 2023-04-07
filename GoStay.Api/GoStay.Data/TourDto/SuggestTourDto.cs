@@ -16,5 +16,6 @@ namespace GoStay.Data.TourDto
                 return Type.GetEnumDescription();
             }
         }
+        public string Slug { get; set; }
     }
 }

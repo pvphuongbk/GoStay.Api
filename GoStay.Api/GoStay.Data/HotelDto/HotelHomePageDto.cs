@@ -33,6 +33,7 @@
 			}
         }
         public List<string> Pictures { get; set; } = new List<string>();
+        public string Slug { get; set; }
 	}
 
 }

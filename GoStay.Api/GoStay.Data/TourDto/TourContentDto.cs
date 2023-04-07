@@ -41,5 +41,6 @@ namespace GoStay.Data.TourDto
         public List<string> DistrictTo { get; set; }
 
         public List<string> Pictures { get; set; }
+        public string Slug { get; set; }
     }
 }
