@@ -1075,7 +1075,10 @@ namespace GoStay.DataAccess.DBContext
                     .IsUnicode(false);
 
 				entity.Property(e => e.Name).HasMaxLength(50);
-			});
+                entity.Property(e => e.NameChi).HasMaxLength(50);
+
+                entity.Property(e => e.NameEng).HasMaxLength(50);
+            });
 
            
             modelBuilder.Entity<TicketPassenger>(entity =>

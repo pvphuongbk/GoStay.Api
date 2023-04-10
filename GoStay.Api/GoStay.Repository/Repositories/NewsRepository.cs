@@ -21,10 +21,12 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<NewSearchOutDto>(Procedures.sq_GetListForSearchNews, p).ToList();
         }
-        public static List<NewSearchOutDto> GetListTopNews(int IdCategory)
+        public static List<NewSearchOutDto> GetListTopNews(int? IdCategory, int? IdTopic)
         {
             var p = new DynamicParameters();
             p.Add("@IdCategory", IdCategory == null ? null : string.Join(",", IdCategory), System.Data.DbType.String);
+            p.Add("@IdTopic", IdTopic == null ? null : string.Join(",", IdTopic), System.Data.DbType.String);
+
 
             return DapperExtensions.QueryDapperStoreProc<NewSearchOutDto>(Procedures.sq_GetListTopNews, p).ToList();
         }
