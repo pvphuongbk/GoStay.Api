@@ -41,6 +41,13 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpGet("top-news")]
+        public ResponseBase GetListTopNewsByCategory(int IdCategory)
+        {
+            var items = _newsServices.GetListTopNewsByCategory(IdCategory);
+            return items;
+        }
+
         [HttpPost("add-news")]
         public ResponseBase AddNews(NewsDto newsDto)
         {

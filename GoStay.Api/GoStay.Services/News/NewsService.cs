@@ -93,6 +93,30 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase GetListTopNewsByCategory(int IdCategory)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var data = NewsRepository.GetListTopNews(IdCategory);
+                data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = data;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
         public ResponseBase GetNews(int Id)
         {
 
