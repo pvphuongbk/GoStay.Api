@@ -1326,8 +1326,12 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Deleted).HasDefaultValueSql("((0))");
 
-				entity.Property(e => e.Type).HasMaxLength(50);
-			});
+                entity.Property(e => e.TypeEng).HasMaxLength(50);
+
+                entity.Property(e => e.Type).HasMaxLength(50);
+
+                entity.Property(e => e.TypeChi).HasMaxLength(50);
+            });
 
 			modelBuilder.Entity<User>(entity =>
 			{

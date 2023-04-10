@@ -20,6 +20,7 @@ namespace GoStay.DataAccess.Entities
         public string? Icon { get; set; }
         public string? NameEng { get; set; }
         public string? NameChi { get; set; }
+
         public virtual ICollection<HotelMameniti> HotelMamenitis { get; set; }
         public virtual ICollection<RoomMameniti> RoomMamenitis { get; set; }
     }
