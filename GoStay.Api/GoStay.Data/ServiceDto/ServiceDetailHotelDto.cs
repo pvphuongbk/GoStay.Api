@@ -10,5 +10,7 @@ namespace GoStay.Data.ServiceDto
     {
         public string Name { get; set; }
         public byte? AdvantageLevel { get; set; }
+        public string? NameEng { get; set; }
+        public string? NameChi { get; set; }
     }
 }

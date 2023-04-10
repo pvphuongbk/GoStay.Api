@@ -93,13 +93,13 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase GetListTopNewsByCategory(int IdCategory)
+        public ResponseBase GetListTopNewsByCategory(int? IdCategory, int? IdTopic)
         {
 
             ResponseBase response = new ResponseBase();
             try
             {
-                var data = NewsRepository.GetListTopNews(IdCategory);
+                var data = NewsRepository.GetListTopNews(IdCategory, IdTopic);
                 data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
 
                 response.Code = ErrorCodeMessage.Success.Key;
