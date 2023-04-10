@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using GoStay.Data.Base;
-using PartnerGostay.Models;
 using GoStay.Services;
-using Newtonsoft.Json;
 using GoStay.Services.Newss;
 using GoStay.DataDto.News;
 

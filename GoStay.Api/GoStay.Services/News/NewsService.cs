@@ -102,7 +102,7 @@ namespace GoStay.Services.Newss
                 var news = _newsRepository.FindAll(x=>x.Id == Id)
                             .Include(x=>x.IdCategoryNavigation)
                             .Include(x=>x.IdUserNavigation)
-                            .Include(x=>x.NewsTopics)
+                            .Include(x=>x.NewsTopics).ThenInclude(y=>y.IdNewsTopicNavigation)
                             .Include(x=>x.Lang)
                             .SingleOrDefault();
                 if( news == null)
@@ -167,7 +167,7 @@ namespace GoStay.Services.Newss
                     DateEdit = DateTime.UtcNow,
                     Deleted = 0,
                     LangId = (int)news.LangId,
-
+                    PictureTitle = "",
                 };
                 
                 _newsRepository.Insert(newsEntity);
