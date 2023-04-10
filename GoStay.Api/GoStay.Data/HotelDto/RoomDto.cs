@@ -48,7 +48,8 @@ namespace GoStay.DataDto.Hotel
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Icon { get; set; }
-
+        public string? NameEng { get; set; }
+        public string? NameChi { get; set; }
 
         public byte? AdvantageLevel { get; set; }
 

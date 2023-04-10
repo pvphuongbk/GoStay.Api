@@ -11,6 +11,8 @@ namespace GoStay.DataAccess.Entities
             Hotels = new HashSet<Hotel>();
         }
         public string? Type { get; set; }
+        public string? TypeEng { get; set; }
+        public string? TypeChi { get; set; }
         public virtual ICollection<Hotel> Hotels { get; set; }
     }
 }
