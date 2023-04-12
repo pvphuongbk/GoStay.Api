@@ -81,6 +81,11 @@ namespace GoStay.Api.Controllers
             var item = _newsServices.DeleteNews(Id);
             return item;
         }
-
+        [HttpPut("click")]
+        public ResponseBase EditClickNews([FromBody] int Id)
+        {
+            var item = _newsServices.EditClickNews(Id);
+            return item;
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace GoStay.Services.Newss
         public ResponseBase EditPictureTitleNews(string url, int NewsId);
         public ResponseBase GetListNewsHomePage();
         public ResponseBase GetListTopNewsByCategory(int? IdCategory,int? IdTopic);
+        public ResponseBase EditClickNews(int NewsId);
 
     }
 }
