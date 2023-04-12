@@ -192,6 +192,7 @@ namespace GoStay.Services.Newss
                     Deleted = 0,
                     LangId = (int)news.LangId,
                     PictureTitle = "",
+                    Click = 0
                 };
                 
                 _newsRepository.Insert(newsEntity);
@@ -350,7 +351,45 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase EditClickNews(int NewsId)
+        {
 
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var newsEntity = _newsRepository.GetById(NewsId);
+                if (newsEntity == null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    response.Data = NewsId;
+                    return response;
+                }
+                if (newsEntity.Click == null)
+                {
+                    newsEntity.Click = 0;
+                }
+                newsEntity.Click = newsEntity.Click+1;
+                newsEntity.DateEdit = DateTime.UtcNow;
+
+                _newsRepository.Update(newsEntity);
+                _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsEntity.Id;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
         public ResponseBase DeleteNews(int Id)
         {
 
