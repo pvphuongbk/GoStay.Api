@@ -23,6 +23,7 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
+        public virtual DbSet<Domain> Domains { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
         public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
         public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
@@ -67,6 +68,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<VGetAllHotel> VGetAllHotels { get; set; } = null!;
         public virtual DbSet<Vehicle> Vehicles { get; set; } = null!;
+        public virtual DbSet<VideoNews> VideoNews { get; set; } = null!;
         public virtual DbSet<ViewDirection> ViewDirections { get; set; } = null!;
         public virtual DbSet<Viewhotelservice> Viewhotelservices { get; set; } = null!;
 
@@ -265,9 +267,21 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.SearchKey).HasMaxLength(50);
             });
 
-			modelBuilder.Entity<Hotel>(entity =>
-			{
-				entity.ToTable("Hotel");
+            modelBuilder.Entity<Domain>(entity =>
+            {
+                entity.ToTable("Domain");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Domain1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("Domain");
+            });
+
+            modelBuilder.Entity<Hotel>(entity =>
+            {
+                entity.ToTable("Hotel");
 
 				entity.Property(e => e.Address).HasMaxLength(200);
 
@@ -659,6 +673,10 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Description).HasMaxLength(500);
 
+                entity.Property(e => e.Iddomain)
+                    .HasColumnName("IDDomain")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Keysearch).HasMaxLength(150);
 
                 entity.Property(e => e.LangId)
@@ -683,6 +701,11 @@ namespace GoStay.DataAccess.DBContext
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_News_users");
 
+                entity.HasOne(d => d.IddomainNavigation)
+                    .WithMany(p => p.News)
+                    .HasForeignKey(d => d.Iddomain)
+                    .HasConstraintName("FK_News_Domain");
+
                 entity.HasOne(d => d.Lang)
                     .WithMany(p => p.News)
                     .HasForeignKey(d => d.LangId)
@@ -695,6 +718,8 @@ namespace GoStay.DataAccess.DBContext
                 entity.ToTable("NewsCategory");
 
                 entity.Property(e => e.Category).HasMaxLength(100);
+
+                entity.Property(e => e.Iddomain).HasColumnName("IDDomain");
 
                 entity.Property(e => e.Keysearch)
                     .HasMaxLength(100)
@@ -1294,6 +1319,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.TourStyle1)
                     .HasMaxLength(100)
                     .HasColumnName("TourStyle");
+
+                entity.Property(e => e.TourStyleChi).HasMaxLength(100);
+
+                entity.Property(e => e.TourStyleEng).HasMaxLength(100);
             });
 
             modelBuilder.Entity<TourTopic>(entity =>
@@ -1305,6 +1334,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.TourTopic1)
                     .HasMaxLength(100)
                     .HasColumnName("TourTopic");
+
+                entity.Property(e => e.TourTopicChi).HasMaxLength(100);
+
+                entity.Property(e => e.TourTopicEng).HasMaxLength(100);
             });
 
             modelBuilder.Entity<TourVehicle>(entity =>
@@ -1326,11 +1359,10 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.Deleted).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.TypeEng).HasMaxLength(50);
-
                 entity.Property(e => e.Type).HasMaxLength(50);
 
                 entity.Property(e => e.TypeChi).HasMaxLength(50);
+                entity.Property(e => e.TypeEng).HasMaxLength(50);
             });
 
 			modelBuilder.Entity<User>(entity =>
@@ -1519,6 +1551,21 @@ namespace GoStay.DataAccess.DBContext
             modelBuilder.Entity<Vehicle>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<VideoNews>(entity =>
+            {
+                entity.Property(e => e.DateCreate).HasColumnType("datetime");
+
+                entity.Property(e => e.DateEdit).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.PictureTitle).HasMaxLength(50);
+
+                entity.Property(e => e.Title).HasMaxLength(50);
+
+                entity.Property(e => e.Video).HasMaxLength(255);
             });
 
             modelBuilder.Entity<ViewDirection>(entity =>

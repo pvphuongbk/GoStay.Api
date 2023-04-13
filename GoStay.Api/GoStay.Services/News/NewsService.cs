@@ -21,13 +21,15 @@ namespace GoStay.Services.Newss
         private readonly ICommonRepository<NewsCategory> _newsCategoryRepository;
         private readonly ICommonRepository<NewsTopic> _newsTopicRepository;
         private readonly ICommonRepository<TopicNews> _topicRepository;
+        private readonly ICommonRepository<VideoNews> _videoRepository;
+
         private readonly IMapper _mapper;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonUoW _commonUoW;
 
         public NewsService(ICommonRepository<News> newsRepository, IMapper mapper, ICommonUoW commonUoW,
             ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository, ICommonRepository<User> userRepository
-            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository)
+            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository, ICommonRepository<VideoNews> videoRepository)
         {
             _mapper = mapper;
             _pictureRepository = pictureRepository;
@@ -37,6 +39,7 @@ namespace GoStay.Services.Newss
             _userRepository = userRepository;
             _newsTopicRepository = newsTopicRepository;
             _topicRepository = topicRepository;
+            _videoRepository = videoRepository;
         }
         public ResponseBase GetListNews(GetListNewsParam param)
         {
@@ -192,7 +195,8 @@ namespace GoStay.Services.Newss
                     Deleted = 0,
                     LangId = (int)news.LangId,
                     PictureTitle = "",
-                    Click = 0
+                    Click = 0,
+                    Iddomain=1
                 };
                 
                 _newsRepository.Insert(newsEntity);
@@ -425,7 +429,61 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase GetListVideoNews(int UserId)
+        {
 
-        
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var listvideo = new List<VideoNewsDto>();
+                var list = _videoRepository.FindAll(x=>x.IdUser == UserId);
+                foreach(var item in list)
+                {
+                    listvideo.Add(new VideoNewsDto() { Title = item.Title, Video = item.Video
+                    , Name = item.Name, PictureTitle = item.PictureTitle, DateCreate = item.DateCreate, Id = item.Id , IdCategory = item.IdCategory
+                    , IdUser = item.IdUser
+                    });
+                }    
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = listvideo;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+        public ResponseBase AddVideoNews(VideoNews news)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                news.Status = 0;
+                _videoRepository.Insert(news);
+                _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = news.Id;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+
     }
 }

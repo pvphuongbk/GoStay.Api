@@ -4,6 +4,7 @@ using GoStay.Data.Base;
 using GoStay.Services;
 using GoStay.Services.Newss;
 using GoStay.DataDto.News;
+using GoStay.DataAccess.Entities;
 
 namespace GoStay.Api.Controllers
 {
@@ -41,6 +42,14 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpGet("list-video-news")]
+        public ResponseBase GetListVideoNews(int UserId)
+        {
+            var items = _newsServices.GetListVideoNews(UserId);
+            return items;
+        }
+
+
         [HttpGet("top-news")]
         public ResponseBase GetListTopNewsByCategory(int? IdCategory, int? IdTopic)
         {
@@ -52,6 +61,13 @@ namespace GoStay.Api.Controllers
         public ResponseBase AddNews(NewsDto newsDto)
         {
             var item = _newsServices.AddNews(newsDto);
+            return item;
+        }
+
+        [HttpPost("add-video-news")]
+        public ResponseBase AddVideoNews(VideoNews videoNews)
+        {
+            var item = _newsServices.AddVideoNews(videoNews);
             return item;
         }
 

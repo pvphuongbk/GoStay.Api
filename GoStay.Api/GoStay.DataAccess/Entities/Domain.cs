@@ -3,18 +3,15 @@ using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
 {
-    public partial class NewsCategory
+    public partial class Domain
     {
-        public NewsCategory()
+        public Domain()
         {
             News = new HashSet<News>();
         }
 
         public int Id { get; set; }
-        public int ParentId { get; set; }
-        public string Category { get; set; } = null!;
-        public string? Keysearch { get; set; }
-        public int? Iddomain { get; set; }
+        public string? Domain1 { get; set; }
 
         public virtual ICollection<News> News { get; set; }
     }

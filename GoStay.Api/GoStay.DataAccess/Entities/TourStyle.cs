@@ -12,6 +12,8 @@ namespace GoStay.DataAccess.Entities
 
         public byte Id { get; set; }
         public string? TourStyle1 { get; set; }
+        public string? TourStyleEng { get; set; }
+        public string? TourStyleChi { get; set; }
 
         public virtual ICollection<Tour> Tours { get; set; }
     }

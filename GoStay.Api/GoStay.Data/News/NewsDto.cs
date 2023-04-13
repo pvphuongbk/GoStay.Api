@@ -90,4 +90,22 @@ namespace GoStay.DataDto.News
         public string Url { get; set; }
         public int NewsId { get; set; }
     }
+    public class VideoNewsDto
+    {
+        public int Id { get; set; }
+        public string Video { get; set; } = null!;
+        public string UrlVideo
+        {
+            get
+            {
+                return "https://cdn.realtech.com.vn" + Video;
+            }
+        }
+        public int? IdCategory { get; set; }
+        public string? Title { get; set; }
+        public DateTime? DateCreate { get; set; }
+        public int? IdUser { get; set; }
+        public string? PictureTitle { get; set; }
+        public string? Name { get; set; }
+    }
 }
