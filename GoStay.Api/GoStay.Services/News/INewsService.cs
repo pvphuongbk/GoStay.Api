@@ -1,4 +1,5 @@
 ﻿using GoStay.Data.Base;
+using GoStay.DataAccess.Entities;
 using GoStay.DataDto.News;
 
 namespace GoStay.Services.Newss
@@ -15,6 +16,8 @@ namespace GoStay.Services.Newss
         public ResponseBase GetListNewsHomePage();
         public ResponseBase GetListTopNewsByCategory(int? IdCategory,int? IdTopic);
         public ResponseBase EditClickNews(int NewsId);
+        public ResponseBase GetListVideoNews(int UserId);
+        public ResponseBase AddVideoNews(VideoNews news);
 
     }
 }

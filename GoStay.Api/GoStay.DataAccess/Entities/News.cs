@@ -26,9 +26,11 @@ namespace GoStay.DataAccess.Entities
         public int LangId { get; set; }
         public int? Click { get; set; }
         public string? Tag { get; set; }
+        public int? Iddomain { get; set; }
 
         public virtual NewsCategory IdCategoryNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
+        public virtual Domain? IddomainNavigation { get; set; }
         public virtual Language Lang { get; set; } = null!;
         public virtual ICollection<NewsTopic> NewsTopics { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
