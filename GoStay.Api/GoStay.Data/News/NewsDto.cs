@@ -57,6 +57,9 @@ namespace GoStay.DataDto.News
         public string? Description { get; set; }
 
         public string Category { get; set; }
+        public string CategoryEng { get; set; }
+        public string CategoryChi { get; set; }
+
         public string UserName { get; set; }
         public int Total { get; set; }
         public int TotalPicture { get; set; }
