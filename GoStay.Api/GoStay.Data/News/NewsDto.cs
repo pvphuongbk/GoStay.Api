@@ -102,6 +102,8 @@ namespace GoStay.DataDto.News
             }
         }
         public int? IdCategory { get; set; }
+        public string? Category { get; set; }
+
         public string? Title { get; set; }
         public DateTime? DateCreate { get; set; }
         public int? IdUser { get; set; }

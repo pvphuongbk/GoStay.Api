@@ -12,6 +12,7 @@ namespace GoStay.DataAccess.Entities
 
         public int Id { get; set; }
         public string? Topic { get; set; }
+        public int? Iddomain { get; set; }
 
         public virtual ICollection<NewsTopic> NewsTopics { get; set; }
     }

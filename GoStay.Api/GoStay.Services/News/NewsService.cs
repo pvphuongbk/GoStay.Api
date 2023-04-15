@@ -8,6 +8,7 @@ using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.News;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
 
@@ -429,19 +430,19 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase GetListVideoNews(int UserId)
+        public ResponseBase GetListVideoNews(int UserId, int status)
         {
 
             ResponseBase response = new ResponseBase();
             try
             {
                 var listvideo = new List<VideoNewsDto>();
-                var list = _videoRepository.FindAll(x=>x.IdUser == UserId);
+                var list = _videoRepository.FindAll(x=>x.IdUser == UserId && x.Status== status).Include(x=>x.IdCategoryNavigation);
                 foreach(var item in list)
                 {
                     listvideo.Add(new VideoNewsDto() { Title = item.Title, Video = item.Video
                     , Name = item.Name, PictureTitle = item.PictureTitle, DateCreate = item.DateCreate, Id = item.Id , IdCategory = item.IdCategory
-                    , IdUser = item.IdUser
+                    , IdUser = item.IdUser, Category = item.IdCategoryNavigation.Category
                     });
                 }    
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -466,7 +467,7 @@ namespace GoStay.Services.Newss
             try
             {
                 _commonUoW.BeginTransaction();
-                news.Status = 0;
+                news.Status = 1;
                 _videoRepository.Insert(news);
                 _commonUoW.Commit();
                 response.Code = ErrorCodeMessage.Success.Key;

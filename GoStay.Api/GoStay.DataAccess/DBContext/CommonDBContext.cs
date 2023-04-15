@@ -719,6 +719,10 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Category).HasMaxLength(100);
 
+                entity.Property(e => e.CategoryChi).HasMaxLength(100);
+
+                entity.Property(e => e.CategoryEng).HasMaxLength(100);
+
                 entity.Property(e => e.Iddomain).HasColumnName("IDDomain");
 
                 entity.Property(e => e.Keysearch)
@@ -1185,6 +1189,8 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<TopicNews>(entity =>
             {
+                entity.Property(e => e.Iddomain).HasColumnName("IDDomain");
+
                 entity.Property(e => e.Topic).HasMaxLength(100);
             });
 
@@ -1561,11 +1567,26 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
-                entity.Property(e => e.PictureTitle).HasMaxLength(50);
+                entity.Property(e => e.PictureTitle).HasMaxLength(255);
 
                 entity.Property(e => e.Title).HasMaxLength(50);
 
                 entity.Property(e => e.Video).HasMaxLength(255);
+
+                entity.HasOne(d => d.IdCategoryNavigation)
+                    .WithMany(p => p.VideoNews)
+                    .HasForeignKey(d => d.IdCategory)
+                    .HasConstraintName("FK_VideoNews_NewsCategory");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.VideoNews)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_VideoNews_users");
+
+                entity.HasOne(d => d.Lang)
+                    .WithMany(p => p.VideoNews)
+                    .HasForeignKey(d => d.LangId)
+                    .HasConstraintName("FK_VideoNews_Language");
             });
 
             modelBuilder.Entity<ViewDirection>(entity =>
