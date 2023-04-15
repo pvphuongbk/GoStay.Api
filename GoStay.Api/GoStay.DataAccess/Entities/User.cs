@@ -11,6 +11,7 @@ namespace GoStay.DataAccess.Entities
             News = new HashSet<News>();
             OrderTickets = new HashSet<OrderTicket>();
             Orders = new HashSet<Order>();
+            VideoNews = new HashSet<VideoNews>();
         }
 
         public int UserId { get; set; }
@@ -36,6 +37,7 @@ namespace GoStay.DataAccess.Entities
         public virtual ICollection<News> News { get; set; }
         public virtual ICollection<OrderTicket> OrderTickets { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+		public virtual ICollection<VideoNews> VideoNews { get; set; }
     }
 
     public class UserGostay : User

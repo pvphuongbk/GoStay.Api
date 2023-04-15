@@ -24,5 +24,9 @@ namespace GoStay.DataAccess.Entities
         public int? LangId { get; set; }
         public int Status { get; set; }
         public string? Name { get; set; }
+
+        public virtual NewsCategory? IdCategoryNavigation { get; set; }
+        public virtual User? IdUserNavigation { get; set; }
+        public virtual Language? Lang { get; set; }
     }
 }
