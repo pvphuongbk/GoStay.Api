@@ -1565,6 +1565,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.DateEdit).HasColumnType("datetime");
 
+                entity.Property(e => e.KeySearch).HasMaxLength(50);
+
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.PictureTitle).HasMaxLength(255);

@@ -106,9 +106,29 @@ namespace GoStay.DataDto.News
         }
         public int? IdCategory { get; set; }
         public string? Category { get; set; }
-
+        public int? Total { get; set; }
         public string? Title { get; set; }
         public DateTime? DateCreate { get; set; }
+        public int? IdUser { get; set; }
+        public string? PictureTitle { get; set; }
+        public string? Name { get; set; }
+    }
+    public class GetListVideoNewsParam
+    {
+        public int? UserId { get; set; }
+        public int? IdCategory { get; set; }
+        public byte? Status { get; set; }
+        public string? TextSearch { get; set; }
+
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+    }
+    public class EditVideoNewsDto
+    {
+        public int Id { get; set; }
+        public string Video { get; set; } = null!;
+        public int? IdCategory { get; set; }
+        public string? Title { get; set; }
         public int? IdUser { get; set; }
         public string? PictureTitle { get; set; }
         public string? Name { get; set; }
