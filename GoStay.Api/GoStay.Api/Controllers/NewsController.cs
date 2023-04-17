@@ -42,10 +42,10 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
-        [HttpGet("list-video-news")]
-        public ResponseBase GetListVideoNews(int UserId, int status)
+        [HttpPost("list-video-news")]
+        public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)
         {
-            var items = _newsServices.GetListVideoNews(UserId,status);
+            var items = _newsServices.GetListVideoNews(filter);
             return items;
         }
 
@@ -101,6 +101,18 @@ namespace GoStay.Api.Controllers
         public ResponseBase EditClickNews([FromBody] int Id)
         {
             var item = _newsServices.EditClickNews(Id);
+            return item;
+        }
+        [HttpPut("edit-video-news")]
+        public ResponseBase EditVideoNews(EditVideoNewsDto videoNews)
+        {
+            var item = _newsServices.EditVideoNews(videoNews);
+            return item;
+        }
+        [HttpPut("delete-video-news")]
+        public ResponseBase DeleteVideoNews([FromBody] int Id)
+        {
+            var item = _newsServices.DeleteVideoNews(Id);
             return item;
         }
     }

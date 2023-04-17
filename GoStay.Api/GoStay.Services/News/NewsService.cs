@@ -430,24 +430,23 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase GetListVideoNews(int UserId, int status)
+        public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)
         {
 
             ResponseBase response = new ResponseBase();
             try
             {
-                var listvideo = new List<VideoNewsDto>();
-                var list = _videoRepository.FindAll(x=>x.IdUser == UserId && x.Status== status).Include(x=>x.IdCategoryNavigation);
-                foreach(var item in list)
+                if (filter.TextSearch == null)
                 {
-                    listvideo.Add(new VideoNewsDto() { Title = item.Title, Video = item.Video
-                    , Name = item.Name, PictureTitle = item.PictureTitle, DateCreate = item.DateCreate, Id = item.Id , IdCategory = item.IdCategory
-                    , IdUser = item.IdUser, Category = item.IdCategoryNavigation.Category
-                    });
-                }    
+                    filter.TextSearch = "";
+                }
+                filter.TextSearch = filter.TextSearch.RemoveUnicode();
+                filter.TextSearch = filter.TextSearch.Replace(" ", string.Empty).ToLower();
+
+                var list = NewsRepository.SearchListVideoNews(filter);
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
-                response.Data = listvideo;
+                response.Data = list;
                 return response;
 
             }
@@ -468,6 +467,7 @@ namespace GoStay.Services.Newss
             {
                 _commonUoW.BeginTransaction();
                 news.Status = 1;
+                news.KeySearch = news.Title.RemoveUnicode().Replace(" ", string.Empty).ToLower();
                 _videoRepository.Insert(news);
                 _commonUoW.Commit();
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -485,6 +485,77 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase EditVideoNews(EditVideoNewsDto news)
+        {
 
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var newsEntity = _videoRepository.GetById(news.Id);
+                if(newsEntity != null)
+                {
+                    newsEntity.Video = news.Video;
+                    newsEntity.IdCategory = news.IdCategory;
+                    newsEntity.Title = news.Title;
+                    newsEntity.IdUser = news.IdUser;
+                    newsEntity.PictureTitle = news.PictureTitle;
+                    newsEntity.Name = news.Name;
+                    newsEntity.KeySearch = newsEntity.Title.RemoveUnicode().Replace(" ", string.Empty).ToLower();
+
+                }
+                newsEntity.Status = 1;
+                _videoRepository.Update(newsEntity);
+                _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsEntity.Id;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+        public ResponseBase DeleteVideoNews(int Id)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var newsEntity = _videoRepository.GetById(Id);
+                if (newsEntity == null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    response.Data = "Not found obj";
+                    return response;
+                }
+                newsEntity.Deleted = 1;
+                _videoRepository.Update(newsEntity);
+                _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = "Success";
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                response.Data = "Exception";
+
+                return response;
+            }
+
+        }
     }
 }

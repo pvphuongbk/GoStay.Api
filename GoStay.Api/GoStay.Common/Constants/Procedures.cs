@@ -20,7 +20,9 @@
         public static string sq_GetAllOrderTicket = "sq_GetAllOrderTicket";
         //new
         public static string sq_GetListForSearchNews = "sq_GetListForSearchNews"; 
-        public static string sq_GetListTopNews = "sq_GetListTopNews"; 
+        public static string sq_GetListTopNews = "sq_GetListTopNews";
+        public static string sq_GetListVideoNews = "sq_GetListVideoNews";
+
 
 
     }

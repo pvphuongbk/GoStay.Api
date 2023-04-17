@@ -30,5 +30,18 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<NewSearchOutDto>(Procedures.sq_GetListTopNews, p).ToList();
         }
+        public static List<VideoNewsDto> SearchListVideoNews(GetListVideoNewsParam filter)
+        {
+            var p = new DynamicParameters();
+            p.Add("@UserId", filter.UserId == null ? null : string.Join(",", filter.UserId), System.Data.DbType.String);
+            p.Add("@Status", filter.Status == null ? null : string.Join(",", filter.Status), System.Data.DbType.String);
+            p.Add("@IdCategory", filter.IdCategory == null ? null : string.Join(",", filter.IdCategory), System.Data.DbType.String);
+            p.Add("@TextSearch", filter.TextSearch == null ? null : string.Join(",", filter.TextSearch), System.Data.DbType.String);
+
+            p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
+            p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
+
+            return DapperExtensions.QueryDapperStoreProc<VideoNewsDto>(Procedures.sq_GetListVideoNews, p).ToList();
+        }
     }
 }
