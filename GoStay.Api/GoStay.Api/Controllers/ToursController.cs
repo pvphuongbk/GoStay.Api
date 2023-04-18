@@ -41,5 +41,11 @@ namespace GoStay.Api.Controllers
             var items = _tourService.GetTourContent(Id);
             return items;
         }
+        [HttpGet("tour-location")]
+        public ResponseBase GetTourLocationTotal(int IdProvince)
+        {
+            var items = _tourService.GetTourLocationTotal(IdProvince);
+            return items;
+        }
     }
 }
