@@ -9,5 +9,7 @@ namespace GoStay.Services.Tours
         ResponseBase SearchTour(SearchTourRequest request);
         public ResponseBase GetTourContent(int Id);
         public ResponseBase GetTourHomePage();
+        public ResponseBase GetTourLocationTotal(int IdProvince);
+
     }
 }

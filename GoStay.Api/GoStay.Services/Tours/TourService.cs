@@ -2,12 +2,15 @@
 using GoStay.Common;
 using GoStay.Common.Extention;
 using GoStay.Data.Base;
+using GoStay.Data.Enums;
 using GoStay.Data.HotelDto;
 using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
 
 namespace GoStay.Services.Tours
@@ -21,7 +24,7 @@ namespace GoStay.Services.Tours
         private readonly ICommonRepository<TourDetail> _tourDetailRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<TinhThanh> _provinceRepository;
-        private readonly ICommonRepository<TourDistrictTo> _tourProvinceToRepository;
+        private readonly ICommonRepository<TourDistrictTo> _tourLocationToRepository;
         private readonly ICommonRepository<Quan> _districtRepository;
 
 
@@ -29,7 +32,7 @@ namespace GoStay.Services.Tours
         public TourService(ICommonRepository<Tour> tourRepository, IMapper mapper, ICommonRepository<TourStyle> tourStyleRepository,
             ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TourDetail> tourDetailRepository,
             ICommonRepository<Picture> pictureRepository, ICommonRepository<TinhThanh> provinceRepository, 
-            ICommonRepository<TourDistrictTo> tourProvinceToRepository, ICommonRepository<Quan> districtRepository)
+            ICommonRepository<TourDistrictTo> tourLocationToRepository, ICommonRepository<Quan> districtRepository)
         {
             _tourRepository = tourRepository;
             _mapper = mapper;
@@ -38,7 +41,7 @@ namespace GoStay.Services.Tours
             _tourDetailRepository = tourDetailRepository;
             _pictureRepository = pictureRepository;
             _provinceRepository = provinceRepository;
-            _tourProvinceToRepository = tourProvinceToRepository;
+            _tourLocationToRepository = tourLocationToRepository;
             _districtRepository = districtRepository;
         }
 
@@ -49,7 +52,15 @@ namespace GoStay.Services.Tours
             searchText = searchText.RemoveUnicode();
             searchText = searchText.Replace(" ", string.Empty).ToLower();
             var Data = TourRepository.SuggestTour(searchText);
-            Data.ForEach(x => x.Slug = (x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+            foreach (var Tour in Data)
+            {
+                Tour.Slug = Tour.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
+                if(Tour.Type== SuggestTourType.TourName)
+                {
+                    Tour.Img = _pictureRepository.FindAll(x => x.TourId == Tour.Id).FirstOrDefault().UrlOut;
+                }    
+            }
+
             response.Data=Data;
             return response;
         }
@@ -107,7 +118,7 @@ namespace GoStay.Services.Tours
 
                 tourContent.DistrictFrom = _districtRepository.GetById(tourContent.IdDistrictFrom).Tenquan;
 
-                tourContent.IdDistrictTo = _tourProvinceToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdDistrictTo).ToList();
+                tourContent.IdDistrictTo = _tourLocationToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdDistrictTo).ToList();
                 if (tour.IdStartTime != null)
                 {
                     tourContent.StartTime = tour.IdStartTimeNavigation.StartDate;
@@ -128,6 +139,30 @@ namespace GoStay.Services.Tours
             catch
             {
                 response.Data = new TourContentDto();
+                return response;
+            }
+
+        }
+        public ResponseBase GetTourLocationTotal(int IdProvince)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+
+                var listdistrict = _districtRepository.FindAll(x => x.IdTinhThanh == IdProvince).Select(x=>x.Id);
+                int total=0;
+                foreach(var item in listdistrict)
+                {
+                    total += _tourLocationToRepository.FindAll(x => x.IdDistrictTo == item).Count();
+                }    
+                response.Data = total;
+
+                return response;
+            }
+            catch
+            {
+                response.Data = 0;
                 return response;
             }
 

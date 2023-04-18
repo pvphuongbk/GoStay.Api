@@ -17,5 +17,6 @@ namespace GoStay.Data.TourDto
             }
         }
         public string Slug { get; set; }
+        public string? Img { get; set; } 
     }
 }
