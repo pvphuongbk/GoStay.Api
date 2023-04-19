@@ -442,8 +442,11 @@ namespace GoStay.Services.Orders
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser)?.Include(x=>x.OrderDetails).Include(x=>x.IdPaymentMethodNavigation)
-                    .Include(x=>x.StatusNavigation).Include(x=>x.IdUserNavigation).ToList();
+                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser)?
+                                    .Include(x=>x.OrderDetails)
+                                    .Include(x=>x.IdPaymentMethodNavigation)
+                                    .Include(x=>x.StatusNavigation)
+                                    .Include(x=>x.IdUserNavigation).ToList();
                 var listOrderDetail = new List<OrderDetail>();
                 if (listOrder == null)
                 {
@@ -459,7 +462,6 @@ namespace GoStay.Services.Orders
                 for (int i=0;i<listOrder.Count();i++)
                 {
                     listOrderInfo.Add(_mapper.Map<Order, OrderGetInfoDto>(listOrder[i]));
-                    //var listdetail = listOrder[i].OrderDetails.ToList();
                     var listdetail = listOrderDetail.Where(x => x.IdOrder == listOrder[i].Id).ToList();
 
                     for (int j = 0;j< listdetail.Count();j++)
@@ -503,7 +505,6 @@ namespace GoStay.Services.Orders
                 for (int i = 0; i < listOrder.Count(); i++)
                 {
                     listOrderInfo.Add(_mapper.Map<Order, OrderGetInfoDto>(listOrder[i]));
-                    //var listdetail = listOrder[i].OrderDetails.ToList();
                     var listdetail = listOrderDetail.Where(x => x.IdOrder == listOrder[i].Id).ToList();
 
                     for (int j = 0; j < listdetail.Count(); j++)
