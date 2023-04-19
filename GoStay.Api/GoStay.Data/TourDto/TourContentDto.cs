@@ -37,8 +37,7 @@ namespace GoStay.Data.TourDto
 
         public int IdDistrictFrom { get; set; }
         public string DistrictFrom { get; set; }
-        public List<int> IdDistrictTo { get; set; }
-        public List<string> DistrictTo { get; set; }
+        public Dictionary<int,string> IdDistrictTo { get; set; }
 
         public List<string> Pictures { get; set; }
         public string Slug { get; set; }

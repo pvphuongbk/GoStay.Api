@@ -52,15 +52,8 @@ namespace GoStay.Services.Tours
             searchText = searchText.RemoveUnicode();
             searchText = searchText.Replace(" ", string.Empty).ToLower();
             var Data = TourRepository.SuggestTour(searchText);
-            foreach (var Tour in Data)
-            {
-                Tour.Slug = Tour.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
-                if(Tour.Type== SuggestTourType.TourName)
-                {
-                    Tour.Img = _pictureRepository.FindAll(x => x.TourId == Tour.Id).FirstOrDefault().UrlOut;
-                }    
-            }
 
+            Data.ForEach(x=>x.Slug = x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower());   
             response.Data=Data;
             return response;
         }
@@ -105,33 +98,50 @@ namespace GoStay.Services.Tours
             try
             {
                 var tour = _tourRepository.FindAll(x => x.Id == Id)
+                                .Include(x=>x.TourDetails)
+                                .Include(x=>x.IdTourStyleNavigation)
+                                .Include(x => x.IdTourTopicNavigation)
+                                .Include(x => x.IdDistrictFromNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
                                 .Include(x=>x.OrderDetails)
                                 .Include(x=>x.Pictures)
-                                .Include(x=>x.TourDistrictTos)
+                                .Include(x=>x.TourDistrictTos).ThenInclude(x=>x.IdDistrictToNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
                                 .Include(x=>x.IdStartTimeNavigation).SingleOrDefault();
                 var tourContent = new TourContentDto();
                 tourContent = _mapper.Map<Tour,TourContentDto >(tour);
 
-                tourContent.TourStyle = _tourStyleRepository.GetById(tourContent.IdTourStyle).TourStyle1;
+                tourContent.TourStyle = tour.IdTourStyleNavigation.TourStyle1;
 
-                tourContent.TourTopic = _tourTopicRepository.GetById(tourContent.IdTourTopic).TourTopic1;
+                tourContent.TourTopic = tour.IdTourTopicNavigation.TourTopic1;
 
-                tourContent.DistrictFrom = _districtRepository.GetById(tourContent.IdDistrictFrom).Tenquan;
+                if(tour.IdDistrictFromNavigation.Tenquan == "Tất cả")
+                {
+                    tourContent.DistrictFrom = tour.IdDistrictFromNavigation.IdTinhThanhNavigation.TenTt;
+                }
+                else
+                {
+                    tourContent.DistrictFrom = tour.IdDistrictFromNavigation.Tenquan;
+                }
 
-                tourContent.IdDistrictTo = _tourLocationToRepository.FindAll(x => x.IdTour == tourContent.Id).Select(x => x.IdDistrictTo).ToList();
                 if (tour.IdStartTime != null)
                 {
                     tourContent.StartTime = tour.IdStartTimeNavigation.StartDate;
                 }
-                tourContent.DistrictTo = new List<string>();
-                foreach(var item in tourContent.IdDistrictTo)
+                tourContent.IdDistrictTo = new Dictionary<int, string>();
+                foreach (var item in tour.TourDistrictTos)
                 {
-                    tourContent.DistrictTo.Add(_districtRepository.GetById(item).Tenquan);
+                    if (item.IdDistrictToNavigation.Tenquan == "Tất cả")
+                    {
+                        tourContent.IdDistrictTo.Add(item.IdDistrictTo, item.IdDistrictToNavigation.IdTinhThanhNavigation.TenTt);
+                    }
+                    else
+                    {
+                        tourContent.IdDistrictTo.Add(item.IdDistrictTo, item.IdDistrictToNavigation.Tenquan);
+                    }
                 }
-
                 tourContent.Pictures = tour.Pictures.Where(x=>x.Deleted!=1).Select(x=>x.Url).ToList();
 
-                tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(_tourDetailRepository.FindAll(x => x.IdTours == Id&& x.Deleted!=1).OrderBy(x=>x.Stt).ToList());
+                tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(tour.TourDetails.Where(x=>x.Deleted!=1).OrderBy(x => x.Stt).ToList());
+
                 tourContent.Slug= tourContent.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
                 response.Data = tourContent;
                 return response;
@@ -149,15 +159,9 @@ namespace GoStay.Services.Tours
             ResponseBase response = new ResponseBase();
             try
             {
-
-                var listdistrict = _districtRepository.FindAll(x => x.IdTinhThanh == IdProvince).Select(x=>x.Id);
-                int total=0;
-                foreach(var item in listdistrict)
-                {
-                    total += _tourLocationToRepository.FindAll(x => x.IdDistrictTo == item).Count();
-                }    
-                response.Data = total;
-
+                var dicstrictTo = _tourLocationToRepository.FindAll(x => x.IdDistrictToNavigation.IdTinhThanhNavigation != null &&
+                                                                    x.IdDistrictToNavigation.IdTinhThanhNavigation.Id == IdProvince).Count();
+                response.Data = dicstrictTo;
                 return response;
             }
             catch
