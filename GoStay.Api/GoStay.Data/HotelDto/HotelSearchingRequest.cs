@@ -13,6 +13,8 @@
         public int? Palletbed { get; set; }
         public int? NumMature { get; set; }
         public int? NumChild { get; set; }
+        public int? NumRoom { get; set; }
+
         public DateTime? CheckinDate { get; set; }
         public DateTime? CheckoutDate { get; set; }
 

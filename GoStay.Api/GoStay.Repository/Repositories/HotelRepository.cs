@@ -15,6 +15,7 @@ namespace GoStay.Repository.Repositories
             p.Add("@Palletbed", filter.Palletbed == null ? null : string.Join(",", filter.Palletbed), System.Data.DbType.String);
             p.Add("@NumMature", filter.NumMature == null ? null : string.Join(",", filter.NumMature), System.Data.DbType.String);
             p.Add("@NumChild", filter.NumChild == null ? null : string.Join(",", filter.NumChild), System.Data.DbType.String);
+            p.Add("@NumRoom", filter.NumRoom == null ? null : string.Join(",", filter.NumRoom), System.Data.DbType.String);
             p.Add("@CheckinDate", filter.CheckinDate == null ? null : string.Join(",", filter.CheckinDate?.ToString("yyyy-MM-dd HH:mm:ss")), System.Data.DbType.String);
             p.Add("@CheckoutDate", filter.CheckoutDate == null ? null : string.Join(",", filter.CheckoutDate?.ToString("yyyy-MM-dd HH:mm:ss")), System.Data.DbType.String);
             p.Add("@IdTinhThanh", filter.IdTinhThanh == null ? null : string.Join(",", filter.IdTinhThanh), System.Data.DbType.String);
