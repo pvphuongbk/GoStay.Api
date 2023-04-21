@@ -124,12 +124,16 @@ namespace GoStay.Services.OrderTickets
                         responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                         responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
                         responseBase.Data = CreateOrderTicket(order, orderDetail).Data;
+                        return responseBase;
+
                     }
                     else
                     {
                         responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
                         responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
                         responseBase.Data = GetOrderTicketbyId(ordercheck.Id).Data;
+                        return responseBase;
+
                     }
                 }
                 return responseBase;

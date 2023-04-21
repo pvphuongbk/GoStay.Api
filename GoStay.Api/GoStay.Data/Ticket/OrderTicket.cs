@@ -117,7 +117,17 @@
         public int IdUser { get; set; }
         public byte Status { get; set; }
         public string? Ordercode { get; set; }
-
+        public string? NameU { get; set; }
+        public string? NameP { get; set; }
+        public string Name 
+        {
+            get
+            {
+                if (NameP.Trim() == "")
+                    return NameU;
+                return NameP;
+            }
+        }
         public int IdTicket { get; set; }
         public decimal Price { get; set; }
         public string StartPoint { get; set; } = null!;
