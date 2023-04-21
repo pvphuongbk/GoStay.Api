@@ -44,5 +44,11 @@ namespace GoStay.Api.Controllers
             var items = _orderService.GetAllOrderTicket(UserId,pageIndex, pageSize);
             return items;
         }
+        [HttpPut("update-status")]
+        public ResponseBase UpdateStatus(UpdateStatus param)
+        {
+            var items = _orderService.UpdateStatus(param.UserId, param.TicketId );
+            return items;
+        }
     }
 }

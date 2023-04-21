@@ -9,6 +9,7 @@ namespace GoStay.Services.OrderTickets
         public ResponseBase CheckOrderTicket(OrderTicketDto order, OrderTicketDetailDto orderDetail);
         public ResponseBase GetOrderTicketbyId(int Id);
         public ResponseBase GetAllOrderTicket(int? UserId,int pageIndex, int pageSize);
+        public ResponseBase UpdateStatus(int UserId, int IdTicketOrder);
 
     }
 }
