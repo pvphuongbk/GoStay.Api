@@ -194,5 +194,44 @@ namespace GoStay.Services.OrderTickets
                 return responseBase;
             }
         }
+        public ResponseBase UpdateStatus(int UserId, int IdTicketOrder)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                if(UserId==9)
+                {
+                    _commonUoW.BeginTransaction();
+
+                    var ticket = _OrderTicketRepository.FindAll(x=>x.Id == IdTicketOrder).SingleOrDefault();
+                    if(ticket!=null)
+                    {
+                        ticket.Status = 2;
+                        _OrderTicketRepository.Update(ticket);
+                        _commonUoW.Commit();
+                        responseBase.Code = ErrorCodeMessage.Success.Key;
+                        responseBase.Message = ErrorCodeMessage.Success.Value;
+                        responseBase.Data = "Success";
+                        return responseBase;
+
+                    }
+                    _commonUoW.Commit();
+                    responseBase.Code = ErrorCodeMessage.NotFound.Key;
+                    responseBase.Message = ErrorCodeMessage.NotFound.Value;
+                    responseBase.Data = "Ticket not exist";
+                    return responseBase;
+                }
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = ErrorCodeMessage.Exception.Value;
+                responseBase.Data = "No authority";
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
     }
 }

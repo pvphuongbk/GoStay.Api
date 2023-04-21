@@ -151,4 +151,10 @@
         public int Infant { get; set; }
 
     }
+    public class UpdateStatus
+    {
+        public int UserId { get; set; }
+        public int TicketId { get; set; }
+
+    }
 }
