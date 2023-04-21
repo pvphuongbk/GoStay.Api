@@ -14,6 +14,6 @@ namespace GoStay.Data.HotelDto
         public int? TinhThanhID { get; set; }
         public string? HotelTypeName { get; set; }
         public string? Slug { get;set;}
-        public int? NumRecord { get; set; }
+        public int NumRecord { get; set; }
     }
 }
