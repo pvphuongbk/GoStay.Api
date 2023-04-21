@@ -147,12 +147,16 @@ namespace GoStay.Services.Orders
                                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
                                     responseBase.Data = CreateOrder(order, orderDetail).Data;
+                                    return responseBase;
+
                                 }
                                 else
                                 {
                                     responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
                                     responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
                                     responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
+                                    return responseBase;
+
                                 }
                             }
                         }
@@ -166,12 +170,14 @@ namespace GoStay.Services.Orders
                                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
                                     responseBase.Data = CreateOrder(order, orderDetail).Data;
+                                    return responseBase;
                                 }
                                 else
                                 {
                                     responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
                                     responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
                                     responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
+                                    return responseBase;
                                 }
                             }
                         }
@@ -182,6 +188,7 @@ namespace GoStay.Services.Orders
                         responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
                         responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
                         responseBase.Data = AddOrderDetail(ordercheck.Id, orderDetail).Data;
+                        return responseBase;
                     }
 
                 }

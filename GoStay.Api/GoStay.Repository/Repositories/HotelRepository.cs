@@ -23,7 +23,9 @@ namespace GoStay.Repository.Repositories
             p.Add("@IdQuans", filter.IdQuans == null ? null : string.Join(",", filter.IdQuans), System.Data.DbType.String);
             p.Add("@Rating", filter.Ratings == null ? null : string.Join(",", filter.Ratings), System.Data.DbType.String);
             p.Add("@Types", filter.Types == null ? null : string.Join(",", filter.Types), System.Data.DbType.String);
-            p.Add("@IdServices", filter.Services == null ? null : string.Join(",", filter.Services), System.Data.DbType.String);
+            p.Add("@IdServicesHotel", filter.ServicesHotel == null ? null : string.Join(",", filter.ServicesHotel), System.Data.DbType.String);
+            p.Add("@IdServicesRoom", filter.ServicesRoom == null ? null : string.Join(",", filter.ServicesRoom), System.Data.DbType.String);
+
             p.Add("@ActualPriceMin", filter.PriceMin == null ? null : filter.PriceMin.ToString(), System.Data.DbType.String);
             p.Add("@ActualPriceMax", filter.PriceMax == null ? null : filter.PriceMax.ToString(), System.Data.DbType.String);
             p.Add("@ReviewScore", filter.ReviewScore == null ? null : filter.ReviewScore.ToString(), System.Data.DbType.String);

@@ -9,7 +9,8 @@
         public List<int>? IdPhuong { get; set; }
         public List<int>? Types { get; set; }
         public double? ReviewScore { get; set; }
-        public List<int>? Services { get; set; }
+        public List<int>? ServicesHotel { get; set; }
+        public List<int>? ServicesRoom { get; set; }
         public int? Palletbed { get; set; }
         public int? NumMature { get; set; }
         public int? NumChild { get; set; }
