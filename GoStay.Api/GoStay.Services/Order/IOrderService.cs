@@ -27,6 +27,6 @@ namespace GoStay.Services.Orders
         ResponseBase GetOrderByMonth(int month, int year, int status);
         ResponseBase GetOrderRoomByMonth(int month, int year, int status);
         ResponseBase GetListOrderSearch(OrderSearchParam param);
-
+        public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom);
     }
 }
