@@ -201,7 +201,31 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
+        public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
 
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == UserId && x.IdHotel == IdHotel && x.Status != 3 && x.OrderDetails.Where(y => y.IdRoom == IdRoom).Any());
+                var count = ordercheck.Count();
+                if (ordercheck.Count()==0)
+                {
+                    responseBase.Data = 0;
+                }
+                else
+                {
+                    responseBase.Data = ordercheck.Select(x=>x.Id).First();
+                }
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
         public ResponseBase AddOrderDetail(int IdOrder, OrderDetailDto orderDetail)
         {
             ResponseBase responseBase = new ResponseBase();
