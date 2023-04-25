@@ -41,6 +41,12 @@ namespace GoStay.Api.Controllers
             var items = _newsServices.GetNews(Id);
             return items;
         }
+        [HttpGet("video-news")]
+        public ResponseBase GetVideoNews(int Id)
+        {
+            var items = _newsServices.GetVideoNews(Id);
+            return items;
+        }
 
         [HttpPost("list-video-news")]
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)

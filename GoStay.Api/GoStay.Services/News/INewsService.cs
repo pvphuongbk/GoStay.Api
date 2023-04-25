@@ -20,5 +20,7 @@ namespace GoStay.Services.Newss
         public ResponseBase AddVideoNews(VideoNews news);
         public ResponseBase EditVideoNews(EditVideoNewsDto news);
         public ResponseBase DeleteVideoNews(int Id);
+        public ResponseBase GetVideoNews(int Id);
+
     }
 }
