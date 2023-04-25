@@ -119,12 +119,15 @@ namespace GoStay.DataDto.News
         {
             get
             {
-                return Title.Replace(" ", "-").Replace(",", string.Empty)
-                        .Replace("/", "-").Replace("--", string.Empty)
-                        .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                        .Replace("(", string.Empty).Replace(")", string.Empty)
-                        .Replace("*", string.Empty).Replace("%", string.Empty)
-                        .Replace("&", "-").Replace("@", string.Empty).ToLower();
+                if (Title != null)
+                    return Title.Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower();
+                else
+                    return "";
             }
         }
     }
