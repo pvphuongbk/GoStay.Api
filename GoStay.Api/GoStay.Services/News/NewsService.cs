@@ -579,5 +579,53 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase GetVideoNews(int Id)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var news = _videoRepository.FindAll(x => x.Id == Id)
+                            .Include(x => x.IdCategoryNavigation)
+                            .Include(x => x.IdUserNavigation)
+                            .Include(x => x.Lang)
+                            .SingleOrDefault();
+                if (news == null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    return response;
+                }
+                var newsDetail = new VideoNewsDetailDto()
+                {
+                    Id = news.Id,
+                    IdCategory = news.IdCategory,
+                    Status = news.Status,
+                    IdUser = news.IdUser,
+                    Title = news.Title,
+                    Video = news.Video,
+                    PictureTitle = news.PictureTitle,
+                    Category = news.IdCategoryNavigation.Category,
+                    LangId = news.LangId,
+                    DateCreate = news.DateCreate,
+                    Language = news.Lang.Language1,
+                    UserName = news.IdUserNavigation.UserName,
+                };
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsDetail;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
     }
 }

@@ -148,4 +148,31 @@ namespace GoStay.DataDto.News
         public string? PictureTitle { get; set; }
         public string? Name { get; set; }
     }
+    public class VideoNewsDetailDto
+    {
+        public int? Id { get; set; }
+        public string Video { get; set; } = null!;
+        public int? IdCategory { get; set; }
+        public int? IdUser { get; set; }
+        public int? Status { get; set; }
+        public string? Title { get; set; } = null!;
+        public string Category { get; set; }
+        public string? PictureTitle { get; set; }
+        public int? LangId { get; set; }
+        public string? Language { get; set; }
+        public string? Slug
+        {
+            get
+            {
+                return Title.Replace(" ", "-").Replace(",", string.Empty)
+                        .Replace("/", "-").Replace("--", string.Empty)
+                        .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                        .Replace("(", string.Empty).Replace(")", string.Empty)
+                        .Replace("*", string.Empty).Replace("%", string.Empty)
+                        .Replace("&", "-").Replace("@", string.Empty).ToLower();
+            }
+        }
+        public string? UserName { get; set; }
+        public DateTime? DateCreate { get; set; }
+    }
 }
