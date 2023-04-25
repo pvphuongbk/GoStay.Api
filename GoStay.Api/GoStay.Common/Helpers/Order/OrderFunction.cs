@@ -18,37 +18,18 @@ namespace GoStay.Common.Helpers.Order
     {
         private readonly IMapper _mapper;
         private readonly ICommonRepository<Hotel> _hotelRepository;
-        private readonly ICommonRepository<Service> _serviceRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
-        private readonly ICommonRepository<ViewDirection> _viewRepository;
-        private readonly ICommonRepository<Palletbed> _palletbedRepository;
 
-        private readonly ICommonRepository<TourStyle> _tourStyleRepository;
-        private readonly ICommonRepository<TourTopic> _tourTopicRepository;
-        private readonly ICommonRepository<TourDetail> _tourDetailRepository;
-        private readonly ICommonRepository<TourDistrictTo> _tourProvinceToRepository;
-
-        private readonly ICommonRepository<TinhThanh> _tinhThanhRepository;
         private readonly ICommonRepository<User> _userRepository;
 
-        public OrderFunction(IMapper mapper, ICommonRepository<Hotel> hotelRepository, ICommonRepository<Service> serviceRepository,
-            ICommonRepository<Picture> pictureRepository, ICommonRepository<ViewDirection> viewRepository,
-            ICommonRepository<Palletbed> palletbedRepository, ICommonRepository<TourStyle> tourStyleRepository, 
-            ICommonRepository<TourTopic> tourTopicRepository, ICommonRepository<TinhThanh> tinhThanhRepository,
-            ICommonRepository<User> userRepository, ICommonRepository<TourDetail> tourDetailRepository, ICommonRepository<TourDistrictTo> tourProvinceToRepository)
+        public OrderFunction(IMapper mapper, ICommonRepository<Hotel> hotelRepository, 
+            ICommonRepository<Picture> pictureRepository,
+            ICommonRepository<User> userRepository)
         {
             _mapper = mapper;
             _hotelRepository = hotelRepository;
-            _serviceRepository = serviceRepository;
             _pictureRepository = pictureRepository;
-            _viewRepository = viewRepository;
-            _palletbedRepository = palletbedRepository;
-            _tourStyleRepository = tourStyleRepository;
-            _tourTopicRepository = tourTopicRepository;
-            _tinhThanhRepository = tinhThanhRepository;
             _userRepository = userRepository;
-            _tourDetailRepository = tourDetailRepository;
-            _tourProvinceToRepository = tourProvinceToRepository;
         }
         public OrderDetailInfoDto CreateOrderDetailInfoDto(OrderDetail orderDetail)
         {
