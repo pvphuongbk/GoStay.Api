@@ -1,5 +1,7 @@
 ﻿
 
+using GoStay.DataAccess.Entities;
+
 namespace GoStay.DataDto.News
 {
     public partial class NewsDto
@@ -110,8 +112,21 @@ namespace GoStay.DataDto.News
         public string? Title { get; set; }
         public DateTime? DateCreate { get; set; }
         public int? IdUser { get; set; }
+        public string? UserName { get; set; }
         public string? PictureTitle { get; set; }
         public string? Name { get; set; }
+        public string? Slug
+        {
+            get
+            {
+                return Title.Replace(" ", "-").Replace(",", string.Empty)
+                        .Replace("/", "-").Replace("--", string.Empty)
+                        .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                        .Replace("(", string.Empty).Replace(")", string.Empty)
+                        .Replace("*", string.Empty).Replace("%", string.Empty)
+                        .Replace("&", "-").Replace("@", string.Empty).ToLower();
+            }
+        }
     }
     public class GetListVideoNewsParam
     {
