@@ -99,6 +99,8 @@ namespace GoStay.DataDto.News
     {
         public int Id { get; set; }
         public string Video { get; set; } = null!;
+        public string? Descriptions { get; set; }
+
         public string UrlVideo
         {
             get
@@ -147,6 +149,8 @@ namespace GoStay.DataDto.News
         public string Video { get; set; } = null!;
         public int? IdCategory { get; set; }
         public string? Title { get; set; }
+        public string? Descriptions { get; set; }
+
         public int? IdUser { get; set; }
         public string? PictureTitle { get; set; }
         public string? Name { get; set; }
@@ -160,6 +164,7 @@ namespace GoStay.DataDto.News
         public int? Status { get; set; }
         public string? Title { get; set; } = null!;
         public string Category { get; set; }
+        public string? Descriptions { get; set; }
         public string? PictureTitle { get; set; }
         public int? LangId { get; set; }
         public string? Language { get; set; }

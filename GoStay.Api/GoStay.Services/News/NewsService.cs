@@ -520,6 +520,8 @@ namespace GoStay.Services.Newss
                     newsEntity.Video = news.Video;
                     newsEntity.IdCategory = news.IdCategory;
                     newsEntity.Title = news.Title;
+                    newsEntity.Descriptions = news.Descriptions;
+
                     newsEntity.IdUser = news.IdUser;
                     newsEntity.PictureTitle = news.PictureTitle;
                     newsEntity.Name = news.Name;
@@ -604,6 +606,7 @@ namespace GoStay.Services.Newss
                     IdUser = news.IdUser,
                     Title = news.Title,
                     Video = news.Video,
+                    Descriptions = news.Descriptions,
                     PictureTitle = news.PictureTitle,
                     Category = news.IdCategoryNavigation.Category,
                     LangId = news.LangId,
