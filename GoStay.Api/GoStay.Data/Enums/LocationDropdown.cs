@@ -5,6 +5,7 @@
         Hotel = 1,
         Quan = 2,
         TinhThanh = 3,
-        Phuong = 4
+        Phuong = 4,
+        Near=5
     }
 }
