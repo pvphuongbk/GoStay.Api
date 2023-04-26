@@ -153,7 +153,6 @@ namespace GoStay.Services.Hotels
 				searchText = searchText.RemoveUnicode();
 				searchText = searchText.Replace(" ", string.Empty).ToLower();
                 var listData = HotelRepository.GetListLocationForDropdown(searchText);
-                listData.ForEach(x=>x.Slug = x.Value.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower());
 
                 responseBase.Data = listData;
                 return responseBase;

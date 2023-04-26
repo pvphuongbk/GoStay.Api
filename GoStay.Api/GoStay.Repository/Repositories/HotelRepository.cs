@@ -45,7 +45,7 @@ namespace GoStay.Repository.Repositories
             return DapperExtensions.QueryDapperStoreProc<LocationDropdownDto>(Procedures.sq_GetListLocationForDropdown, p).ToList();
         }
 
-        public static List<NearHotelDto> GetListNearHotel(int NumTop,float LAT, float LON)
+        public static List<LocationDropdownDto> GetListNearHotel(int NumTop,float LAT, float LON)
         {
             var p = new DynamicParameters();
             p.Add("@LAT", LAT, System.Data.DbType.Double);
@@ -53,7 +53,7 @@ namespace GoStay.Repository.Repositories
 
             p.Add("@LON", LON, System.Data.DbType.Double);
 
-            return DapperExtensions.QueryDapperStoreProc<NearHotelDto>(Procedures.sq_GetListNearHotel, p).ToList();
+            return DapperExtensions.QueryDapperStoreProc<LocationDropdownDto>(Procedures.sq_GetListNearHotel, p).ToList();
         }
     }
 }
