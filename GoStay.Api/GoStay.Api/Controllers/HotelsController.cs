@@ -60,9 +60,9 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpGet("hotel-near")]
-        public ResponseBase GetListNearHotel(float Lat, float Lon)
+        public ResponseBase GetListNearHotel(int NumTop, float Lat, float Lon)
         {
-            var items = _hotelService.GetListNearHotel(Lat, Lon);
+            var items = _hotelService.GetListNearHotel( NumTop,Lat, Lon);
             return items;
         }
 

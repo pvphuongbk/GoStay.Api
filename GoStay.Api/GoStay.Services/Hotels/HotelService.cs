@@ -165,12 +165,12 @@ namespace GoStay.Services.Hotels
                 return responseBase;
             }
         }
-        public ResponseBase GetListNearHotel(float Lat, float Lon)
+        public ResponseBase GetListNearHotel(int NumTop,float Lat, float Lon)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listData = HotelRepository.GetListNearHotel(Lat,Lon);
+                var listData = HotelRepository.GetListNearHotel( NumTop,Lat, Lon);
 
                 responseBase.Data = listData;
                 return responseBase;
