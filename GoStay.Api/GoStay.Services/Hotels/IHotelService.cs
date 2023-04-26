@@ -11,7 +11,7 @@ namespace GoStay.Services.Hotels
         public ResponseBase GetListForSearchHotel(HotelSearchRequest filter);
         public ResponseBase GetListSuggestHotel(string searchText);
         public ResponseBase GetHotelDetail(int hotelId);
-        public ResponseBase GetListNearHotel(float Lat, float Lon);
+        public ResponseBase GetListNearHotel(int NumTop,float Lat, float Lon);
 
         public ResponseBase GetAllTypeHotel();
         ResponseBase GetServicesSearch(int type);
