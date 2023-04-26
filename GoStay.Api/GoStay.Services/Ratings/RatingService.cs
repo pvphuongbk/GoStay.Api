@@ -8,6 +8,7 @@ using GoStay.Repository.Repositories;
 using GoStay.Services.Ratings;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GoStay.Services.Reviews
 {
@@ -108,6 +109,12 @@ namespace GoStay.Services.Reviews
             ResponseBase response = new ResponseBase();
             try
             {
+                dto.LocationScore = CheckScore(dto.LocationScore);
+                dto.RoomsScore = CheckScore(dto.RoomsScore);
+                dto.CleanlinessScore = CheckScore(dto.CleanlinessScore);
+                dto.ValueScore = CheckScore(dto.ValueScore);
+                dto.ServiceScore = CheckScore(dto.ServiceScore);
+
                 _icommonUoWRepository.BeginTransaction();
                 var (re, check) = UpdateScoreForHotel(dto);
                 if (!check)
@@ -213,6 +220,12 @@ namespace GoStay.Services.Reviews
             return (re,true);
         }
 
+        public decimal CheckScore(decimal score)
+        {
+            if (score > 10)
+                return score / 10;
+            return score;
+        }
         private void UpdateLocationScore(Hotel hotel, int count, List<HotelRating> hotelRatings, RatingOrUpdateDto dto)
         {
             var totalScore = hotelRatings.Sum(x => x.LocationScore) + dto.LocationScore;
