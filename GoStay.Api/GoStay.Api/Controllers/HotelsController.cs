@@ -58,6 +58,14 @@ namespace GoStay.Api.Controllers
             var items = _hotelService.GetListSuggestHotel(search);
             return items;
         }
+
+        [HttpGet("hotel-near")]
+        public ResponseBase GetListNearHotel(float Lat, float Lon)
+        {
+            var items = _hotelService.GetListNearHotel(Lat, Lon);
+            return items;
+        }
+
         [HttpGet("type-hotel")]
         public ResponseBase GetAllTypeHotel()
         {

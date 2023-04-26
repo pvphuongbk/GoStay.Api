@@ -4,6 +4,8 @@
 	{
 		public static string sq_GetListForSearchHotel = "sq_GetListForSearchHotel";
         public static string sq_GetListLocationForDropdown = "sq_GetListLocationForDropdown";
+        public static string sq_GetListNearHotel = "sq_GetListNearHotel";
+
         public static string sq_GetListHotelForHomePage = "sq_GetListHotelForHomePage";
         public static string sq_GetListForSearchHotelPaging_gamma = "sq_GetListForSearchHotelPaging_gamma";
 
