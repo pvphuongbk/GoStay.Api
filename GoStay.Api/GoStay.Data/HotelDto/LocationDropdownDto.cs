@@ -1,4 +1,5 @@
 ﻿using GoStay.Data.Enums;
+using System.Xml.Linq;
 
 namespace GoStay.Data.HotelDto
 {
@@ -11,9 +12,28 @@ namespace GoStay.Data.HotelDto
         public int HotelType { get; set; }
         public LocationDropdown Type { get; set; }
         public int Id { get; set; }
-        public int? TinhThanhID { get; set; }
-        public string? HotelTypeName { get; set; }
-        public string? Slug { get;set;}
+        public int TinhThanhID { get; set; }
+        public int? QuanID { get; set; }
+        public string HotelTypeName { get; set; }
         public int NumRecord { get; set; }
+
+        public float HowFar { get; set; }
+        public string Address { get; set; }
+        public string PriceRange { get; set; }
+        public string? Slug
+        {
+            get
+            {
+                if (Value != null)
+                    return Value.Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower();
+                else
+                    return "";
+            }
+        }
     }
 }
