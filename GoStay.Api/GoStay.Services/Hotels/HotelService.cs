@@ -11,6 +11,7 @@ using GoStay.DataAccess.Interface;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using Newtonsoft.Json.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 namespace GoStay.Services.Hotels
@@ -153,7 +154,12 @@ namespace GoStay.Services.Hotels
 				searchText = searchText.RemoveUnicode();
 				searchText = searchText.Replace(" ", string.Empty).ToLower();
                 var listData = HotelRepository.GetListLocationForDropdown(searchText);
-
+                listData.ForEach(x=>x.Slug = x.Value.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
                 responseBase.Data = listData;
                 return responseBase;
             }
@@ -170,7 +176,12 @@ namespace GoStay.Services.Hotels
             try
             {
                 var listData = HotelRepository.GetListNearHotel( NumTop,Lat, Lon);
-
+                listData.ForEach(x => x.Slug = x.Value.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
                 responseBase.Data = listData;
                 return responseBase;
             }
