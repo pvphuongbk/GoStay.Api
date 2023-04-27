@@ -9,6 +9,7 @@ namespace GoStay.Services.Ratings
         public ResponseBase GetRatingByUser(int hotelId, int userId);
         public ResponseBase GetRatingByHotel(int hotelId);
         public ResponseBase GetUserBoxReview(int inHotel);
+        public ResponseBase CheckOrdered(int hotelId, int userId);
 
     }
 }

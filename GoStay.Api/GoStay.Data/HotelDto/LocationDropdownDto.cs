@@ -25,5 +25,6 @@ namespace GoStay.Data.HotelDto
             get
             ;set;
         }
+        public int HotelRoomID { get; set; }
     }
 }

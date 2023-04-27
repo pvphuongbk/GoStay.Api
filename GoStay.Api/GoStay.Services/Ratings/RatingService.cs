@@ -196,6 +196,32 @@ namespace GoStay.Services.Reviews
             }
         }
 
+        public ResponseBase CheckOrdered(int hotelId, int userId)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var exist = _orderRepository.FindAll(x => x.IdUser == userId && x.IdHotel == hotelId).Count();
+                if (exist > 0)
+                {
+                    response.Data = 1;
+                    return response;
+                }
+                else
+                {
+                    response.Data = 0;
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+        }
+
+
         private (UpdateRatingResponse,bool) UpdateScoreForHotel(RatingOrUpdateDto dto)
         {
             var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser != dto.UserId && x.IdHotel == dto.HotelId).ToList();

@@ -31,6 +31,13 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpGet("ordered")]
+        public ResponseBase CheckOrdered(int hotelId, int userId)
+        {
+            var items = _ratingService.CheckOrdered(hotelId, userId);
+            return items;
+        }
+
         [HttpGet("rating-by-hotel")]
         public ResponseBase GetRatingByHotel(int hotelId)
         {
