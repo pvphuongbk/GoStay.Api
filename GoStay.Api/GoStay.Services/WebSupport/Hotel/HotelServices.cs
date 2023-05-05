@@ -8,6 +8,7 @@ using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataDto.Hotel;
 using GoStay.DataDto.HotelDto;
+using GoStay.Repository.Repositories;
 using GoStay.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -185,7 +186,35 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
+        public ResponseBase GetListRoomAdmin(RequestGetListRoomAdmin request)
+        {
+            ResponseBase response = new ResponseBase();
 
+            try
+            {
+                if (request.HotelName == null)
+                {
+                    request.HotelName = "";
+                }
+                if (request.RoomName == null)
+                {
+                    request.RoomName = "";
+                }
+                request.HotelName = request.HotelName.RemoveUnicode();
+                request.HotelName = request.HotelName.Replace(" ", string.Empty).ToLower();
+                request.RoomName = request.RoomName.RemoveUnicode();
+                request.RoomName = request.RoomName.Replace(" ", string.Empty).ToLower();
+                var data = HotelRepository.GetListRoomAdmin(request);
+
+                response.Data = data;
+                return response;
+            }
+            catch
+            {
+                response.Data = new PagingList<RoomDto>();
+                return response;
+            }
+        }
         public ResponseBase AddRoom(HotelRoom data)
         {
             ResponseBase response = new ResponseBase();
@@ -719,6 +748,27 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
 
+        }
+        public ResponseBase ChangeRoomStatus(int IdRoom, int RoomStatus)
+        {
+            ResponseBase response = new ResponseBase();
+
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var room = _roomRepository.FindAll(x=>x.Id==IdRoom).SingleOrDefault();
+                room.RoomStatus = RoomStatus;
+                _roomRepository.Update(room);
+                _commonUoW.Commit();
+                response.Data = "success";
+                return response;
+
+            }
+            catch
+            {
+                response.Data = "exception";
+                return response;
+            }
         }
     }
 }

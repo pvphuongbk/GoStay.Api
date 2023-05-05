@@ -32,4 +32,24 @@ namespace GoStay.Data.HotelDto
         public List<ServiceDetailHotelDto> Services { get; set; }
 
     }
+    public class RoomAdminDto
+    {
+        public int Id { get; set; }
+        public decimal NewPrice { get; set; }
+        public decimal Price_Value { get; set; }
+        public float Discount { get; set; }
+        public decimal RoomSize { get; set; }
+        public string Name { get; set; }
+        public byte NumMature { get; set; }
+        public byte NumChild { get; set; }
+        public string SearchKey { get; set; }
+        public int RoomStatus { get; set; }
+        public int IDUser { get; set; }
+        public string HotelName { get; set; }
+        public string UserName { get; set; }
+        public string Urls { get; set; }
+        public int Total { get; set; }
+
+
+    }
 }

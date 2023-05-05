@@ -54,6 +54,14 @@ namespace GoStay.Api.Controllers
             var items = _hotelServices.GetRoomList(request);
             return items;
         }
+
+        [HttpPost("list-room-admin")]
+        public ResponseBase GetListRoomAdmin(RequestGetListRoomAdmin request)
+        {
+            var items = _hotelServices.GetListRoomAdmin(request);
+            return items;
+        }
+
         [HttpPost("add-room")]
         
         public ResponseBase AddRoomPartner(List<IFormFile> fileRooms, string bodyJson)
@@ -178,6 +186,13 @@ namespace GoStay.Api.Controllers
         public ResponseBase GetServicesRoom(int IdRoom)
         {
             var result = _hotelServices.GetServicesRoom(IdRoom);
+            return result;
+        }
+
+        [HttpGet("change-room-status")]
+        public ResponseBase ChangeRoomStatus(int IdRoom, int RoomStatus)
+        {
+            var result = _hotelServices.ChangeRoomStatus(IdRoom, RoomStatus);
             return result;
         }
 

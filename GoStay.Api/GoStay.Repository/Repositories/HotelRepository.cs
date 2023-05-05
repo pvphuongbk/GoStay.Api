@@ -55,5 +55,22 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<LocationDropdownDto>(Procedures.sq_GetListNearHotel, p).ToList();
         }
+
+        public static List<RoomAdminDto> GetListRoomAdmin(RequestGetListRoomAdmin filter)
+        {
+            var p = new DynamicParameters();
+            p.Add("@IdHotel", filter.IdHotel == null ? null : string.Join(",", filter.IdHotel), System.Data.DbType.String);
+            p.Add("@IdUser", filter.IdUser == null ? null : string.Join(",", filter.IdUser), System.Data.DbType.String);
+            p.Add("@RoomStatus", filter.RoomStatus == null ? null : string.Join(",", filter.RoomStatus), System.Data.DbType.String);
+            p.Add("@HotelName", filter.HotelName == null ? null : string.Join(",", filter.HotelName), System.Data.DbType.String);
+            p.Add("@RoomName", filter.RoomName == null ? null : string.Join(",", filter.RoomName), System.Data.DbType.String);
+
+
+            p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
+            p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
+
+
+            return DapperExtensions.QueryDapperStoreProc<RoomAdminDto>(Procedures.sq_GetListRoomAdmin, p).ToList();
+        }
     }
 }
