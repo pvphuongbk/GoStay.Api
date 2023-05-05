@@ -36,4 +36,14 @@ namespace GoStay.DataDto.HotelDto
         public int? IdRoom { get; set; }
         public string? NameSearch { get; set; }
     }
+    public class RequestGetListRoomAdmin
+    {
+        public int? PageIndex { get; set; }
+        public int? PageSize { get; set; }
+        public int? IdHotel { get; set; }
+        public int? IdUser { get; set; }
+        public int? RoomStatus { get; set; }
+        public string? RoomName { get; set; }
+        public string? HotelName { get; set; }
+    }
 }

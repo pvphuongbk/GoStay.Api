@@ -8,6 +8,8 @@
 
         public static string sq_GetListHotelForHomePage = "sq_GetListHotelForHomePage";
         public static string sq_GetListForSearchHotelPaging_gamma = "sq_GetListForSearchHotelPaging_gamma";
+        public static string sq_GetListRoomAdmin = "sq_GetListRoomAdmin";
+
 
         // Tours
         public static string sq_GetListForSearchTours = "sq_GetListForSearchTours";
@@ -23,7 +25,7 @@
         //new
         public static string sq_GetListForSearchNews = "sq_GetListForSearchNews"; 
         public static string sq_GetListTopNews = "sq_GetListTopNews";
-        public static string sq_GetListVideoNews = "sq_GetListVideoNews";
+        public static string sq_GetListVideoNews = "sq_GetListVideoNews"; 
 
 
 
