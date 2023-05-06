@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using GoStay.Common.Helpers.Order;
 using GoStay.DataDto.OrderDto;
 using GoStay.Repository.Repositories;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GoStay.Services.Orders
 {
@@ -783,6 +785,96 @@ namespace GoStay.Services.Orders
             ResponseBase response = new ResponseBase();
             response.Data = OrderRepository.SearchListOrder(param).OrderByDescending(x => x.DateCreate);
             return response;
+        }
+
+        public ResponseBase DeleteRoomInOrder(int IdDetail, int IdOrder)
+        {
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _pictureRepository, _userRepository);
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var orders = _OrderRepository.FindAll(x => x.Id == IdOrder && x.OrderDetails.Any(z=>z.Id== IdDetail)).Include(x => x.OrderDetails);
+                if(orders.Count()<=0)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+
+                    response.Data = "Not Found";
+                    return response;
+
+                }
+                if (orders.Count() > 1)
+                {
+                    response.Code = ErrorCodeMessage.Exception.Key;
+                    response.Message = ErrorCodeMessage.Exception.Value;
+
+                    response.Data = "exception";
+                    return response;
+
+                }
+                _commonUoW.BeginTransaction();
+                _OrderDetailRepository.Remove(IdDetail);
+                _commonUoW.Commit();
+
+                response.Data = "Success";
+                return response;
+            }
+            catch
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = ErrorCodeMessage.Exception.Value;
+
+                response.Data = "exception";
+                return response;
+
+            }
+            
+        }
+        public ResponseBase GetListRoomInOrder(int Id)
+        {
+            IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _pictureRepository, _userRepository);
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var orderInfo = new OrderGetInfoDto();
+                var listOrderDetail = new List<OrderDetail>();
+
+                var order = _OrderRepository.FindAll(x => x.Id == Id)?
+                    //room
+                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                            .ThenInclude(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
+                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                            .ThenInclude(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
+                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                            .ThenInclude(x => x.PalletbedNavigation)
+                    //tour
+                    //exception
+                    .SingleOrDefault();
+
+
+                if (order == null)
+                {
+                    responseBase.Data = orderInfo;
+                    return responseBase;
+                }
+
+                listOrderDetail = order.OrderDetails.ToList();
+
+                orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
+
+                for (int j = 0; j < listOrderDetail.Count(); j++)
+                {
+                    orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listOrderDetail[j]));
+                }
+                responseBase.Data = orderInfo.ListOrderDetails;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
         }
     }
 }

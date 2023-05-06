@@ -36,7 +36,7 @@ namespace GoStay.Common.Helpers.Order
             var orderDetailInfoDto = new OrderDetailInfoDto
             {
                 Id = orderDetail.Id,
-
+                IdOrder = orderDetail.IdOrder,
                 ChechIn = orderDetail.ChechIn,
                 CheckOut = orderDetail.CheckOut,
                 DateCreate = orderDetail.DateCreate,

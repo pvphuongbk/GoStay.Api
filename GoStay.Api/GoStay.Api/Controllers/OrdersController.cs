@@ -137,5 +137,19 @@ namespace GoStay.Api.Controllers
             var items = _orderService.GetListOrderSearch(param);
             return items;
         }
+
+
+        [HttpGet("delete-room-in-order")]
+        public ResponseBase DeleteRoomInOrder(int IdDetail, int IdOrder)
+        {
+            var items = _orderService.DeleteRoomInOrder(IdDetail, IdOrder);
+            return items;
+        }
+        [HttpGet("list-room-in-order")]
+        public ResponseBase GetListRoomInOrder(int IdOrder)
+        {
+            var items = _orderService.GetListRoomInOrder( IdOrder);
+            return items;
+        }
     }
 }
