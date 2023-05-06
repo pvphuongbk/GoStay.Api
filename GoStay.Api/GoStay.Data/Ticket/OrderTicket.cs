@@ -15,6 +15,7 @@
         public string? Session { get; set; }
         public string DataFlightSession { get; set; } = null!;
         public string FlightSession { get; set; } = null!;
+        public string? ContactInfor { get; set; }
     }
     public class OrderTicketDetailDto
     {
@@ -69,6 +70,8 @@
         public string? Session { get; set; }
         public string DataFlightSession { get; set; } = null!;
         public string FlightSession { get; set; } = null!;
+        public string? ContactInfor { get; set; }
+
         public OrderTicketDetailShowDto TicketDetail { get; set; }
     }
     public class OrderTicketDetailShowDto

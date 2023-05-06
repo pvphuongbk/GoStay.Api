@@ -21,7 +21,7 @@ namespace GoStay.DataAccess.Entities
         public string? Session { get; set; }
         public string DataFlightSession { get; set; } = null!;
         public string FlightSession { get; set; } = null!;
-
+        public string? ContactInfor { get; set; }
         public virtual OrderPhuongThucTt IdPtthanhToanNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
         public virtual OrderStatus StatusNavigation { get; set; } = null!;

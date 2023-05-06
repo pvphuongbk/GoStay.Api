@@ -852,7 +852,7 @@ namespace GoStay.DataAccess.DBContext
             modelBuilder.Entity<OrderTicket>(entity =>
             {
                 entity.ToTable("OrderTicket");
-
+                entity.Property(e => e.ContactInfor).HasMaxLength(50);
                 entity.Property(e => e.DataFlightSession)
                     .HasMaxLength(100)
                     .IsUnicode(false);
