@@ -173,6 +173,7 @@ namespace GoStay.Services.OrderTickets
                 orderTicketShow.StatusText = order.StatusNavigation.Status;
                 orderTicketShow.Paymentmethod = order.IdPtthanhToanNavigation.PhuongThuc;
                 orderTicketShow.DateCreateText = order.DateCreate.ToString("dd/MM/yyyy hh:mm");
+                orderTicketShow.ContactInfor = order.ContactInfor;
                 orderTicketShow.TicketDetail = _mapper.Map<OrderTicketDetail, OrderTicketDetailShowDto>(ticketDetail);
                 orderTicketShow.TicketDetail.DepartureDateText = ticketDetail.DepartureDate.ToString("dd/MM/yyyy");
                 orderTicketShow.TicketDetail.StartDateText = ticketDetail.StartDate.ToString("dd/MM/yyyy hh:mm");
