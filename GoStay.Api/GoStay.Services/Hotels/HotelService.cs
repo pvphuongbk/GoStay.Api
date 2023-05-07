@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoStay.Common.Constants;
 using GoStay.Common.Extention;
 using GoStay.Common.Helpers;
 using GoStay.Common.Helpers.Hotels;
@@ -8,10 +9,12 @@ using GoStay.Data.HotelDto;
 using GoStay.Data.ServiceDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.Repository.DapperHelper;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 
 namespace GoStay.Services.Hotels
@@ -193,14 +196,29 @@ namespace GoStay.Services.Hotels
             }
         }
 
-
+        public ResponseBase GetHotelDetailNew(int hotelId, int userId)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var dto = HotelDapperExtensions.GetHotelDetailDto(Procedures.sq_GetHotelDetailById, hotelId, userId);
+                responseBase.Data = dto;
+                return responseBase;
+            }
+            catch
+            {
+                var hotelDetailDto = new HotelDetailDto();
+                responseBase.Data = hotelDetailDto;
+                return responseBase;
+            }
+        }
         public ResponseBase GetHotelDetail(int hotelId)
 		{
 			IHotelFunction hotelFunction= new HotelFunction(_mapper) ;
 			ResponseBase responseBase = new ResponseBase();
-			try
+            try
 			{
-				var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
+                var hotel = _hotelRepository.FindAll(x => x.Id == hotelId && x.Deleted != 1)
 					.Include(x=>x.HotelRooms.Where(x=>x.Deleted!=1 && x.Status ==1)
 					.OrderByDescending(x=>x.Discount).OrderByDescending(x=>x.RemainNum))
 						.ThenInclude(x=>x.RoomMamenitis.OrderByDescending(x=>x.Level).Take(5)).ThenInclude(x=>x.IdservicesNavigation)
@@ -213,7 +231,6 @@ namespace GoStay.Services.Hotels
 					.Include(x=>x.IdTinhThanhNavigation)
 					.Include(x=>x.HotelMamenitis.OrderByDescending(x => x.Level).Take(4)).ThenInclude(x=>x.IdservicesNavigation)
 					.FirstOrDefault();
-
                 var svhotel = hotel.HotelMamenitis.Select(x=>x.IdservicesNavigation).ToList();
 
 				var hotelRoom = hotel.HotelRooms.ToList();
@@ -223,7 +240,6 @@ namespace GoStay.Services.Hotels
                     responseBase.Code = ErrorCodeMessage.Exception.Key;
                     return responseBase;
 				}
-
                 var hotelDetailDto = hotelFunction.CreateHotelDetailDto(hotel);
 				hotelDetailDto.Services = _mapper.Map<List<Service>,List<ServiceDetailHotelDto>>(svhotel);
 				
@@ -239,7 +255,7 @@ namespace GoStay.Services.Hotels
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
             }
-			catch
+            catch
 			{
                 var hotelDetailDto = new HotelDetailDto();
                 responseBase.Data = hotelDetailDto;
