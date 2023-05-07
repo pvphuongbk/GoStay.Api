@@ -34,7 +34,7 @@ namespace GoStay.Repository.DapperHelper
 
                 foreach(var rm in hotelDetail.Rooms)
                 {
-                    rm.Services = roomServices.Where(x => x.IdRoom == rm.Id).ToList();
+                    rm.Services = roomServices.Where(x => x.IdRoom == rm.Id).Take(5).ToList();
                     rm.Pictures = string.IsNullOrEmpty(rm.StrPictures) ? new List<string>() : rm.StrPictures.Split(';').ToList();
                 }
 
