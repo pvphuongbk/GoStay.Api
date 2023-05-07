@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GoStay.Data.HotelDto
@@ -29,6 +31,8 @@ namespace GoStay.Data.HotelDto
         public DateTime? CheckInDate { get; set; }
         public DateTime? CheckOutDate { get; set; }
         public List<string> Pictures { get; set; } = new List<string>();
+        [JsonIgnore]
+        public string StrPictures { get; set; }
         public List<ServiceDetailHotelDto> Services { get; set; }
 
     }

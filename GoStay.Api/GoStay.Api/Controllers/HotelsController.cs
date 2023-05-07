@@ -31,6 +31,12 @@ namespace GoStay.Api.Controllers
             var items = _hotelService.GetHotelDetail(int.Parse(hotelId) );
             return items;
         }
+        [HttpGet("hotel-detail-summary")]
+        public ResponseBase GetHotelDetailSummary(int hotelId,int userId)
+        {
+            var items = _hotelService.GetHotelDetailNew(hotelId, userId);
+            return items;
+        }
 
         [HttpGet("room-by-hotel/{id}")]
 		public ResponseBase GetListRoomByHotel(int id)

@@ -4,7 +4,9 @@ using GoStay.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GoStay.Data.HotelDto
@@ -37,7 +39,10 @@ namespace GoStay.Data.HotelDto
         public List<HotelRoomDto> Rooms { get; set; }
         public List<ServiceDetailHotelDto> Services { get; set; }
         public List<string> Pictures { get; set; } = new List<string>();
+        [JsonIgnore]
+        public double? ReviewScore { get; set; }
         public int TotalPicture { get; set; }
         public string Slug { get; set; }
+        public int Ordered { get; set; }
     }
 }
