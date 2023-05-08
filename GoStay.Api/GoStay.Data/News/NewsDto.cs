@@ -182,5 +182,6 @@ namespace GoStay.DataDto.News
         }
         public string? UserName { get; set; }
         public DateTime? DateCreate { get; set; }
+        public string? Avatar { get; set; }
     }
 }

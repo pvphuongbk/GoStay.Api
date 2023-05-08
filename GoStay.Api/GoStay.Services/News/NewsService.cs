@@ -615,8 +615,9 @@ namespace GoStay.Services.Newss
                     DateCreate = news.DateCreate,
                     Language = news.Lang.Language1,
                     UserName = news.IdUserNavigation.UserName,
+                   
                 };
-
+                newsDetail.Avatar = news.IdUserNavigation.Picture;
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = newsDetail;
