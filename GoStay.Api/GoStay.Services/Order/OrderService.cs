@@ -786,6 +786,7 @@ namespace GoStay.Services.Orders
             ResponseBase response = new ResponseBase();
             var Data = OrderRepository.SearchListOrder(param);
             Data.ForEach(x => x.Slug = x.HotelName?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace(".", "-")
                             .Replace("/", "-").Replace("--", string.Empty)
                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                             .Replace("(", string.Empty).Replace(")", string.Empty)

@@ -109,7 +109,9 @@ namespace GoStay.Services.Hotels
                 {
                     HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10 };
                     var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-                    Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                            
+                    Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(".", "-")
+                    .Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
                     responseBase.Data = Data;
                     return responseBase;
                 }
@@ -117,7 +119,7 @@ namespace GoStay.Services.Hotels
                 {
                     HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10, IdTinhThanh = IdProvince};
                     var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-                    Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                    Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(".", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
                     responseBase.Data = Data;
                     return responseBase;
                 }
@@ -136,7 +138,7 @@ namespace GoStay.Services.Hotels
 			try
 			{
                 var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
-                Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(".", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
                 responseBase.Data = Data;
                 return responseBase;
 			}
@@ -158,7 +160,7 @@ namespace GoStay.Services.Hotels
 				searchText = searchText.Replace(" ", string.Empty).ToLower();
                 var listData = HotelRepository.GetListLocationForDropdown(searchText);
                 listData.ForEach(x=>x.Slug = x.Value.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                             .Replace("(", string.Empty).Replace(")", string.Empty)
                             .Replace("*", string.Empty).Replace("%", string.Empty)
@@ -180,7 +182,7 @@ namespace GoStay.Services.Hotels
             {
                 var listData = HotelRepository.GetListNearHotel( NumTop,Lat, Lon);
                 listData.ForEach(x => x.Slug = x.Value.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                             .Replace("(", string.Empty).Replace(")", string.Empty)
                             .Replace("*", string.Empty).Replace("%", string.Empty)
@@ -251,7 +253,7 @@ namespace GoStay.Services.Hotels
 												;
                 }
                 hotelDetailDto.TotalPicture = _pictureRepository.FindAll(x=>x.HotelId== hotelId && x.Deleted!=1).Count();
-                hotelDetailDto.Slug = hotelDetailDto.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
+                hotelDetailDto.Slug = hotelDetailDto.HotelName.RemoveUnicode().Replace(" ", "-").Replace(".", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
             }

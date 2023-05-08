@@ -87,7 +87,7 @@ namespace GoStay.Services.Newss
                 {
                     var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 });
                     data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
@@ -117,7 +117,7 @@ namespace GoStay.Services.Newss
             {
                 var data = NewsRepository.GetListTopNews(IdCategory, IdTopic);
                 data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
@@ -175,7 +175,7 @@ namespace GoStay.Services.Newss
                     Tag = news.Tag,
                     UserName = news.IdUserNavigation.UserName,
                     Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
