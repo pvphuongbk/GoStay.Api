@@ -434,6 +434,8 @@ namespace GoStay.Services.Newss
                 }
                 newsEntity.Deleted = 1;
                 _newsRepository.Update(newsEntity);
+                var listnewstopics = _newsTopicRepository.FindAll(x => x.IdNews == newsEntity.Id);
+                _newsTopicRepository.RemoveMultiple(listnewstopics);
                 _commonUoW.Commit();
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;

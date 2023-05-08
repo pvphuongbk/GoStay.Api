@@ -11,6 +11,7 @@ using GoStay.DataDto.OrderDto;
 using GoStay.Repository.Repositories;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using GoStay.Common.Extention;
 
 namespace GoStay.Services.Orders
 {
@@ -783,7 +784,14 @@ namespace GoStay.Services.Orders
         public ResponseBase GetListOrderSearch(OrderSearchParam param)
         {
             ResponseBase response = new ResponseBase();
-            response.Data = OrderRepository.SearchListOrder(param).OrderByDescending(x => x.DateCreate);
+            var Data = OrderRepository.SearchListOrder(param);
+            Data.ForEach(x => x.Slug = x.HotelName?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
+            response.Data = Data;
             return response;
         }
 
