@@ -49,7 +49,11 @@ namespace GoStay.Repository.DapperHelper
                     hotelDetail.ActualPrice = (decimal)room.NewPrice;
                 }
 
-                hotelDetail.Slug = hotelDetail.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
+                hotelDetail.Slug = hotelDetail.HotelName.RemoveUnicode().Replace(" ", "-")
+                    .Replace(",", string.Empty)
+                            .Replace(".", "-")
+                    .Replace("--", string.Empty)
+                    .ToLower();
 
                 summary.UserBoxReviews = reader.Read<UserBoxReview>().ToList();
                 summary.HotelDetailDto = hotelDetail;
