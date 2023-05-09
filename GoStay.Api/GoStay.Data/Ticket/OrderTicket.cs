@@ -16,6 +16,9 @@
         public string DataFlightSession { get; set; } = null!;
         public string FlightSession { get; set; } = null!;
         public string? ContactInfor { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
     }
     public class OrderTicketDetailDto
     {
@@ -39,21 +42,15 @@
     }
     public partial class TicketPassengerDto
     {
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string? FullName { get; set; }
         public string? Type { get; set; }
-        public bool Gender { get; set; }
-        public string? Email { get; set; }
-        public string? Phone { get; set; }
-        public string Birthday { get; set; } = null!;
+        public bool? Gender { get; set; }
+        public string? Birthday { get; set; }
         public string? PassportExpiryDate { get; set; }
         public string? PassportIssueCountry { get; set; }
         public string? PassportNumber { get; set; }
         public int IdTicket { get; set; }
         public decimal Price { get; set; }
-        public bool IsContact { get; set; }
-
-
     }
 
     public class OrderTicketShowDto
@@ -71,7 +68,9 @@
         public string DataFlightSession { get; set; } = null!;
         public string FlightSession { get; set; } = null!;
         public string? ContactInfor { get; set; }
-
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
         public OrderTicketDetailShowDto TicketDetail { get; set; }
     }
     public class OrderTicketDetailShowDto
@@ -88,6 +87,7 @@
         public string EndDateText { get; set; }
         public string AirlineCode { get; set; } = null!;
         public string AirlineName { get; set; } = null!;
+        public string? Logo { get; set; }
         public string FlightNumber { get; set; } = null!;
         public int Duration { get; set; }
         public string? Barrage { get; set; }
@@ -98,20 +98,26 @@
     }
     public partial class TicketPassengerShowDto
     {
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string? FullName { get; set; }
         public string? Type { get; set; }
         public bool Gender { get; set; }
-        public string? Email { get; set; }
-        public string? Phone { get; set; }
+        public string Gen
+        {
+            get
+            {
+                if (Gender == true)
+                    return "Nam";
+                else
+                    return "Nữ";
+            }
+        }
+
         public string Birthday { get; set; } = null!;
         public string? PassportExpiryDate { get; set; }
         public string? PassportIssueCountry { get; set; }
         public string? PassportNumber { get; set; }
         public int IdTicket { get; set; }
         public decimal Price { get; set; }
-        public bool IsContact { get; set; }
-
     }
     public class OrderTicketAdminDto
     {
@@ -120,17 +126,7 @@
         public int IdUser { get; set; }
         public byte Status { get; set; }
         public string? Ordercode { get; set; }
-        public string? NameU { get; set; }
-        public string? NameP { get; set; }
-        public string Name 
-        {
-            get
-            {
-                if (NameP.Trim() == "")
-                    return NameU;
-                return NameP;
-            }
-        }
+        public string? ContactInfor { get; set; }
         public int IdTicket { get; set; }
         public decimal Price { get; set; }
         public string StartPoint { get; set; } = null!;

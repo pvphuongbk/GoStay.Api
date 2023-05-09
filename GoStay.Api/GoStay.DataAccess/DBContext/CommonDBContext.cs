@@ -316,7 +316,9 @@ namespace GoStay.DataAccess.DBContext
                     .HasColumnName("intDate")
                     .HasDefaultValueSql("(datediff(second,'2022-1-1',getdate()))");
 
-				entity.Property(e => e.LatMap).HasColumnName("Lat_map");
+                entity.Property(e => e.LastOrderTime).HasColumnType("datetime");
+
+                entity.Property(e => e.LatMap).HasColumnName("Lat_map");
 
 				entity.Property(e => e.LocationScore)
 					.HasColumnType("decimal(2, 1)")
@@ -852,6 +854,9 @@ namespace GoStay.DataAccess.DBContext
             modelBuilder.Entity<OrderTicket>(entity =>
             {
                 entity.ToTable("OrderTicket");
+
+                entity.Property(e => e.Address).HasMaxLength(100);
+
                 entity.Property(e => e.ContactInfor).HasMaxLength(50);
                 entity.Property(e => e.DataFlightSession)
                     .HasMaxLength(100)
@@ -863,6 +868,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.DateUpdate).HasColumnType("datetime");
 
+                entity.Property(e => e.Email).HasMaxLength(50);
+
                 entity.Property(e => e.FlightSession)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -872,6 +879,8 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Ordercode)
                     .HasMaxLength(30)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Phone).HasMaxLength(20);
 
                 entity.Property(e => e.Session)
                     .HasMaxLength(50)
@@ -1103,7 +1112,8 @@ namespace GoStay.DataAccess.DBContext
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-				entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(50);
+
                 entity.Property(e => e.NameChi).HasMaxLength(50);
 
                 entity.Property(e => e.NameEng).HasMaxLength(50);
@@ -1116,11 +1126,9 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Birthday).HasMaxLength(20);
 
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.FirstName).HasMaxLength(20);
-
-                entity.Property(e => e.LastName).HasMaxLength(20);
+                entity.Property(e => e.FullName)
+                    .HasMaxLength(20)
+                    .HasColumnName("Full Name");
 
                 entity.Property(e => e.PassportExpiryDate)
                     .HasMaxLength(20)
@@ -1131,10 +1139,6 @@ namespace GoStay.DataAccess.DBContext
                     .IsFixedLength();
 
                 entity.Property(e => e.PassportNumber)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-
-                entity.Property(e => e.Phone)
                     .HasMaxLength(20)
                     .IsFixedLength();
 

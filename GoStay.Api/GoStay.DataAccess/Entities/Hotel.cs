@@ -48,6 +48,7 @@ namespace GoStay.DataAccess.Entities
         public string? SearchKey { get; set; }
         public DateTime CreatedDate { get; set; }
         public decimal? ReviewScore { get; set; }
+        public DateTime? LastOrderTime { get; set; }
 
         public virtual Phuong IdPhuongNavigation { get; set; } = null!;
         public virtual PriceRange? IdPriceRangeNavigation { get; set; }
