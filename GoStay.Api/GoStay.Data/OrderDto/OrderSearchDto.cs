@@ -39,6 +39,8 @@ namespace GoStay.DataDto.OrderDto
         public string? Ordercode { get; set; }
         public int? IdUser { get; set; }
         public string? UserName { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
         public string? Status { get; set; }
         public int? Style { get; set; }
         public double? TotalPrice { get; set; }
