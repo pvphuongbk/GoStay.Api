@@ -53,7 +53,12 @@ namespace GoStay.Services.Tours
             searchText = searchText.Replace(" ", string.Empty).ToLower();
             var Data = TourRepository.SuggestTour(searchText);
 
-            Data.ForEach(x=>x.Slug = x.Name.RemoveUnicode().Replace(" ", "-").Replace(".", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower());   
+            Data.ForEach(x=>x.Slug = x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower());   
             response.Data=Data;
             return response;
         }
@@ -62,7 +67,12 @@ namespace GoStay.Services.Tours
         {
             ResponseBase response = new ResponseBase();
             var Data = TourRepository.GetPagingListTours(request);
-            Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(".", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+            Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()));
             response.Data = Data;
             return response;
         }
@@ -80,7 +90,12 @@ namespace GoStay.Services.Tours
                     
                     Data.AddRange(data);
                 }
-                Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(".", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()));
+                Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()));
                 response.Data = Data;
                 return response;
             }
@@ -142,7 +157,12 @@ namespace GoStay.Services.Tours
 
                 tourContent.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(tour.TourDetails.Where(x=>x.Deleted!=1).OrderBy(x => x.Stt).ToList());
 
-                tourContent.Slug= tourContent.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower();
+                tourContent.Slug= tourContent.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower();
                 response.Data = tourContent;
                 return response;
             }
