@@ -119,18 +119,7 @@ namespace GoStay.DataDto.News
         public string? Name { get; set; }
         public string? Slug
         {
-            get
-            {
-                if (Title != null)
-                    return Title.Replace(" ", "-").Replace(",", string.Empty)
-                            .Replace("/", "-").Replace("--", string.Empty)
-                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                            .Replace("&", "-").Replace("@", string.Empty).ToLower();
-                else
-                    return "";
-            }
+            get;set;
         }
     }
     public class GetListVideoNewsParam

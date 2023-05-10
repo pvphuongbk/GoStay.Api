@@ -468,6 +468,12 @@ namespace GoStay.Services.Newss
                 filter.TextSearch = filter.TextSearch.Replace(" ", string.Empty).ToLower();
 
                 var list = NewsRepository.SearchListVideoNews(filter);
+                list.ForEach(x=>x.Slug = x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = list;
