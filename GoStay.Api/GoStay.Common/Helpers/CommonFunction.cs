@@ -78,7 +78,12 @@ namespace GoStay.Common.Helpers
                                     (double)(hotel.ReviewScore),
                     Pictures = hotel.Pictures.Where(x => !string.IsNullOrEmpty(x.Url)).Select(x => x.Url).ToList(),
 
-					Slug= hotel.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower(),
+					Slug= hotel.Name.RemoveUnicode().RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower(),
 					NumberReviewers = hotel.NumberReviewers
                 };
 
