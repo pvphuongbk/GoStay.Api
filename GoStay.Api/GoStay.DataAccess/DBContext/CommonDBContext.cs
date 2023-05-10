@@ -882,6 +882,10 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Phone).HasMaxLength(20);
 
+                entity.Property(e => e.ReservationFlightCode).HasMaxLength(50);
+
+                entity.Property(e => e.ReservationTransactionCode).HasMaxLength(50);
+
                 entity.Property(e => e.Session)
                     .HasMaxLength(50)
                     .IsUnicode(false);
