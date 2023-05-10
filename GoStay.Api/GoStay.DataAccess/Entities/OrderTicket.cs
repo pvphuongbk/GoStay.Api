@@ -25,6 +25,8 @@ namespace GoStay.DataAccess.Entities
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
+        public string? ReservationFlightCode { get; set; }
+        public string? ReservationTransactionCode { get; set; }
 
         public virtual OrderPhuongThucTt IdPtthanhToanNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;
