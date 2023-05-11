@@ -47,7 +47,19 @@ namespace GoStay.DataDto.OrderDto
         public string? PaymentMethod { get; set; }
         public int? IdHotel { get; set; }
         public string? HotelName { get; set; }
-        public string? RoomName { get; set; }
+        public string? RoomNames {
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    ListRoomNames = new List<string>();
+                else
+                {
+                    ListRoomNames = value.Split(';').ToList();
+
+                }
+            }
+        }
+        public List<string> ListRoomNames { get; set; } = new List<string>();
         public string? TourName { get; set; }
 
         public string? Slug { get; set; }
