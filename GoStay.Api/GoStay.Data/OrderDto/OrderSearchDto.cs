@@ -47,6 +47,9 @@ namespace GoStay.DataDto.OrderDto
         public string? PaymentMethod { get; set; }
         public int? IdHotel { get; set; }
         public string? HotelName { get; set; }
+        public string? RoomName { get; set; }
+        public string? TourName { get; set; }
+
         public string? Slug { get; set; }
     }
 }
