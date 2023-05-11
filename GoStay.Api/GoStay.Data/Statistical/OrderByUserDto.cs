@@ -18,6 +18,8 @@
         public int TotalPage{ get; set; }
 
         public string UserName { get; set; }
+        public string Ordercode { get; set; }
+
 
     }
 }
