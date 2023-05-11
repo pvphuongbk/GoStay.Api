@@ -35,8 +35,23 @@
             }
         }
         public List<string> ListRoomNames { get; set; } = new List<string>();
-        public string? PaymentMethod { get; set; }
+        public int? PaymentMethod { get; set; }
         public int? IdHotel { get; set; }
-        public string? SlugHotel { get; set; }
+        public string? Slug { get; set; }
+        public string? TourName { get; set; }
+        public string Name
+        {
+            get
+            {
+                if (Style == 1)
+                    return HotelName;
+                else
+                    return TourName;
+            }
+        }
+        public int? IdTour { get; set; }
+        public int? Style { get; set; }
+
+
     }
 }
