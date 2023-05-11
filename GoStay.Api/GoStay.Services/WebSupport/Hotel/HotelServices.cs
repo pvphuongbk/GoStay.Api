@@ -757,7 +757,7 @@ namespace GoStay.Services.WebSupport
             {
                 _commonUoW.BeginTransaction();
                 var room = _roomRepository.FindAll(x=>x.Id==IdRoom).SingleOrDefault();
-                room.RoomStatus = RoomStatus;
+                room.Status = RoomStatus;
                 _roomRepository.Update(room);
                 _commonUoW.Commit();
                 response.Data = "success";

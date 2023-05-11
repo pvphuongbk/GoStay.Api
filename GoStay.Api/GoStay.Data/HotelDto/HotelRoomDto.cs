@@ -48,6 +48,8 @@ namespace GoStay.Data.HotelDto
         public byte NumChild { get; set; }
         public string SearchKey { get; set; }
         public int RoomStatus { get; set; }
+        public int Status { get; set; }
+
         public int IDUser { get; set; }
         public string HotelName { get; set; }
         public string UserName { get; set; }
