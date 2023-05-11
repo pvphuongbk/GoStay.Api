@@ -232,7 +232,7 @@ namespace GoStay.Services.Statisticals
 
                     var datas = StatisticalRepository.GetAllOrderByUser(userID, pageIndex, pageSize);
                     datas.ForEach(x => x.TotalPage = (x.TotalCount+ pageSize-1) / pageSize);
-                    datas.ForEach(x=>x.SlugHotel = x.HotelName?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                    datas.ForEach(x=>x.Slug = x.Name?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                             .Replace(".", "-")
                             .Replace("/", "-").Replace("--", string.Empty)
                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
