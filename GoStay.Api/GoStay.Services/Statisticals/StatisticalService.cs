@@ -1,4 +1,5 @@
 ﻿using GoStay.Common.Enums;
+using GoStay.Common.Extention;
 using GoStay.Data.Base;
 using GoStay.Data.Statistical;
 using GoStay.DataAccess.Entities;
@@ -231,6 +232,13 @@ namespace GoStay.Services.Statisticals
 
                     var datas = StatisticalRepository.GetAllOrderByUser(userID, pageIndex, pageSize);
                     datas.ForEach(x => x.TotalPage = (x.TotalCount+ pageSize-1) / pageSize);
+                    datas.ForEach(x=>x.SlugHotel = x.HotelName?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace(".", "-")
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
                     responseBase.Data = datas;
                     return responseBase;
                 }
