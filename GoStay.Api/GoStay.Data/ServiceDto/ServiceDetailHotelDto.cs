@@ -12,6 +12,7 @@ namespace GoStay.Data.ServiceDto
     {
         [JsonIgnore]
         public int IdRoom { get; set; }
+        public string Icon { get; set; }
         public string Name { get; set; }
         public byte? AdvantageLevel { get; set; }
         public string? NameEng { get; set; }
