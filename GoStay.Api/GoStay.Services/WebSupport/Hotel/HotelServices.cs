@@ -83,7 +83,7 @@ namespace GoStay.Services.WebSupport
                     .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
             }
             var list = _mapper.Map<PagingList<Hotel>, PagingList<HotelDto>>(hotel);
-            list.Items.ForEach(x => x.PriceRange = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().IdPriceRangeNavigation.Title));
+            list.Items.ForEach(x => x.PriceRange = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().IdPriceRangeNavigation.TitleVnd));
             list.Items.ForEach(x => x.TypeHotel = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().TypeNavigation.Type));
             list.Items.ForEach(x => x.RoomCount = (hotel.Items.Where(y => y.Id == x.Id).FirstOrDefault().HotelRooms
                                                     .Count()));
