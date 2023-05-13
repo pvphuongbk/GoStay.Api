@@ -20,7 +20,9 @@
         public static string sq_GetAllOrderPriceByUser = "sq_GetAllOrderPriceByUser";
         public static string sq_GetPriceChartByUserInMonth = "sq_GetPriceChartByUserInMonth";
         public static string sq_GetPriceChartByUserInYear = "sq_GetPriceChartByUserInYear";
-        public static string sq_GetAllOrderByUser = "sq_GetAllOrderByUser";
+        public static string sq_GetAllOrderRoomByUser = "sq_GetAllOrderRoomByUser";
+        public static string sq_GetAllOrderTourByUser = "sq_GetAllOrderTourByUser";
+
         //ticket
         public static string sq_GetAllOrderTicket = "sq_GetAllOrderTicket";
         //new
