@@ -35,14 +35,19 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<PriceChartByUserDto>(Procedures.sq_GetPriceChartByUserInMonth, p).ToList();
         }
-        public static List<OrderByUserDto> GetAllOrderByUser(int userID, int pageIndex, int pageSize)
+        public static List<OrderByUserDto> GetAllOrderByUser(int userID, int pageIndex, int pageSize, int style)
         {
+            
             var p = new DynamicParameters();
             p.Add("@UserId", userID, System.Data.DbType.Int32);
             p.Add("@PageIndex", pageIndex, System.Data.DbType.Int32);
             p.Add("@PageSize", pageSize, System.Data.DbType.Int32);
 
-            return DapperExtensions.QueryDapperStoreProc<OrderByUserDto>(Procedures.sq_GetAllOrderByUser, p).ToList();
+            if (style == 2)
+                return DapperExtensions.QueryDapperStoreProc<OrderByUserDto>(Procedures.sq_GetAllOrderTourByUser, p).ToList();
+
+            return DapperExtensions.QueryDapperStoreProc<OrderByUserDto>(Procedures.sq_GetAllOrderRoomByUser, p).ToList();
+
         }
     }
 }

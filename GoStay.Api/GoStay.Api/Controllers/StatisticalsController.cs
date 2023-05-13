@@ -49,9 +49,9 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("order-by-user")]
-        public Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize)
+        public Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize, int style)
         {
-            var items = _statisticalService.GetAllOrderByUser(userID, pageIndex, pageSize);
+            var items = _statisticalService.GetAllOrderByUser(userID, pageIndex, pageSize, style);
             return items;
         }
     }

@@ -11,6 +11,6 @@ namespace GoStay.Services.Statisticals
         ResponseBase GetRoomInMonthByDay(int month, int year);
         Task<ResponseBase> GetAllOrderPriceByUser(PriceDetailByUserRequest request);
         Task<ResponseBase> GetPriceChartByUser(PriceChartType type, int userID, int year, int month);
-        Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize);
+        Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize,int style);
     }
 }

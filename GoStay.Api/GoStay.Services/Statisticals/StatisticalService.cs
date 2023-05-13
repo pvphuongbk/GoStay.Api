@@ -222,7 +222,7 @@ namespace GoStay.Services.Statisticals
             });
         }
 
-        public Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize)
+        public Task<ResponseBase> GetAllOrderByUser(int userID, int pageIndex, int pageSize, int style)
         {
             return Task.Run(delegate
             {
@@ -230,7 +230,7 @@ namespace GoStay.Services.Statisticals
                 try
                 {
 
-                    var datas = StatisticalRepository.GetAllOrderByUser(userID, pageIndex, pageSize);
+                    var datas = StatisticalRepository.GetAllOrderByUser(userID, pageIndex, pageSize,style);
                     datas.ForEach(x => x.TotalPage = (x.TotalCount+ pageSize-1) / pageSize);
                     datas.ForEach(x=>x.Slug = x.Name?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                             .Replace(".", "-")
