@@ -108,7 +108,7 @@ namespace GoStay.Services.Hotels
                 if (IdProvince == 0)
                 {
                     HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10 };
-                    var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                    var Data = HotelRepository.GetListHotelHomepage(filter);
                             
                     Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                                             .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
@@ -122,7 +122,7 @@ namespace GoStay.Services.Hotels
                 else
                 {
                     HotelSearchRequest filter = new HotelSearchRequest() { PageIndex = 1, PageSize = 10, IdTinhThanh = IdProvince};
-                    var Data = HotelRepository.GetPagingListHotelForHomePage(filter);
+                    var Data = HotelRepository.GetListHotelHomepage(filter);
                     Data.ForEach(x => x.Slug = (x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                                             .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)

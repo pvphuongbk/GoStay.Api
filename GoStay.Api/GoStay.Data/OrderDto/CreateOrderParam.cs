@@ -31,6 +31,9 @@ namespace GoStay.Data.OrderDto
         public byte IdPaymentMethod { get; set; }
         public string? MoreInfo { get; set; }
         public string? Session { get; set; }
+        public int? Adult { get; set; }
+        public int? Children { get; set; }
+        public int? Infant { get; set; }
     }
 
     public class OrderDetailDto

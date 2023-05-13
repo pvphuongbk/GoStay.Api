@@ -36,7 +36,17 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListForSearchHotelPaging_gamma, p).ToList();
         }
+        public static List<HotelHomePageDto> GetListHotelHomepage(HotelSearchRequest filter)
+        {
+            var p = new DynamicParameters();
 
+            p.Add("@IdTinhThanh", filter.IdTinhThanh == null ? null : string.Join(",", filter.IdTinhThanh), System.Data.DbType.String);
+            p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
+            p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
+
+
+            return DapperExtensions.QueryDapperStoreProc<HotelHomePageDto>(Procedures.sq_GetListHotelHomepage, p).ToList();
+        }
         public static List<LocationDropdownDto> GetListLocationForDropdown(string searchText)
         {
             var p = new DynamicParameters();

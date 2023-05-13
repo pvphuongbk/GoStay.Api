@@ -37,7 +37,9 @@ namespace GoStay.Data.OrderDto
         public decimal TotalPrice { get; set; }
         public decimal TotalNewPrice { get; set; }
         public List<OrderDetailInfoDto> ListOrderDetails { get; set; }
-
+        public int Adult { get; set; }
+        public int Children { get; set; }
+        public int Infant { get; set; }
     }
 
     public class OrderDetailInfoDto
