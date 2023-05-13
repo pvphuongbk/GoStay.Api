@@ -33,6 +33,7 @@
 			}
         }
         public List<string> Pictures { get; set; } = new List<string>();
+        public DateTime LastOrderTime { get; set; }
         public string Slug { get; set; }
 	}
 

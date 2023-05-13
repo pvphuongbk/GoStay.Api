@@ -73,7 +73,14 @@ namespace GoStay.Services.Orders
                 _commonUoW.BeginTransaction();
                 var orderEntity = _mapper.Map<OrderDto, Order>(order);
                 _OrderRepository.Insert(orderEntity);
+                if (orderDetail.DetailStyle == 1)
+                {
+                    var hotel = _hotelRepository.GetById(order.IdHotel);
+                    hotel.LastOrderTime = DateTime.Now;
+                    _hotelRepository.Update(hotel);
+                }
                 _commonUoW.Commit();
+
                 _commonUoW.BeginTransaction();
 
                 orderDetail.IdOrder = orderEntity.Id;
@@ -93,6 +100,7 @@ namespace GoStay.Services.Orders
                     var tour = _tourRepository.GetById(orderDetail.IdProduct);
                     orderDetailEntity.Price = (decimal)tour.Price;
                     orderDetailEntity.Discount = tour.Discount;
+                    orderDetailEntity.Num = 0;
                 }
                 _OrderDetailRepository.Insert(orderDetailEntity);
                 _commonUoW.Commit();

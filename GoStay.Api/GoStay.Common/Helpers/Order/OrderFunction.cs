@@ -62,6 +62,9 @@ namespace GoStay.Common.Helpers.Order
                 orderDetailInfoDto.Price = (decimal)orderDetailInfoDto.Tours.Price;
                 orderDetailInfoDto.Discount = orderDetailInfoDto.Tours.Discount;
                 orderDetailInfoDto.NewPrice = orderDetailInfoDto.Price * (100 - (decimal)orderDetailInfoDto.Discount) / 100;
+                orderDetailInfoDto.ChechIn  = DateTime.Now;
+                orderDetailInfoDto.CheckOut = DateTime.Now;
+
             }
             return orderDetailInfoDto;
         }
