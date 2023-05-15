@@ -11,6 +11,7 @@ using GoStay.DataDto.Banner;
 using GoStay.DataDto.Hành_Chính;
 using GoStay.DataDto.Hotel;
 using GoStay.DataDto.HotelDto;
+using GoStay.DataDto.News;
 using PartnerGostay.Models;
 using System.Linq;
 
@@ -85,6 +86,7 @@ namespace GoStay.Api.Configurations
             CreateMap<OrderTicket, OrderTicketAdminDto>().ReverseMap();
             CreateMap<PagingList<OrderTicket>, PagingList<OrderTicketAdminDto>>().ReverseMap();
 
+            CreateMap<VideoModel, VideoNews>().ReverseMap();
 
         }
     }

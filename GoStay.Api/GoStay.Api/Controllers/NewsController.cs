@@ -71,7 +71,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("add-video-news")]
-        public ResponseBase AddVideoNews(VideoNews videoNews)
+        public ResponseBase AddVideoNews(VideoModel videoNews)
         {
             var item = _newsServices.AddVideoNews(videoNews);
             return item;

@@ -173,4 +173,16 @@ namespace GoStay.DataDto.News
         public DateTime? DateCreate { get; set; }
         public string? Avatar { get; set; }
     }
+    public class VideoModel
+    {
+        public string Video { get; set; } = null!;
+        public int? IdCategory { get; set; }
+        public int? LangId { get; set; }
+        public string? Title { get; set; }
+        public DateTime? DateCreate { get; set; }
+        public int? IdUser { get; set; }
+        public int? Status { get; set; }
+        public string? PictureTitle { get; set; }
+        public string? Descriptions { get; set; }
+    }
 }

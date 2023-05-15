@@ -17,7 +17,7 @@ namespace GoStay.Services.Newss
         public ResponseBase GetListTopNewsByCategory(int? IdCategory,int? IdTopic);
         public ResponseBase EditClickNews(int NewsId);
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter);
-        public ResponseBase AddVideoNews(VideoNews news);
+        public ResponseBase AddVideoNews(VideoModel news);
         public ResponseBase EditVideoNews(EditVideoNewsDto news);
         public ResponseBase DeleteVideoNews(int Id);
         public ResponseBase GetVideoNews(int Id);
