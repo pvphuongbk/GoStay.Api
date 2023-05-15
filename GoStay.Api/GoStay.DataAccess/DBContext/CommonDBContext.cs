@@ -1583,7 +1583,7 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.PictureTitle).HasMaxLength(255);
 
-                entity.Property(e => e.Title).HasMaxLength(255);
+                entity.Property(e => e.Title).HasMaxLength(1000);
 
                 entity.Property(e => e.Video).HasMaxLength(1000);
 
