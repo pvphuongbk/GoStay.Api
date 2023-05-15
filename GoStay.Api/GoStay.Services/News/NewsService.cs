@@ -489,12 +489,13 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase AddVideoNews(VideoNews news)
+        public ResponseBase AddVideoNews(VideoModel videonews)
         {
 
             ResponseBase response = new ResponseBase();
             try
             {
+                var news = _mapper.Map<VideoModel, VideoNews>(videonews);
                 _commonUoW.BeginTransaction();
                 news.Status = 1;
                 if (news.Title == null)
