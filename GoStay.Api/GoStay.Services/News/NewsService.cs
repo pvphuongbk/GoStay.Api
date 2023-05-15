@@ -496,6 +496,7 @@ namespace GoStay.Services.Newss
             try
             {
                 var news = _mapper.Map<VideoModel, VideoNews>(videonews);
+                news.DateCreate = DateTime.Now;
                 _commonUoW.BeginTransaction();
                 news.Status = 1;
                 if (news.Title == null)

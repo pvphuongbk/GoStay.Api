@@ -32,6 +32,7 @@ namespace GoStay.DataAccess.Entities
         public int? ModifiedBy { get; set; }
         public int? IsDeleted { get; set; }
         public string? Picture { get; set; }
+        public string? UserVerify { get; set; }
 
         public virtual ICollection<HotelRating> HotelRatings { get; set; }
         public virtual ICollection<News> News { get; set; }
