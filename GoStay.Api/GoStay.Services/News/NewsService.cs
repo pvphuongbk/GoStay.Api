@@ -497,6 +497,8 @@ namespace GoStay.Services.Newss
             {
                 _commonUoW.BeginTransaction();
                 news.Status = 1;
+                if (news.Title == null)
+                    news.Title = $"Video {DateTime.Now.ToString("dd/MM/yyyy")}";
                 news.KeySearch = news.Title.RemoveUnicode().Replace(" ", string.Empty).ToLower();
                 _videoRepository.Insert(news);
                 _commonUoW.Commit();
