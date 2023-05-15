@@ -27,5 +27,9 @@ namespace GoStay.Data.HotelDto
         }
         public int HotelRoomID { get; set; }
         public float? Discount { get; set; }
+        public float? Lat { get; set; }
+        public float? Lon { get; set; }
+        public int? Rating { get; set; }
+
     }
 }
