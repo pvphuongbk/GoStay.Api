@@ -1448,6 +1448,10 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.UserType)
                     .HasColumnName("user_type")
                     .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.UserVerify)
+                    .HasMaxLength(150)
+                    .HasColumnName("user_verify");
             });
 
 			modelBuilder.Entity<VGetAllHotel>(entity =>
@@ -1572,17 +1576,16 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.DateCreate).HasColumnType("datetime");
 
                 entity.Property(e => e.DateEdit).HasColumnType("datetime");
-                entity.Property(e => e.Descriptions).HasMaxLength(255);
 
                 entity.Property(e => e.KeySearch).HasMaxLength(50);
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(255);
 
                 entity.Property(e => e.PictureTitle).HasMaxLength(255);
 
-                entity.Property(e => e.Title).HasMaxLength(50);
+                entity.Property(e => e.Title).HasMaxLength(255);
 
-                entity.Property(e => e.Video).HasMaxLength(255);
+                entity.Property(e => e.Video).HasMaxLength(1000);
 
                 entity.HasOne(d => d.IdCategoryNavigation)
                     .WithMany(p => p.VideoNews)
