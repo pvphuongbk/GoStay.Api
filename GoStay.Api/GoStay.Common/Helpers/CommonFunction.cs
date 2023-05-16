@@ -84,7 +84,8 @@ namespace GoStay.Common.Helpers
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower(),
-					NumberReviewers = hotel.NumberReviewers
+					NumberReviewers = hotel.NumberReviewers,
+					LastOrderTime = hotel.LastOrderTime?? DateTime.Now,
                 };
 
                 var room = hotel.HotelRooms.Where(x => x.Discount != null).MaxBy(x => x.Discount);
