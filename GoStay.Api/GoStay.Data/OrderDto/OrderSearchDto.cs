@@ -66,10 +66,10 @@ namespace GoStay.DataDto.OrderDto
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    ListRoomNames = new List<string>();
+                    ListRoomIds = new List<string>();
                 else
                 {
-                    ListRoomNames = value.Split(';').ToList();
+                    ListRoomIds = value.Split(';').ToList();
 
                 }
             }
