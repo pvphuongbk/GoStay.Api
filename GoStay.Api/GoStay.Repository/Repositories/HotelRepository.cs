@@ -3,6 +3,7 @@ using GoStay.Common;
 using GoStay.Common.Constants;
 using GoStay.Data.HotelDto;
 using GoStay.DataDto.HotelDto;
+using GoStay.DataDto.RatingDto;
 using GoStay.Repository.DapperHelper;
 
 namespace GoStay.Repository.Repositories
@@ -81,6 +82,19 @@ namespace GoStay.Repository.Repositories
 
 
             return DapperExtensions.QueryDapperStoreProc<RoomAdminDto>(Procedures.sq_GetListRoomAdmin, p).ToList();
+        }
+
+        public static List<RatingAdminDto> GetListRating(int? HotelId, byte? Status,string? NameSearch, int PageIndex, int PageSize)
+        {
+            var p = new DynamicParameters();
+            p.Add("@HotelId", HotelId == null ? null : string.Join(",", HotelId), System.Data.DbType.String);
+            p.Add("@Status", Status == null ? null : string.Join(",", Status), System.Data.DbType.String);
+            p.Add("@NameSearch", NameSearch, System.Data.DbType.String);
+            p.Add("@PageIndex", PageIndex, System.Data.DbType.Int32);
+            p.Add("@PageSize", PageSize, System.Data.DbType.Int32);
+
+
+            return DapperExtensions.QueryDapperStoreProc<RatingAdminDto>(Procedures.sq_GetListRating, p).ToList();
         }
     }
 }

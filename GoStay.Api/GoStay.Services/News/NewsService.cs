@@ -18,6 +18,7 @@ namespace GoStay.Services.Newss
     {
         private readonly ICommonRepository<News> _newsRepository;
         private readonly ICommonRepository<User> _userRepository;
+        private readonly ICommonRepository<Language> _languageRepository;
 
         private readonly ICommonRepository<NewsCategory> _newsCategoryRepository;
         private readonly ICommonRepository<NewsTopic> _newsTopicRepository;
@@ -30,7 +31,7 @@ namespace GoStay.Services.Newss
 
         public NewsService(ICommonRepository<News> newsRepository, IMapper mapper, ICommonUoW commonUoW,
             ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository, ICommonRepository<User> userRepository
-            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository, ICommonRepository<VideoNews> videoRepository)
+            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository, ICommonRepository<VideoNews> videoRepository, ICommonRepository<Language> languageRepository)
         {
             _mapper = mapper;
             _pictureRepository = pictureRepository;
@@ -41,6 +42,7 @@ namespace GoStay.Services.Newss
             _newsTopicRepository = newsTopicRepository;
             _topicRepository = topicRepository;
             _videoRepository = videoRepository;
+            _languageRepository = languageRepository;
         }
         public ResponseBase GetListNews(GetListNewsParam param)
         {
@@ -642,6 +644,32 @@ namespace GoStay.Services.Newss
                 return response;
             }
 
+        }
+
+        public ResponseBase GetDataSupportNews()
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var cate = _newsCategoryRepository.FindAll().ToList();
+                var lan = _languageRepository.FindAll().ToList();
+                var topic = _topicRepository.FindAll().ToList();
+                DataSupportNews data = new DataSupportNews()
+                {
+                    ListCategory = cate,
+                    ListLanguage = lan,
+                    ListTopic = topic
+                };
+                responseBase.Data = data;
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                return responseBase;
+            }
+            catch (Exception ex)
+            {
+                responseBase.Message = ex.Message;
+                return responseBase;
+            }
         }
     }
 }

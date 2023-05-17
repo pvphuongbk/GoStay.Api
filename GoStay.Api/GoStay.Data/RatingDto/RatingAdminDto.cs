@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GoStay.DataAccess.Entities
+namespace GoStay.DataDto.RatingDto
 {
-    public partial class HotelRating
+    public class RatingAdminDto
     {
         public int Id { get; set; }
         public int IdHotel { get; set; }
+        public string HotelName { get; set; }
         public decimal LocationScore { get; set; }
         public decimal ValueScore { get; set; }
         public decimal ServiceScore { get; set; }
@@ -14,11 +18,6 @@ namespace GoStay.DataAccess.Entities
         public decimal RoomsScore { get; set; }
         public string? Description { get; set; }
         public int IdUser { get; set; }
-        public DateTime? DateReviews { get; set; }
-        public DateTime? DateUpdate { get; set; }
         public byte? Status { get; set; }
-
-        public virtual Hotel IdHotelNavigation { get; set; } = null!;
-        public virtual User IdUserNavigation { get; set; } = null!;
     }
 }

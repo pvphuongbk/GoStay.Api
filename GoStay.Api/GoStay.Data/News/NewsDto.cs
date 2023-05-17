@@ -185,4 +185,11 @@ namespace GoStay.DataDto.News
         public string? PictureTitle { get; set; }
         public string? Descriptions { get; set; }
     }
+    public class DataSupportNews
+    {
+        public List<NewsCategory> ListCategory { get; set; }
+        public List<Language> ListLanguage { get; set; }
+        public List<TopicNews> ListTopic { get; set; }
+    }
+
 }
