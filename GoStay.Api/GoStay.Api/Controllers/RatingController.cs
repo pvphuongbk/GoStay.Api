@@ -50,5 +50,19 @@ namespace GoStay.Api.Controllers
             var items = _ratingService.GetUserBoxReview(idHotel);
             return items;
         }
+
+        [HttpGet("update-status-rating")]
+        public ResponseBase UpdateStatusRating(int Id, byte Status)
+        {
+            var items = _ratingService.UpdateStatusRating(Id,Status);
+            return items;
+        }
+
+        [HttpGet("list-rating")]
+        public ResponseBase GetListRating(int? HotelId, byte? Status,string? NameSearch, int PageIndex, int PageSize)
+        {
+            var items = _ratingService.GetListRating(HotelId, Status, NameSearch, PageIndex, PageSize);
+            return items;
+        }
     }
 }

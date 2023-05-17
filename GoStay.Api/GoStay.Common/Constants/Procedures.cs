@@ -10,6 +10,7 @@
         public static string sq_GetListHotelForHomePage = "sq_GetListHotelForHomePage";
         public static string sq_GetListForSearchHotelPaging_gamma = "sq_GetListForSearchHotelPaging_gamma";
         public static string sq_GetListRoomAdmin = "sq_GetListRoomAdmin";
+        public static string sq_GetListRating = "sq_GetListRating";
 
 
         // Tours

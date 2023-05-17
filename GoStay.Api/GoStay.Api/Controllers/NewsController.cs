@@ -56,10 +56,17 @@ namespace GoStay.Api.Controllers
         }
 
 
-        [HttpGet("top-news")]
+        [HttpGet("top-news")] 
         public ResponseBase GetListTopNewsByCategory(int? IdCategory, int? IdTopic)
         {
             var items = _newsServices.GetListTopNewsByCategory(IdCategory, IdTopic);
+            return items;
+        }
+
+        [HttpGet("data-support")] 
+        public ResponseBase GetDataSupportNews()
+        {
+            var items = _newsServices.GetDataSupportNews();
             return items;
         }
 

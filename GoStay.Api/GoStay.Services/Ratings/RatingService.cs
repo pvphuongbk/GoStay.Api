@@ -104,6 +104,32 @@ namespace GoStay.Services.Reviews
                 return response;
             }
         }
+        public ResponseBase GetListRating(int? HotelId, byte? Status,string? NameSearch, int PageIndex, int PageSize)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                if (NameSearch == null)
+                {
+                    NameSearch = "";
+                }
+                NameSearch = NameSearch.RemoveUnicode();
+                NameSearch = NameSearch.Replace(" ", string.Empty).ToLower();
+
+                var Ratings = HotelRepository.GetListRating(HotelId, Status, NameSearch, PageIndex, PageSize);
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = Ratings;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
         public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto)
         {
             ResponseBase response = new ResponseBase();
@@ -149,6 +175,7 @@ namespace GoStay.Services.Reviews
                         RoomsScore = dto.RoomsScore,
                         ValueScore = dto.ValueScore,
                         DateReviews = DateTime.Now,
+                        Status = 0,
                     };
                     _hotelRatingRepository.Insert(item);
                 }
@@ -164,11 +191,37 @@ namespace GoStay.Services.Reviews
                 return response;
             }
         }
+        public ResponseBase UpdateStatusRating(int Id, byte status)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var exitsRating = _hotelRatingRepository.FindAll(x => x.Id ==Id).SingleOrDefault();
+                if(exitsRating == null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    return response;
+                }
+                exitsRating.Status = status;
+                _hotelRatingRepository.Insert(exitsRating);
+
+                _icommonUoWRepository.Commit();
+                response.Data = "Success";
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+        }
         public ResponseBase GetUserBoxReview(int idHotel)
         {
             ResponseBase response = new ResponseBase();
             List<UserBoxReview> listUserBoxReview = new List<UserBoxReview>();
-            var rating = _hotelRatingRepository.FindAll(x=>x.IdHotel == idHotel);
+            var rating = _hotelRatingRepository.FindAll(x=>x.IdHotel == idHotel && x.Status==1);
 
             try
             {

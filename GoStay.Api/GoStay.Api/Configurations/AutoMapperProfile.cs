@@ -12,8 +12,8 @@ using GoStay.DataDto.Hành_Chính;
 using GoStay.DataDto.Hotel;
 using GoStay.DataDto.HotelDto;
 using GoStay.DataDto.News;
+using GoStay.DataDto.RatingDto;
 using PartnerGostay.Models;
-using System.Linq;
 
 namespace GoStay.Api.Configurations
 {
@@ -87,6 +87,8 @@ namespace GoStay.Api.Configurations
             CreateMap<PagingList<OrderTicket>, PagingList<OrderTicketAdminDto>>().ReverseMap();
 
             CreateMap<VideoModel, VideoNews>().ReverseMap();
+            CreateMap<HotelRating, RatingAdminDto>().ReverseMap();
+
 
         }
     }
