@@ -45,6 +45,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<OrderTicket> OrderTickets { get; set; } = null!;
         public virtual DbSet<OrderTicketDetail> OrderTicketDetails { get; set; } = null!;
         public virtual DbSet<Palletbed> Palletbeds { get; set; } = null!;
+        public virtual DbSet<Permision> Permisions { get; set; } = null!;
         public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
         public virtual DbSet<Picture> Pictures { get; set; } = null!;
         public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
@@ -66,6 +67,7 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<TourVehicle> TourVehicles { get; set; } = null!;
         public virtual DbSet<TypeHotel> TypeHotels { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UserPermision> UserPermisions { get; set; } = null!;
         public virtual DbSet<VGetAllHotel> VGetAllHotels { get; set; } = null!;
         public virtual DbSet<Vehicle> Vehicles { get; set; } = null!;
         public virtual DbSet<VideoNews> VideoNews { get; set; } = null!;
@@ -961,6 +963,13 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Text).HasMaxLength(200);
             });
 
+            modelBuilder.Entity<Permision>(entity =>
+            {
+                entity.ToTable("Permision");
+
+                entity.Property(e => e.Description).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<Phuong>(entity =>
             {
                 entity.ToTable("Phuong");
@@ -1452,6 +1461,23 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.UserVerify)
                     .HasMaxLength(150)
                     .HasColumnName("user_verify");
+            });
+
+            modelBuilder.Entity<UserPermision>(entity =>
+            {
+                entity.ToTable("UserPermision");
+
+                entity.HasOne(d => d.IdPermisionNavigation)
+                    .WithMany(p => p.UserPermisions)
+                    .HasForeignKey(d => d.IdPermision)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserPermision_Permision");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserPermisions)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserPermision_users");
             });
 
 			modelBuilder.Entity<VGetAllHotel>(entity =>
