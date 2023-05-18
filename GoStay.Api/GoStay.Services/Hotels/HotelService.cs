@@ -60,7 +60,7 @@ namespace GoStay.Services.Hotels
                                                 .Include(x => x.Pictures.Take(5))
                                                 .Include(x => x.IdTinhThanhNavigation)
                                                 .Include(x => x.IdQuanNavigation)
-                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1))
+                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted!=1))
                                                 .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
 												.Take(number)
                                                 .ToList();
