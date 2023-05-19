@@ -1,4 +1,5 @@
 
+using BaoTangBn.Service.AuthorityServices;
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.User;
@@ -12,10 +13,13 @@ namespace GoStay.Api.Controllers
 	public class UserController : ControllerBase
 	{
         private readonly IUserService _userServices;
+        private readonly IPermisionService _permisionServices;
 
-        public UserController(IUserService userServices)
+
+        public UserController(IUserService userServices, IPermisionService permisionServices)
 		{
             _userServices=userServices;
+            _permisionServices=permisionServices;
         }
 
         [HttpGet("all-user")]
@@ -84,6 +88,17 @@ namespace GoStay.Api.Controllers
             var items = _userServices.CheckUserByAccount(email,password);
             return items;
         }
-
+        [HttpPost("check-user-permision")]
+        public ResponseBase CheckUserPermision(CheckPermisionParam param)
+        {
+            var items = _permisionServices.CheckUserPermision(param.Permission, param.UserId);
+            return items;
+        }
+        [HttpGet("user-permission")]
+        public ResponseBase GetUserPermission(int Userid)
+        {
+            var items = _permisionServices.GetUserPermission(Userid);
+            return items;
+        }
     }
 }

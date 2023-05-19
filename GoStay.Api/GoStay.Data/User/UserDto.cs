@@ -11,4 +11,9 @@ namespace GoStay.DataDto.User
         public int UserId { get; set; }
         public int Usertype { get; set; }
     }
+    public class CheckPermisionParam
+    {
+        public int[] Permission { get; set; }
+        public int UserId { get; set; }
+    }
 }
