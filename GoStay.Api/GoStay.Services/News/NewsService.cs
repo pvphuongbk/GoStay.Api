@@ -651,9 +651,9 @@ namespace GoStay.Services.Newss
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var cate = _newsCategoryRepository.FindAll().ToList();
+                var cate = _newsCategoryRepository.FindAll(x=>x.Iddomain==2).ToList();
                 var lan = _languageRepository.FindAll().ToList();
-                var topic = _topicRepository.FindAll().ToList();
+                var topic = _topicRepository.FindAll(x => x.Iddomain == 2).ToList();
                 DataSupportNews data = new DataSupportNews()
                 {
                     ListCategory = cate,

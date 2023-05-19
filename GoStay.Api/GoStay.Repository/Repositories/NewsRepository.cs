@@ -13,6 +13,8 @@ namespace GoStay.Repository.Repositories
             var p = new DynamicParameters();
             p.Add("@UserId", filter.UserId == null ? null : string.Join(",", filter.UserId), System.Data.DbType.String);
             p.Add("@Status", filter.Status == null ? null : string.Join(",", filter.Status), System.Data.DbType.String);
+            p.Add("@IdDomain", filter.IdDomain == null ? null : string.Join(",", filter.IdDomain), System.Data.DbType.String);
+
             p.Add("@IdCategory", filter.IdCategory == null ? null : string.Join(",", filter.IdCategory), System.Data.DbType.String);
             p.Add("@IdTopic", filter.IdTopic == null ? null : string.Join(",", filter.IdTopic), System.Data.DbType.String);
             p.Add("@TextSearch", filter.TextSearch == null ? null : string.Join(",", filter.TextSearch), System.Data.DbType.String);

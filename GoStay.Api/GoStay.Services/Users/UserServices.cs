@@ -190,5 +190,17 @@ namespace GoStay.Services.Users
 
             return response;
 		}
+        public User GetById(int Id)
+        {
+            try
+            {
+                var user = _userRepository.GetById(Id);
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 	}
 }
