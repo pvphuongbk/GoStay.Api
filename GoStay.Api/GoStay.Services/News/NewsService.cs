@@ -627,7 +627,7 @@ namespace GoStay.Services.Newss
                     DateCreate = news.DateCreate,
                     Language = news.Lang.Language1,
                     UserName = news.IdUserNavigation.UserName,
-                   
+                    Click = news.Click,
                 };
                 newsDetail.Avatar = news.IdUserNavigation.Picture;
                 response.Code = ErrorCodeMessage.Success.Key;

@@ -128,6 +128,7 @@ namespace GoStay.Services.WebSupport
                         .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
                         .Include(x => x.IdhotelNavigation)
                         .Include(x => x.Pictures)
+                        .OrderByDescending(x=>x.Id)
                         .ConvertToPaging(1, 1);
                 }
                 else
@@ -147,6 +148,7 @@ namespace GoStay.Services.WebSupport
                             .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
                             .Include(x => x.IdhotelNavigation)
                             .Include(x => x.Pictures)
+                            .OrderByDescending(x => x.Id)
                             .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
                     }
                     else
@@ -158,6 +160,7 @@ namespace GoStay.Services.WebSupport
                             .Include(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
                             .Include(x => x.IdhotelNavigation)
                             .Include(x => x.Pictures)
+                            .OrderByDescending(x => x.Id)
                             .ConvertToPaging(request.PageSize ?? 10, request.PageIndex ?? 1);
                     }
                 }

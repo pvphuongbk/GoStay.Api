@@ -26,6 +26,7 @@ namespace GoStay.DataAccess.Entities
         public string? Name { get; set; }
         public string? Descriptions { get; set; }
         public string? KeySearch { get; set; }
+        public int? Click { get; set; }
         public virtual NewsCategory? IdCategoryNavigation { get; set; }
         public virtual User? IdUserNavigation { get; set; }
         public virtual Language? Lang { get; set; }
