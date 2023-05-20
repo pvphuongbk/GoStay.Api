@@ -122,6 +122,7 @@ namespace GoStay.DataDto.News
         {
             get;set;
         }
+        public int? Click { get; set; }
     }
     public class GetListVideoNewsParam
     {
@@ -173,6 +174,7 @@ namespace GoStay.DataDto.News
         public string? UserName { get; set; }
         public DateTime? DateCreate { get; set; }
         public string? Avatar { get; set; }
+        public int? Click { get; set; }
     }
     public class VideoModel
     {
