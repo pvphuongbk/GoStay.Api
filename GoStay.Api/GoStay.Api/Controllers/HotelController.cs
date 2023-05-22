@@ -190,11 +190,17 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpGet("change-room-status")]
-        public ResponseBase ChangeRoomStatus(int IdRoom, int RoomStatus)
+        public ResponseBase ChangeRoomStatus(int IdRoom, int Status)
         {
-            var result = _hotelServices.ChangeRoomStatus(IdRoom, RoomStatus);
+            var result = _hotelServices.ChangeRoomStatus(IdRoom, Status);
             return result;
         }
 
+        [HttpGet("change-status-room")]
+        public ResponseBase ChangeStatusRoom(int IdRoom, int RoomStatus)
+        {
+            var result = _hotelServices.ChangeStatusRoom(IdRoom, RoomStatus);
+            return result;
+        }
     }
 }
