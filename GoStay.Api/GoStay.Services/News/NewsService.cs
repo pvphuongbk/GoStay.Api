@@ -221,7 +221,7 @@ namespace GoStay.Services.Newss
                     LangId = (int)news.LangId,
                     PictureTitle = "",
                     Click = 0,
-                    Iddomain=1
+                    Iddomain= news.IdDomain
                 };
                 
                 _newsRepository.Insert(newsEntity);
@@ -276,6 +276,8 @@ namespace GoStay.Services.Newss
                 newsEntity.Keysearch = news.Keysearch;
                 newsEntity.DateEdit = DateTime.UtcNow;
                 newsEntity.LangId = (int)news.LangId;
+                newsEntity.Iddomain = (int)news.IdDomain;
+
 
 
                 _newsRepository.Update(newsEntity);

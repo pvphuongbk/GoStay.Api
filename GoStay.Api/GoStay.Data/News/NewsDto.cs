@@ -14,12 +14,16 @@ namespace GoStay.DataDto.News
         public string? Description { get; set; }
         public int? LangId { get; set; }
         public List<int>? IdTopics { get; set; }
+        public int? IdDomain { get; set; }
+
     }
     public partial class NewsDetailDto
     {
         public int? Id { get; set; }
         public int? IdCategory { get; set; }
         public int? IdUser { get; set; }
+        public int? IdDomain { get; set; }
+
         public byte? Status { get; set; }
         public string? Title { get; set; } = null!;
         public string? Content { get; set; }
