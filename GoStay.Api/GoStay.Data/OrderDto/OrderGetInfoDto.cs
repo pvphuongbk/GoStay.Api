@@ -66,6 +66,7 @@ namespace GoStay.Data.OrderDto
     {
         public int? Id { get; set; }
         public int? Idhotel { get; set; }
+        public int? Iduser { get; set; }
         public string HotelName { get; set; }
         public string? Address { get; set; }
         public int? Rating { get; set; }

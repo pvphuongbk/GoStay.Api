@@ -15,7 +15,6 @@ namespace GoStay.DataDto.News
         public int? LangId { get; set; }
         public List<int>? IdTopics { get; set; }
         public int? IdDomain { get; set; }
-
     }
     public partial class NewsDetailDto
     {
