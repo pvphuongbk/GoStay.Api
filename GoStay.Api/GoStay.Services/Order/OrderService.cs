@@ -126,13 +126,13 @@ namespace GoStay.Services.Orders
                 Order ordercheck = null;
                 if (orderDetail.DetailStyle == 1)
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status != 3)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status != 3 && x.Status != 4)
                         .Include(x => x.OrderDetails)
                         .SingleOrDefault();
                 }
                 if (orderDetail.DetailStyle == 2)
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status != 3)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status != 3 && x.Status != 4)
                         .Include(x => x.OrderDetails)
                         .SingleOrDefault();
                 }
@@ -218,7 +218,7 @@ namespace GoStay.Services.Orders
             try
             {
 
-                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == UserId && x.IdHotel == IdHotel && x.Status != 3 && x.OrderDetails.Where(y => y.IdRoom == IdRoom).Any());
+                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == UserId && x.IdHotel == IdHotel && x.Status != 3 && x.Status != 4 && x.OrderDetails.Where(y => y.IdRoom == IdRoom).Any());
                 var count = ordercheck.Count();
                 if (ordercheck.Count()==0)
                 {
