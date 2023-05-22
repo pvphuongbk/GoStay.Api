@@ -752,7 +752,7 @@ namespace GoStay.Services.WebSupport
             }
 
         }
-        public ResponseBase ChangeRoomStatus(int IdRoom, int RoomStatus)
+        public ResponseBase ChangeRoomStatus(int IdRoom, int Status)
         {
             ResponseBase response = new ResponseBase();
 
@@ -760,7 +760,28 @@ namespace GoStay.Services.WebSupport
             {
                 _commonUoW.BeginTransaction();
                 var room = _roomRepository.FindAll(x=>x.Id==IdRoom).SingleOrDefault();
-                room.Status = RoomStatus;
+                room.Status = Status;
+                _roomRepository.Update(room);
+                _commonUoW.Commit();
+                response.Data = "success";
+                return response;
+
+            }
+            catch
+            {
+                response.Data = "exception";
+                return response;
+            }
+        }
+        public ResponseBase ChangeStatusRoom(int IdRoom, int RoomStatus)
+        {
+            ResponseBase response = new ResponseBase();
+
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var room = _roomRepository.FindAll(x => x.Id == IdRoom).SingleOrDefault();
+                room.RoomStatus = RoomStatus;
                 _roomRepository.Update(room);
                 _commonUoW.Commit();
                 response.Data = "success";
