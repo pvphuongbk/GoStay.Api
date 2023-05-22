@@ -101,6 +101,8 @@ namespace GoStay.Services.Orders
                     orderDetailEntity.Price = (decimal)tour.Price;
                     orderDetailEntity.Discount = tour.Discount;
                     orderDetailEntity.Num = 0;
+                    orderDetailEntity.IdRoom = 9589;
+
                 }
                 _OrderDetailRepository.Insert(orderDetailEntity);
                 _commonUoW.Commit();
