@@ -87,7 +87,7 @@ namespace GoStay.Services.Newss
 
                 foreach(var Id in categories)
                 {
-                    var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, PageIndex = 1, PageSize = 10 });
+                    var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id,IdDomain=1, PageIndex = 1, PageSize = 10 });
                     data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                                             .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
