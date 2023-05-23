@@ -5,6 +5,8 @@
         public decimal? PriceMin { get; set; }
         public decimal? PriceMax { get; set; }
         public List<int?>? Ratings { get; set; }
+        public List<int>? Criterion { get; set; }
+
         public List<int>? IdQuans { get; set; }
         public List<int>? IdPhuong { get; set; }
         public List<int>? Types { get; set; }

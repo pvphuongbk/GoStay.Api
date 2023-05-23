@@ -1,4 +1,5 @@
 ﻿using GoStay.DataAccess.Entities;
+using GoStay.DataDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,34 @@ using System.Threading.Tasks;
 
 namespace GoStay.Data.TourDto
 {
+    public class TourAdminDto
+    {
+        public int Id { get; set; }
+        public string? TourName { get; set; }
+        public byte IdTourStyle { get; set; }
+        public byte IdTourTopic { get; set; }
+        public int? IdUser { get; set; }
+        public string? Descriptions { get; set; }
+        public int? InDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public int? IdStartTime { get; set; }
+        public int IdDistrictFrom { get; set; }
+        public double Price { get; set; }
+        public byte? Discount { get; set; }
+        public int? Rating { get; set; }
+        public string? Content { get; set; }
+        public int TourSize { get; set; }
+        public string? Locations { get; set; }
+        public int Style { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public double ActualPrice { get; set; }
+        public byte Status { get; set; }
+        public int Deleted { get; set; }
+        public double? PriceChild { get; set; }
+        public int? NumTour { get; set; }
+        public int? Songuoidadat { get; set; }
+        public string? SearchKey { get; set; }
+    }
     public class TourOrderDto
     {
         public int Id { get; set; }
@@ -49,5 +78,76 @@ namespace GoStay.Data.TourDto
         public string? Details { get; set; }
         public byte? Stt { get; set; }
 
+    }
+    public class DataSupportTour
+    {
+        public List<TourStyleDto> Styles { get; set; }
+        public List<VehicleDto> Vehicles { get; set; }
+        public List<TourStartTimeDto> StartTimes { get; set; }
+        public List<TourTopicDto> Topics { get; set; }
+        public List<QuanDto> Districts { get; set; }
+        public List<ProvinceDto> Provinces { get; set; }
+        public List<TourRatingDto> Ratings { get; set; }
+    }
+    public class TourStyleDto
+    {
+        public byte Id { get; set; }
+        public string? TourStyle1 { get; set; }
+    }
+    public class VehicleDto
+    {
+        public byte Id { get; set; }
+        public string? Name { get; set; }
+    }
+    public class TourStartTimeDto
+    {
+        public int Id { get; set; }
+        public string? StartDate { get; set; }
+    }
+    public class TourTopicDto
+    {
+        public byte Id { get; set; }
+        public string? TourTopic1 { get; set; }
+    }
+    public class ProvinceDto
+    {
+        public int Id { get; set; }
+        public string? TenTt { get; set; }
+        public int? IdCountry { get; set; }
+    }
+    public class TourRatingDto
+    {
+        public int Id { get; set; }
+        public string? Rating { get; set; }
+    }
+    public class TourAddDto
+    {
+        public int Id { get; set; }
+        public int? IdUser { get; set; }
+
+        public string? TourName { get; set; }
+        public byte IdTourStyle { get; set; }
+        public byte IdTourTopic { get; set; }
+        public string StartDateString { get; set; }
+        public int IdDistrictFrom { get; set; }
+        public int[] IdDistrictTo { get; set; }
+        public double Price { get; set; }
+        public byte? Discount { get; set; }
+        public string? Content { get; set; }
+        public int TourSize { get; set; }
+        public string? Locations { get; set; }
+        public int Style { get; set; }
+        public double ActualPrice { get; set; }
+        public int[]? Vehicle { get; set; }
+        public int? Rating { get; set; }
+        public string? Descriptions { get; set; }
+        public int? IdStartTime { get; set; }
+
+    }
+    public class TourAddParam
+    {
+        public Tour tourAddDto { get; set; }
+        public int[] IdDistrictTo { get; set; }
+        public int[] Vehicles { get; set; }
     }
 }
