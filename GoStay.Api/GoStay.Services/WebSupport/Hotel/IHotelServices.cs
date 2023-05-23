@@ -19,6 +19,8 @@ namespace GoStay.Services.WebSupport
         public ResponseBase AddAlbumRoom(int IdRoom, string albumName);
         public ResponseBase AddPictureRoom(int Obj, int IdAlbum, int type, int userId, UploadImagesResponse imagesResponse);
         public string AddNewPicture(Picture picture);
+        public string DeletePicture(int Id);
+
         public ResponseBase GetRoomList(RequestGetListRoom request);
         public ResponseBase GetHotelListByUser(int IdUser);
         public ResponseBase EditRoom(HotelRoom data, List<int> view, List<int> service, List<int> picture);
