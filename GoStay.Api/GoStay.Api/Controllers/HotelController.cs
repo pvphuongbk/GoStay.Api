@@ -202,5 +202,21 @@ namespace GoStay.Api.Controllers
             var result = _hotelServices.ChangeStatusRoom(IdRoom, RoomStatus);
             return result;
         }
+        [HttpPost("add-picture")]
+        public ResponseBase AddNewPicture(Picture picture)
+        {
+            ResponseBase response = new ResponseBase();
+            var result = _hotelServices.AddNewPicture(picture);
+            response.Data = result;
+            return response;
+        }
+        [HttpDelete("delete-picture")]
+        public ResponseBase DeletePicture(int Id)
+        {
+            ResponseBase response = new ResponseBase();
+            var result = _hotelServices.DeletePicture(Id);
+            response.Data = result;
+            return response;
+        }
     }
 }
