@@ -25,6 +25,8 @@ namespace GoStay.DataAccess.Entities
         public string? Description { get; set; }
         public decimal? AvgNight { get; set; }
         public int? Calender { get; set; }
+        public bool? Criterion { get; set; }
+
         public int? Rating { get; set; }
         public string? Content { get; set; }
         public int? Type { get; set; }

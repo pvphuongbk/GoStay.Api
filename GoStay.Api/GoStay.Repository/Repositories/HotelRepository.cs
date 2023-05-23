@@ -23,6 +23,8 @@ namespace GoStay.Repository.Repositories
             p.Add("@IdTinhThanh", filter.IdTinhThanh == null ? null : string.Join(",", filter.IdTinhThanh), System.Data.DbType.String);
             p.Add("@IdPhuongs", filter.IdPhuong == null ? null : string.Join(",", filter.IdPhuong), System.Data.DbType.String);
             p.Add("@IdQuans", filter.IdQuans == null ? null : string.Join(",", filter.IdQuans), System.Data.DbType.String);
+            p.Add("@Criterion", filter.Criterion == null ? null : string.Join(",", filter.Criterion), System.Data.DbType.String);
+
             p.Add("@Rating", filter.Ratings == null ? null : string.Join(",", filter.Ratings), System.Data.DbType.String);
             p.Add("@Types", filter.Types == null ? null : string.Join(",", filter.Types), System.Data.DbType.String);
             p.Add("@IdServicesHotel", filter.ServicesHotel == null ? null : string.Join(",", filter.ServicesHotel), System.Data.DbType.String);

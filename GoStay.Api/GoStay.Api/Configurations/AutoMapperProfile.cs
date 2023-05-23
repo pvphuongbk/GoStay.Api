@@ -89,6 +89,14 @@ namespace GoStay.Api.Configurations
             CreateMap<VideoModel, VideoNews>().ReverseMap();
             CreateMap<HotelRating, RatingAdminDto>().ReverseMap();
 
+            CreateMap<TourStyle, TourStyleDto>().ReverseMap();
+            CreateMap<Vehicle, VehicleDto>().ReverseMap();
+            CreateMap<TourStartTime, TourStartTimeDto>().ReverseMap();
+            CreateMap<TourTopic, TourTopicDto>().ReverseMap();
+            CreateMap<TinhThanh, ProvinceDto>().ReverseMap();
+            CreateMap<TourRating, TourRatingDto>().ReverseMap();
+            CreateMap<Tour, TourAdminDto>().ReverseMap();
+
 
         }
     }
