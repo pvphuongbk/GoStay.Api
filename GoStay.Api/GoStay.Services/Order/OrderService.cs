@@ -153,14 +153,14 @@ namespace GoStay.Services.Orders
                 if (order.IdUser > 1)
                 {
                     ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status < 3)
-                        .Include(x => x.OrderDetails)
-                        .SingleOrDefault();
+                        .Include(x => x.OrderDetails).OrderBy(x=>x.Status)
+                        .FirstOrDefault();
                 }
                 else
                 {
                     ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status < 3 && x.Session == order.Session)
-                        .Include(x => x.OrderDetails)
-                        .SingleOrDefault();
+                        .Include(x => x.OrderDetails).OrderBy(x => x.Status)
+                        .FirstOrDefault();
                 }
 
                 if (ordercheck is null)
