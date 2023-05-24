@@ -227,7 +227,7 @@ namespace GoStay.Services.Orders
                 }
                 else
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status < 3&& x.Ordercode == order.Ordercode)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status < 3&& x.Session == order.Session)
                     .Include(x => x.OrderDetails)
                     .SingleOrDefault();
                 }
