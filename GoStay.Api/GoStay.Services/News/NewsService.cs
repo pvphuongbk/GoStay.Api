@@ -701,5 +701,35 @@ namespace GoStay.Services.Newss
                 return responseBase;
             }
         }
+        public ResponseBase GetNewsCategoryTotal(int IdDomain)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                List<NewsCategoryTotal> newsTopicTotals = new List<NewsCategoryTotal>();
+                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == IdDomain).Include(x=>x.News);
+
+                foreach (var item in cate)
+                {
+                    newsTopicTotals.Add(new NewsCategoryTotal()
+                    {
+                        Id = item.Id,
+                        Category = item.Category,
+                        Total = item.News.Count(),
+                        Slug = item.Category.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()
+                    });
+                };
+
+                responseBase.Data = newsTopicTotals;
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                return responseBase;
+            }
+            catch (Exception ex)
+            {
+                responseBase.Message = ex.Message;
+                return responseBase;
+            }
+        }
     }
 }
