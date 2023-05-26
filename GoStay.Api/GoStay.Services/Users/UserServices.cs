@@ -2,6 +2,13 @@
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.DataDto.Authen;
+using GoStay.DataDto.Users;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
 
 namespace GoStay.Services.Users
@@ -10,11 +17,14 @@ namespace GoStay.Services.Users
 	{
 		private readonly ICommonRepository<User> _userRepository;
 		private readonly ICommonUoW _commonUoW;
-		public UserService(ICommonRepository<User> userRepository, ICommonUoW commonUoW)
+        private readonly AppSettings _appSettings;
+
+        public UserService(ICommonRepository<User> userRepository, ICommonUoW commonUoW, IOptions<AppSettings> appSettings)
 		{
 			_userRepository = userRepository;
 			_commonUoW = commonUoW;
-		}
+            _appSettings = appSettings.Value;
+        }
 
         public ResponseBase GetAllUser()
         {
@@ -190,6 +200,43 @@ namespace GoStay.Services.Users
 
             return response;
 		}
+        public ResponseBase CheckUserByAccountAndGetToken(string email, string password)
+        {
+            ResponseBase response = new ResponseBase();
+
+            var user = _userRepository.FindAll(x => x.Email == email && x.Password == password).FirstOrDefault();
+            var data = new AuthenticateResponse()
+            {
+                User = user,
+                Token = GenerateJwtToken(user),
+                Status = "active"
+            };
+            if (user == null)
+                data.Status = "not found";
+
+            response.Data = data;
+
+            return response;
+        }
+        public string GenerateJwtToken(User user)
+        {
+            // generate token that is valid for 7 days
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim("id", user.UserId.ToString()),
+                    new Claim("Name", user.UserName)
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
         public User GetById(int Id)
         {
             try

@@ -197,5 +197,11 @@ namespace GoStay.DataDto.News
         public List<Language> ListLanguage { get; set; }
         public List<TopicNews> ListTopic { get; set; }
     }
-
+    public class NewsTopicTotal
+    {
+        public int Id { get; set; }
+        public string Topic { get; set; }
+        public string Slug { get; set; }
+        public int Total { get; set; }
+    }
 }

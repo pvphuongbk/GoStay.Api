@@ -48,6 +48,13 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpGet("news-topic-total")]
+        public ResponseBase GetNewsTopicTotal(int IdDomain)
+        {
+            var items = _newsServices.GetNewsTopicTotal(IdDomain);
+            return items;
+        }
+
         [HttpPost("list-video-news")]
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)
         {
