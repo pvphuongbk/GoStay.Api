@@ -23,6 +23,7 @@ namespace GoStay.Services.Newss
         public ResponseBase GetVideoNews(int Id);
         public ResponseBase GetDataSupportNews();
         public ResponseBase GetNewsTopicTotal(int IdDomain);
+        public ResponseBase GetNewsCategoryTotal(int IdDomain);
 
     }
 }
