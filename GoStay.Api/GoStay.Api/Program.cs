@@ -9,6 +9,9 @@ using GoStay.Services.Hotels;
 using GoStay.Api.Configurations;
 using GoStay.Common.Helpers.Order;
 using GoStay.Services;
+using GoStay.DataAccess.Entities;
+using GoStay.DataDto.Users;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
@@ -26,10 +29,11 @@ builder.Services.AddScoped(typeof(IOrderFunction), typeof(OrderFunction));
 //--register Service
 builder.Services.RegisterAssemblyTypesByName(typeof(IHotelService).Assembly,
 	 name => name.EndsWith("Service")) // Condition for name of type
-	 .AsScoped()
-	 .AsImplementedInterfaces()
+.AsScoped()
+.AsImplementedInterfaces()
 	 .Bind();
 builder.Services.AddCommonServices();
+builder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
 
 // Add services to the container.
 builder.Services.AddHttpClient<IMyTypedClientServices, MyTypedClientServices>();

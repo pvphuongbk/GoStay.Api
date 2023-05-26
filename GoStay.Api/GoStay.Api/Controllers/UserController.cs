@@ -2,7 +2,7 @@
 using BaoTangBn.Service.AuthorityServices;
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
-using GoStay.DataDto.User;
+using GoStay.DataDto.Users;
 using GoStay.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
@@ -88,6 +88,13 @@ namespace GoStay.Api.Controllers
             var items = _userServices.CheckUserByAccount(email,password);
             return items;
         }
+        [HttpGet("check-user-by-account-and-get-token")]
+        public ResponseBase CheckUserByAccountAndGetToken(string email, string password)
+        {
+            var items = _userServices.CheckUserByAccountAndGetToken(email, password);
+            return items;
+        }
+
         [HttpPost("check-user-permision")]
         public ResponseBase CheckUserPermision(CheckPermisionParam param)
         {

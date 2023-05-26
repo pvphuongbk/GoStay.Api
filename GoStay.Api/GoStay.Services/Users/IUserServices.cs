@@ -16,6 +16,8 @@ namespace GoStay.Services.Users
         ResponseBase CheckUserByID(int ID);
         ResponseBase UpdateInfo(User user);
         ResponseBase CheckUserByAccount(string email, string password);
+        public ResponseBase CheckUserByAccountAndGetToken(string email, string password);
+
         User GetById(int Id);
 
 

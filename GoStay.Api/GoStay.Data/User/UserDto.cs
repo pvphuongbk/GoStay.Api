@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoStay.DataDto.User
+namespace GoStay.DataDto.Users
 {
     public class SetAuthorParam
     {
@@ -15,5 +15,9 @@ namespace GoStay.DataDto.User
     {
         public int[] Permission { get; set; }
         public int UserId { get; set; }
+    }
+    public class AppSettings
+    {
+        public string Secret { get; set; }
     }
 }
