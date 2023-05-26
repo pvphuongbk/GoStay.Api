@@ -48,19 +48,19 @@ namespace BaoTangBn.Service.AuthorityServices
             {
                 var  result = _userPermisionRepository.FindAll(x => x.IdUser == IdUser).Include(x=>x.IdPermisionNavigation).Select(x=>x.IdPermisionNavigation);
                 var userPermisions = result.Select(x => x.Code).ToList();
-                foreach (var item in permisions)
+                foreach (var item in userPermisions)
                 {
-                    if (userPermisions.Contains(item) == false)
+                    if (permisions.Contains(item) == true)
                     {
-                        response.Code = ErrorCodeMessage.NoPermission.Key;
-                        response.Message = ErrorCodeMessage.NoPermission.Value;
-                        response.Data = false;
+                        response.Code = ErrorCodeMessage.Success.Key;
+                        response.Message = ErrorCodeMessage.Success.Value;
+                        response.Data = true;
                         return response;
                     }
                 }
-                response.Code = ErrorCodeMessage.Success.Key;
-                response.Message = ErrorCodeMessage.Success.Value;
-                response.Data = true;
+                response.Code = ErrorCodeMessage.NoPermission.Key;
+                response.Message = ErrorCodeMessage.NoPermission.Value;
+                response.Data = false;
                 return response;
             }
             catch(Exception ex)
