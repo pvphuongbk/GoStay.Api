@@ -15,7 +15,9 @@
 
         // Tours
         public static string sq_GetListForSearchTours = "sq_GetListForSearchTours";
-        public static string sq_SuggestSearchTour = "sq_SuggestSearchTour";
+        public static string sq_SuggestSearchTour = "sq_SuggestSearchTour"; 
+        public static string sq_GetListToursCompare = "sq_GetListToursCompare"; 
+
         //order
         public static string sq_SearchListOrder = "sq_SearchListOrder";
         public static string sq_GetAllOrderPriceByUser = "sq_GetAllOrderPriceByUser";

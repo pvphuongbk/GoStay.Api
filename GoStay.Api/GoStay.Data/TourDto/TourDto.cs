@@ -150,4 +150,10 @@ namespace GoStay.Data.TourDto
         public int[] IdDistrictTo { get; set; }
         public int[] Vehicles { get; set; }
     }
+    public class CompareTourParam
+    {
+        public string IdTour { get; set; }
+        public int IdUser { get; set; }
+        public string Session { get; set; }
+    }
 }

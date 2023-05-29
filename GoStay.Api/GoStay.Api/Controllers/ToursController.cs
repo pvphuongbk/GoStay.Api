@@ -97,5 +97,17 @@ namespace GoStay.Api.Controllers
             var items = _tourService.RemoveTourDetail(IdDetail);
             return items;
         }
+        [HttpPost("update-tour-to-compare")]
+        public ResponseBase UpdateTourToCompare(CompareTourParam param)
+        {
+            var items = _tourService.UpdateTourToCompare(param);
+            return items;
+        }
+        [HttpGet("list-tour-compare")]
+        public ResponseBase GetListToursCompare(string listId)
+        {
+            var items = _tourService.GetListToursCompare(listId);
+            return items;
+        }
     }
 }
