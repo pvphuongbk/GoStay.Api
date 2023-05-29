@@ -39,5 +39,13 @@ namespace GoStay.Repository.Repositories
 
             return DapperExtensions.QueryDapperStoreProc<SuggestTourDto>(Procedures.sq_SuggestSearchTour, p).ToList();
         }
+
+        public static List<TourInCompareDto> GetListToursCompare(string ListId)
+        {
+            var p = new DynamicParameters();
+            p.Add("@ListId", ListId == null ? null : string.Join(",", ListId), System.Data.DbType.String);
+
+            return DapperExtensions.QueryDapperStoreProc<TourInCompareDto>(Procedures.sq_GetListToursCompare, p).ToList();
+        }
     }
 }

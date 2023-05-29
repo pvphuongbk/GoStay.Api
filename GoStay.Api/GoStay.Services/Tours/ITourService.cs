@@ -19,6 +19,8 @@ namespace GoStay.Services.Tours
         ResponseBase EditTourDetail(TourDetail data);
         ResponseBase DeleteTour(int id);
         ResponseBase RemoveTourDetail(int IdDetail);
+        ResponseBase UpdateTourToCompare(CompareTourParam param);
+        ResponseBase GetListToursCompare(string ListId);
 
     }
 }

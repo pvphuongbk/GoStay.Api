@@ -34,6 +34,7 @@ namespace GoStay.Services.Tours
         private readonly ICommonRepository<TourStartTime> _tourStartTimeRepository;
         private readonly ICommonRepository<Vehicle> _vehicleRepository;
         private readonly ICommonRepository<TourVehicle> _tourVehicleRepository;
+        private readonly ICommonRepository<CompareTour> _compareTourRepository;
 
         private readonly ICommonUoW _commonUoW;
 
@@ -42,7 +43,8 @@ namespace GoStay.Services.Tours
             ICommonRepository<Picture> pictureRepository, ICommonRepository<TinhThanh> provinceRepository, 
             ICommonRepository<TourDistrictTo> tourLocationToRepository, ICommonRepository<Quan> districtRepository,
             ICommonRepository<TourRating> tourRatingRepository, ICommonRepository<TourStartTime> tourStartTimeRepository,
-            ICommonRepository<Vehicle> vehicleRepository, ICommonUoW commonUoW, ICommonRepository<TourVehicle> tourVehicleRepository)
+            ICommonRepository<Vehicle> vehicleRepository, ICommonUoW commonUoW, ICommonRepository<TourVehicle> tourVehicleRepository,
+            ICommonRepository<CompareTour> compareTourRepository)
         {
             _tourRepository = tourRepository;
             _mapper = mapper;
@@ -58,6 +60,7 @@ namespace GoStay.Services.Tours
             _vehicleRepository = vehicleRepository;
             _commonUoW = commonUoW;
             _tourVehicleRepository = tourVehicleRepository;
+            _compareTourRepository = compareTourRepository;
         }
 
         public ResponseBase SuggestTour(string searchText)
@@ -491,6 +494,85 @@ namespace GoStay.Services.Tours
                 _commonUoW.RollBack();
                 return 0;
             }
+        }
+
+        public ResponseBase UpdateTourToCompare(CompareTourParam param)
+        {
+            ResponseBase response = new ResponseBase();
+
+            try
+            {
+                _commonUoW.BeginTransaction();
+
+                var comparetour = _compareTourRepository.FindAll(x=>x.IdUser==param.IdUser 
+                                    && x.Session == param.Session && x.Deleted==false).SingleOrDefault();
+                if (comparetour==null)
+                {
+                    var entity = new CompareTour { IdTours = param.IdTour + ",", Session = param.Session, IdUser = param.IdUser, Deleted = false };
+                    _compareTourRepository.Insert(entity);
+                    _commonUoW.Commit();
+                    response.Data = entity.IdTours;
+                    return response;
+                }
+                else
+                {
+                    if(comparetour.IdTours.Contains(param.IdTour) == true)
+                    {
+                        _commonUoW.Commit();
+                        response.Data = comparetour.IdTours;
+                        return response;
+                    }
+                    var temp = comparetour.IdTours.Remove(comparetour.IdTours.Length - 1);
+                    var stringIdA = temp.Split(",");
+
+                    var listId = Array.ConvertAll<string, int>(stringIdA, int.Parse).ToList();
+                    if (listId.Count() == 10)
+                    {
+
+                        listId.RemoveAt(0);
+                        comparetour.IdTours = "";
+                        foreach (var item in listId)
+                        {
+                            comparetour.IdTours += $"{item},";
+                        }
+                    }    
+                    comparetour.IdTours = comparetour.IdTours+ $"{param.IdTour},";
+                    _compareTourRepository.Update(comparetour);
+                    _commonUoW.Commit();
+                    response.Data = comparetour.IdTours;
+                    return response;
+                }    
+            }
+            catch(Exception ex)
+            {
+                _commonUoW.RollBack();
+                response.Data = ex.Message;
+                return response;
+            }
+        }
+
+        public ResponseBase GetListToursCompare( string ListId)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var Data = TourRepository.GetListToursCompare(ListId);
+                Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()));
+                response.Data = Data;
+                return response;
+            }
+            catch
+            {
+                response.Data = new TourContentDto();
+                return response;
+            }
+
         }
     }
 }

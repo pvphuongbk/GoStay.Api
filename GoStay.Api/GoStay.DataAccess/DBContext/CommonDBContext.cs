@@ -22,6 +22,7 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
+        public virtual DbSet<CompareTour> CompareTours { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Domain> Domains { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
@@ -49,9 +50,11 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Phuong> Phuongs { get; set; } = null!;
         public virtual DbSet<Picture> Pictures { get; set; } = null!;
         public virtual DbSet<PriceRange> PriceRanges { get; set; } = null!;
+        public virtual DbSet<Pricepolicy> Pricepolicies { get; set; } = null!;
         public virtual DbSet<Quan> Quans { get; set; } = null!;
         public virtual DbSet<RoomMameniti> RoomMamenitis { get; set; } = null!;
         public virtual DbSet<RoomView> RoomViews { get; set; } = null!;
+        public virtual DbSet<SchedulerRoomPrice> SchedulerRoomPrices { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
         public virtual DbSet<TicketPassenger> TicketPassengers { get; set; } = null!;
         public virtual DbSet<TinhThanh> TinhThanhs { get; set; } = null!;
@@ -254,6 +257,15 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Stt).HasDefaultValueSql("((10))");
 
                 entity.Property(e => e.Title).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<CompareTour>(entity =>
+            {
+                entity.Property(e => e.IdTours)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Session).HasMaxLength(100);
             });
 
             modelBuilder.Entity<Country>(entity =>
@@ -1059,9 +1071,31 @@ namespace GoStay.DataAccess.DBContext
 					.HasColumnName("TITLE_VND");
 			});
 
-			modelBuilder.Entity<Quan>(entity =>
-			{
-				entity.ToTable("Quan");
+            modelBuilder.Entity<Pricepolicy>(entity =>
+            {
+                entity.HasKey(e => new { e.Start, e.End, e.RoomId })
+                    .HasName("PK_Pricepolicy_1");
+
+                entity.ToTable("Pricepolicy");
+
+                entity.Property(e => e.RoomId).HasColumnName("RoomID");
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
+
+                entity.Property(e => e.RecurrenceRule)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Quan>(entity =>
+            {
+                entity.ToTable("Quan");
 
                 entity.Property(e => e.Diengiai)
                     .HasMaxLength(50)
@@ -1117,6 +1151,35 @@ namespace GoStay.DataAccess.DBContext
                     .WithMany(p => p.RoomViews)
                     .HasForeignKey(d => d.IdView)
                     .HasConstraintName("FK_RoomViews_RoomViews");
+            });
+
+            modelBuilder.Entity<SchedulerRoomPrice>(entity =>
+            {
+                entity.HasKey(e => new { e.Start, e.End, e.RoomId, e.RecurrenceRule });
+
+                entity.Property(e => e.RoomId).HasColumnName("RoomID");
+
+                entity.Property(e => e.RecurrenceRule)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Attendees)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
+
+                entity.Property(e => e.PriceId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("PriceID");
+
+                entity.Property(e => e.RecurrenceException)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.RecurrenceId).HasColumnName("RecurrenceID");
             });
 
             modelBuilder.Entity<Service>(entity =>
@@ -1419,9 +1482,13 @@ namespace GoStay.DataAccess.DBContext
 
 				entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
 
-				entity.Property(e => e.LastName)
-					.HasMaxLength(70)
-					.HasColumnName("last_name");
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(70)
+                    .HasColumnName("last_name");
+
+                entity.Property(e => e.ManagerId)
+                    .HasColumnName("managerId")
+                    .HasDefaultValueSql("((84))");
 
 				entity.Property(e => e.MobileNo)
 					.HasMaxLength(150)
