@@ -209,6 +209,8 @@ namespace GoStay.DataDto.News
     {
         public int Id { get; set; }
         public string Category { get; set; }
+        public string? CategoryEng { get; set; }
+        public string? CategoryChi { get; set; }
         public string Slug { get; set; }
         public int Total { get; set; }
     }

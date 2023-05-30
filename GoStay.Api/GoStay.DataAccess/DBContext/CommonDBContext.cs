@@ -781,6 +781,8 @@ namespace GoStay.DataAccess.DBContext
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Prepayment).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.Session)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -1157,6 +1159,10 @@ namespace GoStay.DataAccess.DBContext
             {
                 entity.HasKey(e => new { e.Start, e.End, e.RoomId, e.RecurrenceRule });
 
+                entity.Property(e => e.Start).HasColumnType("datetime");
+
+                entity.Property(e => e.End).HasColumnType("datetime");
+
                 entity.Property(e => e.RoomId).HasColumnName("RoomID");
 
                 entity.Property(e => e.RecurrenceRule)
@@ -1169,11 +1175,9 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.PriceId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("PriceID");
+                entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
 
                 entity.Property(e => e.RecurrenceException)
                     .HasMaxLength(10)

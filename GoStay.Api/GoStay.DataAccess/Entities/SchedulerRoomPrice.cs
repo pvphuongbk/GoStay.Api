@@ -5,10 +5,10 @@ namespace GoStay.DataAccess.Entities
 {
     public partial class SchedulerRoomPrice
     {
-        public int PriceId { get; set; }
-        public double Price { get; set; }
-        public int Start { get; set; }
-        public int End { get; set; }
+        public int Id { get; set; }
+        public double Title { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
         public int RoomId { get; set; }
         public string RecurrenceRule { get; set; } = null!;
         public bool? IsAllDay { get; set; }
