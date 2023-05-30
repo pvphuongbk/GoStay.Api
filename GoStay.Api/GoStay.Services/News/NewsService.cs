@@ -716,7 +716,9 @@ namespace GoStay.Services.Newss
                         Id = item.Id,
                         Category = item.Category,
                         Total = item.News.Count(),
-                        Slug = item.Category.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower()
+                        Slug = item.Category.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty).Replace("--", string.Empty).ToLower(),
+                        CategoryChi = item.CategoryChi,
+                        CategoryEng = item.CategoryEng,
                     });
                 };
 
