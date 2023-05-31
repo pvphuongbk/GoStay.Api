@@ -41,5 +41,11 @@ namespace GoStay.Api.Controllers
             var items = _schedulerService.GetListScheduler(month, year, RoomId);
             return items;
         }
+        [HttpDelete("destroy")]
+        public ResponseBase Destroy(int Id)
+        {
+            var items = _schedulerService.Destroy(Id);
+            return items;
+        }
     }
 }
