@@ -6,10 +6,13 @@ using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataDto.Statistical;
 using GoStay.Repository.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace GoStay.Services.Statisticals
 {
+   
     public class SchedulerRoomPriceService : ISchedulerRoomPriceService
     {
         private readonly ICommonRepository<SchedulerRoomPrice> _schedulerRepository;
@@ -28,10 +31,18 @@ namespace GoStay.Services.Statisticals
             try
             {
                 _commonUoW.BeginTransaction();
-
+                var check = _schedulerRepository.FindAll(x => x.RoomId == scheduler.RoomId &&
+                                                            x.Start == scheduler.Start &&
+                                                            x.End == scheduler.End &&
+                                                            x.RecurrenceRule == scheduler.RecurrenceRule).Count();
+                if(check>0)
+                {
+                    responseBase = Update(scheduler);
+                    return responseBase;
+                }    
                 _schedulerRepository.Insert(scheduler);
                 _commonUoW.Commit();
-                responseBase.Data = scheduler.Id;
+                responseBase.Data = scheduler.PriceId;
                 return responseBase;
             }
             catch (Exception e)
@@ -50,7 +61,26 @@ namespace GoStay.Services.Statisticals
 
                 _schedulerRepository.Update(scheduler);
                 _commonUoW.Commit();
-                responseBase.Data = scheduler.Id;
+                responseBase.Data = scheduler.PriceId;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+        public ResponseBase Destroy( int Id)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+
+                _schedulerRepository.Remove(Id);
+                _commonUoW.Commit();
+                responseBase.Data = "success";
                 return responseBase;
             }
             catch (Exception e)

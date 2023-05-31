@@ -1157,33 +1157,31 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<SchedulerRoomPrice>(entity =>
             {
-                entity.HasKey(e => new { e.Start, e.End, e.RoomId, e.RecurrenceRule });
+                entity.HasKey(e => e.PriceId);
 
-                entity.Property(e => e.Start).HasColumnType("datetime");
+                entity.Property(e => e.PriceId).HasColumnName("PriceID");
+
+                entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.End).HasColumnType("datetime");
 
-                entity.Property(e => e.RoomId).HasColumnName("RoomID");
+                entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
+
+                entity.Property(e => e.RecurrenceException)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RecurrenceId).HasColumnName("RecurrenceID");
 
                 entity.Property(e => e.RecurrenceRule)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Attendees)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.RoomId).HasColumnName("RoomID");
 
-                entity.Property(e => e.Description).HasMaxLength(50);
+                entity.Property(e => e.Start).HasColumnType("datetime");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
-
-                entity.Property(e => e.RecurrenceException)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
-                entity.Property(e => e.RecurrenceId).HasColumnName("RecurrenceID");
+                entity.Property(e => e.Title).HasMaxLength(20);
             });
 
             modelBuilder.Entity<Service>(entity =>
