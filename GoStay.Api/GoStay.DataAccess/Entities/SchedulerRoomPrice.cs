@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GoStay.DataAccess.Entities
@@ -6,7 +7,16 @@ namespace GoStay.DataAccess.Entities
     public partial class SchedulerRoomPrice
     {
         public int PriceId { get; set; }
-        public string Title { get; set; } = null!;
+
+        public string Title { get; set; }
+
+        public float Price
+        {
+            get
+            {
+                return float.Parse(Title);
+            }
+        }
 
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
