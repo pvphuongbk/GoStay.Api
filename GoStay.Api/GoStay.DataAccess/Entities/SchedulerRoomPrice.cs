@@ -7,10 +7,12 @@ namespace GoStay.DataAccess.Entities
     {
         public int PriceId { get; set; }
         public string Title { get; set; } = null!;
+
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+
         public int RoomId { get; set; }
-        public string RecurrenceRule { get; set; } = null!;
+        public string? RecurrenceRule { get; set; } = null!;
         public bool? IsAllDay { get; set; }
         public string? Description { get; set; }
         public string? RecurrenceException { get; set; }
