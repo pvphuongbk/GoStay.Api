@@ -116,7 +116,7 @@ namespace GoStay.Services.Statisticals
             {
                 _commonUoW.BeginTransaction();
 
-                var listscheduler = _schedulerRepository.FindAll(x=>x.Start.Year== year && x.Start.Month== month&& x.RoomId== RoomId).ToList();
+                var listscheduler = _schedulerRepository.FindAll(x=>x.Start.Year== year && x.RoomId== RoomId).ToList();
                 _commonUoW.Commit();
                 responseBase.Data = listscheduler;
                 return responseBase;
