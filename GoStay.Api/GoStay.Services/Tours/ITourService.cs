@@ -13,7 +13,7 @@ namespace GoStay.Services.Tours
         ResponseBase GetTourLocationTotal(int IdProvince);
         ResponseBase GetDataSupportTour();
         ResponseBase GetAllTourByUserId(int UserId, int PageIndex, int PageSize);
-        ResponseBase AddTour(Tour data, int[] IdDistrictTo, int[] Vehicles);
+        ResponseBase AddTour(TourDto data, int[] IdDistrictTo, int[] Vehicles);
         ResponseBase AddTourDetail(TourDetail data);
         ResponseBase EditTour(TourAddDto data);
         ResponseBase EditTourDetail(TourDetail data);

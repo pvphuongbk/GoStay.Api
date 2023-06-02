@@ -146,7 +146,7 @@ namespace GoStay.Data.TourDto
     }
     public class TourAddParam
     {
-        public Tour tourAddDto { get; set; }
+        public TourDto tourAddDto { get; set; }
         public int[] IdDistrictTo { get; set; }
         public int[] Vehicles { get; set; }
     }
@@ -155,5 +155,34 @@ namespace GoStay.Data.TourDto
         public string IdTour { get; set; }
         public int IdUser { get; set; }
         public string Session { get; set; }
+    }
+    public  class TourDto
+    {
+        public int Id { get; set; }
+        public string? TourName { get; set; }
+        public byte IdTourStyle { get; set; }
+        public byte IdTourTopic { get; set; }
+        public int? IdUser { get; set; }
+        public string? Descriptions { get; set; }
+        public int? InDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public int? IdStartTime { get; set; }
+        public int IdDistrictFrom { get; set; }
+        public double Price { get; set; }
+        public byte? Discount { get; set; }
+        public int? Rating { get; set; }
+        public string? Content { get; set; }
+        public int TourSize { get; set; }
+        public string? Locations { get; set; }
+        public int Style { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public double ActualPrice { get; set; }
+        public byte Status { get; set; }
+        public int Deleted { get; set; }
+        public double? PriceChild { get; set; }
+        public int? NumTour { get; set; }
+        public int? Songuoidadat { get; set; }
+        public string? SearchKey { get; set; }
+
     }
 }
