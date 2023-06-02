@@ -26,6 +26,7 @@ namespace GoStay.DataAccess.Entities
         public int? Children { get; set; }
         public int? Infant { get; set; }
         public decimal? Prepayment { get; set; }
+        public byte? Style { get; set; }
 
         public virtual OrderPhuongThucTt IdPaymentMethodNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;

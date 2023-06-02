@@ -570,6 +570,8 @@ namespace GoStay.DataAccess.DBContext
                     .HasColumnName("intDate")
                     .HasDefaultValueSql("(datediff(second,'2022-1-1',getdate()))");
 
+                entity.Property(e => e.MinNight).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Name).HasMaxLength(150);
 
                 entity.Property(e => e.NewPrice).HasColumnType("decimal(18, 0)");
@@ -1165,6 +1167,10 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.End).HasColumnType("datetime");
 
+                entity.Property(e => e.EndTimezone)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
 
                 entity.Property(e => e.RecurrenceException)
@@ -1181,7 +1187,13 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Start).HasColumnType("datetime");
 
-                entity.Property(e => e.Title).HasMaxLength(20);
+                entity.Property(e => e.StartTimezone)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Service>(entity =>
