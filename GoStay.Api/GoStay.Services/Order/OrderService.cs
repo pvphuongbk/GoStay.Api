@@ -53,6 +53,7 @@ namespace GoStay.Services.Orders
             {
                 _commonUoW.BeginTransaction();
                 var orderEntity = _mapper.Map<OrderDto, Order>(order);
+                orderEntity.Style = orderDetail.DetailStyle;
                 _OrderRepository.Insert(orderEntity);
                 if (orderDetail.DetailStyle == 1)
                 {

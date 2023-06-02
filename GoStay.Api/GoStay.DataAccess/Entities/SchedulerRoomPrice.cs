@@ -10,13 +10,7 @@ namespace GoStay.DataAccess.Entities
 
         public string Title { get; set; }
 
-        public float Price
-        {
-            get
-            {
-                return float.Parse(Title);
-            }
-        }
+        public double Price { get; set; }
 
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
@@ -28,5 +22,8 @@ namespace GoStay.DataAccess.Entities
         public string? RecurrenceException { get; set; }
         public int? Attendees { get; set; }
         public int? RecurrenceId { get; set; }
+
+        public string? EndTimezone { get; set; }
+        public string? StartTimezone { get; set; }
     }
 }

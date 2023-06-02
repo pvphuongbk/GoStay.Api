@@ -18,7 +18,8 @@ namespace GoStay.Repository.Repositories
             p.Add("@Style", filter.Style == null ? null : string.Join(",", filter.Style), System.Data.DbType.String);
             p.Add("@StartDate", filter.StartDate == null ? null : string.Join(",", filter.StartDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
             p.Add("@EndDate", filter.EndDate == null ? null : string.Join(",", filter.EndDate?.ToString("yyyy-MM-dd")), System.Data.DbType.String);
-
+            p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
+            p.Add("@PageSize", filter.PageSize, System.Data.DbType.Int32);
             return DapperExtensions.QueryDapperStoreProc<OrderSearchOutDto>(Procedures.sq_SearchListOrder, p).ToList();
         }
     }
