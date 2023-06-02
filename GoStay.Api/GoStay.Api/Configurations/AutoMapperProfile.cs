@@ -96,6 +96,8 @@ namespace GoStay.Api.Configurations
             CreateMap<TinhThanh, ProvinceDto>().ReverseMap();
             CreateMap<TourRating, TourRatingDto>().ReverseMap();
             CreateMap<Tour, TourAdminDto>().ReverseMap();
+            CreateMap<TourDto, Tour>().ReverseMap();
+
 
 
         }
