@@ -133,7 +133,7 @@ namespace GoStay.Services.Tours
             {
                 var Data =new List<TourAdminDto>();
 
-                var tours = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1).Skip(PageSize * (PageIndex - 1)).Take(PageSize).ToList();
+                var tours = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1).OrderByDescending(x=>x.Id).Skip(PageSize * (PageIndex - 1)).Take(PageSize).ToList();
                 Data = _mapper.Map<List<Tour>,List<TourAdminDto>>(tours);
 
                 response.Data = Data;
@@ -146,6 +146,30 @@ namespace GoStay.Services.Tours
             }
 
         }
+
+
+        public ResponseBase GetTourByUserIdAndId(int UserId, int Id)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var Data = new TourAdminDto();
+
+                var tours = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1&&x.Id==Id).SingleOrDefault();
+                Data = _mapper.Map<Tour, TourAdminDto>(tours);
+
+                response.Data = Data;
+                return response;
+            }
+            catch
+            {
+                response.Data = new TourAdminDto();
+                return response;
+            }
+
+        }
+
         public ResponseBase GetTourContent(int Id)
         {
             

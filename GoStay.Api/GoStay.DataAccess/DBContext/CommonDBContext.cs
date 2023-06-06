@@ -1174,13 +1174,13 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.IsAllDay).HasColumnName("isAllDay");
 
                 entity.Property(e => e.RecurrenceException)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RecurrenceId).HasColumnName("RecurrenceID");
 
                 entity.Property(e => e.RecurrenceRule)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RoomId).HasColumnName("RoomID");
