@@ -61,6 +61,13 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
+        [HttpGet("tour-by-id")]
+        public ResponseBase GetTourByUserIdAndId(int UserId, int Id)
+        {
+            var items = _tourService.GetTourByUserIdAndId(UserId, Id);
+            return items;
+        }
+
         [HttpPost("add-tour")]
         public ResponseBase AddTour(TourAddParam param)
         {
