@@ -35,6 +35,9 @@ namespace GoStay.Data.TourDto
         public int? NumTour { get; set; }
         public int? Songuoidadat { get; set; }
         public string? SearchKey { get; set; }
+        public int[] IdDistrictTo { get; set; }
+        public byte[] Vehicles { get; set; }
+
     }
     public class TourOrderDto
     {

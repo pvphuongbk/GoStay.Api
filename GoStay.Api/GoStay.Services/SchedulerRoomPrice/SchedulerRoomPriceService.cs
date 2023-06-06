@@ -161,7 +161,7 @@ namespace GoStay.Services.Statisticals
                     {
                         if(t1==tEx)
                         {
-
+                            continue;
                         }    
                     }    
 
@@ -182,8 +182,9 @@ namespace GoStay.Services.Statisticals
                             var m = int.Parse(until.Substring(4, 5));
                             var d = int.Parse(until.Substring(6, 7));
                             var tUntil = new DateTime(y, m, d);
-                            if (t1 <= tUntil)
+                            if (t1 > tUntil)
                             {
+                                continue;
                             }
                         }
 
