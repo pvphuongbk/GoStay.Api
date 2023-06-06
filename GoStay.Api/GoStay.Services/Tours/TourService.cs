@@ -158,6 +158,8 @@ namespace GoStay.Services.Tours
 
                 var tours = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1&&x.Id==Id).SingleOrDefault();
                 Data = _mapper.Map<Tour, TourAdminDto>(tours);
+                Data.IdDistrictTo = _tourLocationToRepository.FindAll(x => x.IdTour == Id).Select(x => x.IdDistrictTo).ToArray();
+                Data.Vehicles = _tourVehicleRepository.FindAll(x => x.IdTour == Id).Select(x => x.IdVehicle).ToArray();
 
                 response.Data = Data;
                 return response;
