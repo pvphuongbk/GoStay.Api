@@ -1163,6 +1163,10 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.PriceId).HasColumnName("PriceID");
 
+                entity.Property(e => e.DateCreate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.End).HasColumnType("datetime");
