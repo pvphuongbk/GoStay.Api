@@ -47,5 +47,12 @@ namespace GoStay.Api.Controllers
             var items = _schedulerService.Destroy(Id);
             return items;
         }
+
+        [HttpGet("get-price")]
+        public ResponseBase GetPrice(int month, int year, int RoomId, int day)
+        {
+            var items = _schedulerService.GetPrice(month,  year,  RoomId,  day);
+            return items;
+        }
     }
 }

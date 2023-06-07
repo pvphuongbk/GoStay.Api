@@ -132,11 +132,11 @@ namespace GoStay.Services.Tours
             try
             {
                 var Data =new List<TourAdminDto>();
-
+                var count = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1).Count();
                 var tours = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1).OrderByDescending(x=>x.Id).Skip(PageSize * (PageIndex - 1)).Take(PageSize).ToList();
                 Data = _mapper.Map<List<Tour>,List<TourAdminDto>>(tours);
-
                 response.Data = Data;
+                response.Count = count;
                 return response;
             }
             catch

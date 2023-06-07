@@ -13,8 +13,7 @@ namespace GoStay.Services.Statisticals
         public ResponseBase GetScheduler(int Id);
         public ResponseBase GetListScheduler(int month, int year, int RoomId);
         public ResponseBase Destroy(int Id);
-
-
+        public ResponseBase GetPrice(int month, int year, int RoomId, int day);
 
     }
 }

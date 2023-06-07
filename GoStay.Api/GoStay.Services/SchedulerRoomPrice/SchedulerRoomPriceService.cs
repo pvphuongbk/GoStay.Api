@@ -139,8 +139,8 @@ namespace GoStay.Services.Statisticals
                 double result = 0;
                 _commonUoW.BeginTransaction();
                 var t1 = new DateTime(year, month, day);
-                var t2 = t1.DayOfWeek.ToString().Substring(0,1);
-                var scheduler = _schedulerRepository.FindAll(x => x.RoomId == RoomId && x.Start.Year >= year&& x.Start.Month>= month);
+                var t2 = t1.DayOfWeek.ToString().Substring(0,2).ToUpper();
+                var scheduler = _schedulerRepository.FindAll(x => x.RoomId == RoomId && x.Start.Year <= year&& x.Start.Month<= month);
                 foreach(var item in scheduler)
                 {
                     List<DateTime> tException = new List<DateTime>();
@@ -150,9 +150,13 @@ namespace GoStay.Services.Statisticals
                         var listEx = item.RecurrenceException.Split(",");
                         foreach (var ex in listEx)
                         {
-                            var yEx = int.Parse(ex.Substring(0, 3));
-                            var mEx = int.Parse(ex.Substring(4, 5));
-                            var dEx = int.Parse(ex.Substring(6, 7));
+                            var x1 = ex.Substring(0, 4);
+                            var x2 = ex.Substring(4, 2);
+                            var x3 = ex.Substring(6, 2);
+
+                            var yEx = int.Parse(ex.Substring(0, 4));
+                            var mEx = int.Parse(ex.Substring(4, 2));
+                            var dEx = int.Parse(ex.Substring(6, 2));
                             var tEx = new DateTime(yEx, mEx, dEx);
                             tException.Add(tEx);
                         }
@@ -170,6 +174,8 @@ namespace GoStay.Services.Statisticals
                         var RecurrenceRule = GetRecurrenceRule(item.RecurrenceRule);
                         var freq = "";
                         var byday = "";
+                        var bymonthday = "";
+
                         var count = "";
                         var interval = "";
                         var until = "";
@@ -178,9 +184,9 @@ namespace GoStay.Services.Statisticals
 
                         if (RecurrenceRule.TryGetValue("UNTIL", out until))
                         {
-                            var y = int.Parse(until.Substring(0, 3));
-                            var m = int.Parse(until.Substring(4, 5));
-                            var d = int.Parse(until.Substring(6, 7));
+                            var y = int.Parse(until.Substring(0, 4));
+                            var m = int.Parse(until.Substring(4, 2));
+                            var d = int.Parse(until.Substring(6, 2));
                             var tUntil = new DateTime(y, m, d);
                             if (t1 > tUntil)
                             {
@@ -192,50 +198,96 @@ namespace GoStay.Services.Statisticals
                         {
                             if (byday.Contains(t2))
                             {
+                                var DayStart = GetNearestDay(item.Start, (int)t1.DayOfWeek);
+                                int countF = 0;
+                                int intervalF = 1;
+                                int i = 1;
+                                if (RecurrenceRule.TryGetValue("COUNT", out count)) 
+                                {
+                                    countF = int.Parse(count);
+                                } 
+                                    
+
+                                if (RecurrenceRule.TryGetValue("INTERVAL", out interval)) 
+                                {
+                                    intervalF = int.Parse(interval);
+                                }
+                                if (countF == 0)
+                                {
+                                    while (DayStart <= t1)
+                                    {
+                                        if (DayStart == t1)
+                                        {
+                                            responseBase.Data = item.Price;
+                                            return responseBase;
+                                        }
+
+                                        DayStart = DayStart.AddDays(intervalF * 7 * i);
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    while (DayStart <= t1 && i<=countF)
+                                    {
+                                        if (DayStart == t1)
+                                        {
+                                            responseBase.Data = item.Price;
+                                            return responseBase;
+                                        }
+
+                                        DayStart = DayStart.AddDays(intervalF * 7 * i);
+                                        i++;
+                                    }
+                                }    
 
                             }
+                            else
+                            {
+                                continue;
+                            }    
                         }
+                        if (RecurrenceRule.TryGetValue("BYMONTHDAY", out byday))
+                        {
+                            if (byday.Contains(t2))
+                            {
 
 
+                                //if (RecurrenceRule.TryGetValue("COUNT", out count))
+                                //{
+                                //    if (value.Contains(t2))
+                                //    {
 
+                                //    }
+                                //}
 
+                                //if (RecurrenceRule.TryGetValue("INTERVAL", out interval))
+                                //{
+                                //    if (value.Contains(t2))
+                                //    {
 
-                        //if (RecurrenceRule.TryGetValue("FREQ", out freq))
-                        //{
-                        //    if (value.Contains(t2))
-                        //    {
-
-                        //    }
-                        //}
-
-                        //if (RecurrenceRule.TryGetValue("COUNT", out count))
-                        //{
-                        //    if (value.Contains(t2))
-                        //    {
-
-                        //    }
-                        //}
-
-                        //if (RecurrenceRule.TryGetValue("INTERVAL", out interval))
-                        //{
-                        //    if (value.Contains(t2))
-                        //    {
-
-                        //    }
-                        //}
-
+                                //    }
+                                //}
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
 
                     }
                     else
                     {
                         if( t1 > item.Start && t1<item.End)
                         {
-                            result = (double)item.Price;
-                        }    
+                            responseBase.Data = (double)item.Price;
+                            return responseBase;
+
+                        }
                     }    
                 }    
                 _commonUoW.Commit();
-                responseBase.Data = scheduler;
+                responseBase.Data = 0;
                 return responseBase;
             }
             catch (Exception e)
@@ -258,17 +310,20 @@ namespace GoStay.Services.Statisticals
             }
             return result;
         }
-        public int GetNearestDay(DateTime date, int dayofweek)
+        public DateTime GetNearestDay(DateTime date, int dayofweek)
         {
             var t2 = ((int)date.DayOfWeek);
-            if(dayofweek> t2)
+            var num = dayofweek - t2;
+            var t3 = new DateTime();
+            if (num >= 0)
             {
-                return dayofweek - t2;
+                t3 = date.AddDays(num);
             }
             else
             {
-                return t2- dayofweek;
-            }    
+                t3 = date.AddDays(7 + num);
+            }
+            return t3;
         }
     }
 }
