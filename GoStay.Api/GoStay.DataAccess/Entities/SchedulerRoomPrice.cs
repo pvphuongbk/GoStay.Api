@@ -10,7 +10,7 @@ namespace GoStay.DataAccess.Entities
 
         public string Title { get; set; }
 
-        public double? Price { get; set; }
+        public double Price { get; set; }
 
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
@@ -25,5 +25,6 @@ namespace GoStay.DataAccess.Entities
 
         public string? EndTimezone { get; set; }
         public string? StartTimezone { get; set; }
+        public DateTime DateCreate { get; set; }
     }
 }

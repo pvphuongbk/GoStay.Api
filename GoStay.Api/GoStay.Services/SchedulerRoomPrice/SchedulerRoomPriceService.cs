@@ -8,6 +8,7 @@ using GoStay.DataDto.Statistical;
 using GoStay.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -111,7 +112,7 @@ namespace GoStay.Services.Statisticals
                 return responseBase;
             }
         }
-        public ResponseBase GetListScheduler(int month, int year, int RoomId)
+        public ResponseBase GetListScheduler(int RoomId)
         {
             ResponseBase responseBase = new ResponseBase();
             try
@@ -136,24 +137,19 @@ namespace GoStay.Services.Statisticals
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                double result = 0;
-                _commonUoW.BeginTransaction();
+                Dictionary<DateTime,double> result = new Dictionary<DateTime, double>();
                 var t1 = new DateTime(year, month, day);
                 var t2 = t1.DayOfWeek.ToString().Substring(0,2).ToUpper();
                 var scheduler = _schedulerRepository.FindAll(x => x.RoomId == RoomId && x.Start.Year <= year&& x.Start.Month<= month);
                 foreach(var item in scheduler)
                 {
                     List<DateTime> tException = new List<DateTime>();
-
+                    bool skip=false;
                     if (item.RecurrenceException != null)
                     {
                         var listEx = item.RecurrenceException.Split(",");
                         foreach (var ex in listEx)
                         {
-                            var x1 = ex.Substring(0, 4);
-                            var x2 = ex.Substring(4, 2);
-                            var x3 = ex.Substring(6, 2);
-
                             var yEx = int.Parse(ex.Substring(0, 4));
                             var mEx = int.Parse(ex.Substring(4, 2));
                             var dEx = int.Parse(ex.Substring(6, 2));
@@ -165,9 +161,12 @@ namespace GoStay.Services.Statisticals
                     {
                         if(t1==tEx)
                         {
-                            continue;
+                            skip=true;
+                            break;
                         }    
                     }    
+                    if(skip==true)
+                        continue;
 
                     if (item.RecurrenceRule !=null)
                     {
@@ -175,12 +174,9 @@ namespace GoStay.Services.Statisticals
                         var freq = "";
                         var byday = "";
                         var bymonthday = "";
-
                         var count = "";
                         var interval = "";
                         var until = "";
-
-
 
                         if (RecurrenceRule.TryGetValue("UNTIL", out until))
                         {
@@ -201,7 +197,6 @@ namespace GoStay.Services.Statisticals
                                 var DayStart = GetNearestDay(item.Start, (int)t1.DayOfWeek);
                                 int countF = 0;
                                 int intervalF = 1;
-                                int i = 1;
                                 if (RecurrenceRule.TryGetValue("COUNT", out count)) 
                                 {
                                     countF = int.Parse(count);
@@ -218,28 +213,31 @@ namespace GoStay.Services.Statisticals
                                     {
                                         if (DayStart == t1)
                                         {
-                                            responseBase.Data = item.Price;
-                                            return responseBase;
+                                            result.Add(item.DateCreate, item.Price);
+                                            break;
                                         }
 
-                                        DayStart = DayStart.AddDays(intervalF * 7 * i);
-                                        i++;
+                                        DayStart = DayStart.AddDays(intervalF * 7);
                                     }
+                                    continue;
                                 }
                                 else
                                 {
+                                    int i = 1;
                                     while (DayStart <= t1 && i<=countF)
                                     {
                                         if (DayStart == t1)
                                         {
-                                            responseBase.Data = item.Price;
-                                            return responseBase;
+                                            result.Add(item.DateCreate, item.Price);
+                                            break;
                                         }
 
-                                        DayStart = DayStart.AddDays(intervalF * 7 * i);
+                                        DayStart = DayStart.AddDays(intervalF * 7 );
                                         i++;
                                     }
-                                }    
+                                    continue;
+
+                                }
 
                             }
                             else
@@ -247,47 +245,74 @@ namespace GoStay.Services.Statisticals
                                 continue;
                             }    
                         }
-                        if (RecurrenceRule.TryGetValue("BYMONTHDAY", out byday))
+                        if (RecurrenceRule.TryGetValue("BYMONTHDAY", out bymonthday))
                         {
-                            if (byday.Contains(t2))
+                            if (bymonthday.Contains(t1.Day.ToString()))
                             {
+                                var MonthStart = item.Start.Month;
+                                int countF = 0;
+                                int intervalF = 1;
+                                if (RecurrenceRule.TryGetValue("COUNT", out count))
+                                {
+                                    countF = int.Parse(count);
+                                }
 
+                                if (RecurrenceRule.TryGetValue("INTERVAL", out interval))
+                                {
+                                    intervalF = int.Parse(interval);
+                                }
+                                if (countF == 0)
+                                {
+                                    while (MonthStart <= t1.Month)
+                                    {
+                                        if (MonthStart == t1.Month)
+                                        {
+                                            result.Add(item.DateCreate, item.Price);
+                                            continue;
+                                        }
 
-                                //if (RecurrenceRule.TryGetValue("COUNT", out count))
-                                //{
-                                //    if (value.Contains(t2))
-                                //    {
+                                        MonthStart = MonthStart + intervalF;
+                                    }
+                                }
+                                else
+                                {
+                                    int i = 1;
+                                    while (MonthStart <= t1.Month && i <= countF)
+                                    {
+                                        if (MonthStart == t1.Month)
+                                        {
+                                            result.Add(item.DateCreate, item.Price);
+                                            continue;
+                                        }
 
-                                //    }
-                                //}
-
-                                //if (RecurrenceRule.TryGetValue("INTERVAL", out interval))
-                                //{
-                                //    if (value.Contains(t2))
-                                //    {
-
-                                //    }
-                                //}
+                                        MonthStart = MonthStart + intervalF;
+                                        i++;
+                                    }
+                                }
                             }
                             else
                             {
                                 continue;
                             }
                         }
-
                     }
                     else
                     {
-                        if( t1 > item.Start && t1<item.End)
+                        if( t1 >= item.Start && t1<=item.End)
                         {
-                            responseBase.Data = (double)item.Price;
-                            return responseBase;
+                            result.Add(item.DateCreate, item.Price);
+                            continue;
 
                         }
                     }    
-                }    
-                _commonUoW.Commit();
-                responseBase.Data = 0;
+                }
+                double data = 0;
+
+                if (result.Count > 0)
+                {
+                    result.TryGetValue(result.Max(x => x.Key), out data);
+                }
+                responseBase.Data = data;
                 return responseBase;
             }
             catch (Exception e)

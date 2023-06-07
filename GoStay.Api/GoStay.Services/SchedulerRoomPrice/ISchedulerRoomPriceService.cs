@@ -11,7 +11,7 @@ namespace GoStay.Services.Statisticals
         public ResponseBase Insert(SchedulerRoomPrice scheduler);
         public ResponseBase Update(SchedulerRoomPrice scheduler);
         public ResponseBase GetScheduler(int Id);
-        public ResponseBase GetListScheduler(int month, int year, int RoomId);
+        public ResponseBase GetListScheduler( int RoomId);
         public ResponseBase Destroy(int Id);
         public ResponseBase GetPrice(int month, int year, int RoomId, int day);
 

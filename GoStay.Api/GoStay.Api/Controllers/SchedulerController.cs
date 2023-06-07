@@ -36,9 +36,9 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("get-list")]
-        public ResponseBase GetListScheduler(int month, int year, int RoomId)
+        public ResponseBase GetListScheduler(int RoomId)
         {
-            var items = _schedulerService.GetListScheduler(month, year, RoomId);
+            var items = _schedulerService.GetListScheduler( RoomId);
             return items;
         }
         [HttpDelete("destroy")]
