@@ -350,5 +350,28 @@ namespace GoStay.Services.Statisticals
             }
             return t3;
         }
+
+        public ResponseBase GetListRoomPrice(int month, int year, List<int> RoomIds, int day)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                Dictionary<int, double> ListRoomPrice = new Dictionary<int, double>();
+                foreach (var idroom in RoomIds)
+                {
+                    var price = GetPrice(month, year, idroom, day);
+                    var p = price.Data;
+                    ListRoomPrice.Add(idroom, (double)p);
+                }
+                responseBase.Data = ListRoomPrice;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
     }
 }

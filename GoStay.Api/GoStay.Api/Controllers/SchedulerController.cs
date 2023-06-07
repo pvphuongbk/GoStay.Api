@@ -1,5 +1,6 @@
 ﻿using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
+using GoStay.DataDto.Scheduler;
 using GoStay.Services.Statisticals;
 using GoStay.Services.Tours;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,12 @@ namespace GoStay.Api.Controllers
         public ResponseBase GetPrice(int month, int year, int RoomId, int day)
         {
             var items = _schedulerService.GetPrice(month,  year,  RoomId,  day);
+            return items;
+        }
+        [HttpPost("get-list-room-price")]
+        public ResponseBase GetListRoomPrice(RoomPriceParam param)
+        {
+            var items = _schedulerService.GetListRoomPrice(param.month, param.year, param.RoomIds, param.day);
             return items;
         }
     }
