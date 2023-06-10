@@ -61,5 +61,12 @@ namespace GoStay.Api.Controllers
             var items = _schedulerService.GetListRoomPrice(param.month, param.year, param.RoomIds, param.day);
             return items;
         }
+
+        [HttpGet("update-daily-price")]
+        public ResponseBase UpdateDailyPriceForAllRoom()
+        {
+            var items = _schedulerService.UpdateDailyPriceForAllRoom();
+            return items;
+        }
     }
 }

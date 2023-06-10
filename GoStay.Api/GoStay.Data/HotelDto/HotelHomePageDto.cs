@@ -11,9 +11,7 @@
         public double Review_score { get; set; }
         public double? Lat_map { get; set; }
         public double? Lon_map { get; set; }
-        public double? Discount { get; set; }
-        public decimal OriginalPrice { get; set; }
-        public decimal ActualPrice { get; set; }
+
         public int? NumberReviewers { get; set; }
         public int? PalletbedRoom { get; set; }
         public long? IntDate { get; set; }
@@ -35,6 +33,31 @@
         public List<string> Pictures { get; set; } = new List<string>();
         public DateTime LastOrderTime { get; set; }
         public string Slug { get; set; }
-	}
+
+
+        public double? Discount { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public decimal ActualPrice 
+        {
+            get
+            {
+                return (decimal)(DailyBasePrice * (100 - Discount) / 100);
+            }
+        }
+        public int IdRoom { get; set; }
+        public double DailyPrice { get; set; }
+        public double DailyBasePrice 
+        {
+            get
+            {
+                if (DailyPrice > 0)
+                    return DailyPrice;
+                else
+                    return (double)OriginalPrice;
+            }
+        }
+
+
+    }
 
 }

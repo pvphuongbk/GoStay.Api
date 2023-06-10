@@ -36,6 +36,7 @@ namespace GoStay.DataAccess.Entities
         public int RoomStatus { get; set; }
         public byte MinNight { get; set; }
         public int? DeadLinePreOrder { get; set; }
+        public decimal? CurrentPrice { get; set; }
 
         public virtual Hotel IdhotelNavigation { get; set; } = null!;
         public virtual Palletbed? PalletbedNavigation { get; set; }

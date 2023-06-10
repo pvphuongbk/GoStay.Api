@@ -34,6 +34,7 @@
         public static string sq_GetListVideoNews = "sq_GetListVideoNews";
 
         public static string sq_GetHotelDetailById = "sq_GetHotelDetailById";
+        public static string sq_schedule_Update_Room_Price = "sq_schedule_Update_Room_Price";
 
     }
 }

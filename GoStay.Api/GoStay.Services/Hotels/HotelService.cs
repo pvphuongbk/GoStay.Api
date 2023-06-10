@@ -9,11 +9,13 @@ using GoStay.Data.HotelDto;
 using GoStay.Data.ServiceDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.DataDto.HotelDto;
 using GoStay.Repository.DapperHelper;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 
@@ -25,32 +27,26 @@ namespace GoStay.Services.Hotels
 		private readonly ICommonRepository<HotelRoom> _hotelRoomRepository;
         private readonly ICommonRepository<Service> _serviceRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
-        private readonly ICommonRepository<ViewDirection> _viewRepository;
         private readonly ICommonRepository<TypeHotel> _typeHotelRepository;
-        private readonly ICommonRepository<TinhThanh> _tinhThanhRepository;
-        private readonly ICommonRepository<Quan> _quanRepository;
-        private readonly ICommonRepository<Phuong> _phuongRepository;
+        private readonly ICommonRepository<SchedulerRoomPrice> _schedulerRepository;
 
 
 
 
         private readonly IMapper _mapper;
 		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper,
-			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository,
-			ICommonRepository<ViewDirection> viewRepository, ICommonRepository<TypeHotel> typeHotelRepository, 
-			ICommonRepository<TinhThanh> tinhThanhRepository, ICommonRepository<Quan> quanRepository, ICommonRepository<Phuong> phuongRepository)
+			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<TypeHotel> typeHotelRepository,
+            ICommonRepository<SchedulerRoomPrice> schedulerRepository)
 		{
 			_hotelRepository = hotelRepository;
 			_hotelRoomRepository = hotelRoomRepository;
 			_mapper = mapper;
 			_serviceRepository = serviceRepository;
 			_pictureRepository = pictureRepository;
-			_viewRepository = viewRepository;
 			_typeHotelRepository = typeHotelRepository;
-			_tinhThanhRepository = tinhThanhRepository;
-			_quanRepository = quanRepository;
-			_phuongRepository = phuongRepository;
-		}
+            _schedulerRepository = schedulerRepository;
+
+        }
         public ResponseBase GetListHotelTopFlashSale(int number)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -64,7 +60,24 @@ namespace GoStay.Services.Hotels
                                                 .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
 												.Take(number)
                                                 .ToList();
+                
                 var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotels);
+                Dictionary<int, IQueryable<SchedulerRoomPrice>> roomSchedulers = new Dictionary<int, IQueryable<SchedulerRoomPrice>>();
+
+                foreach (var id in hotelDtos.Select(x => x.IdRoom))
+                {
+                    var schedulerRoomPrice = _schedulerRepository.FindAll(x => x.RoomId == id && x.Start.Year <= DateTime.Now.Year && x.Start.Month <= DateTime.Now.Month);
+                    if (schedulerRoomPrice.Count() > 0)
+                    {
+                        roomSchedulers.Add(id, schedulerRoomPrice);
+                    }
+                }
+                foreach (var item in roomSchedulers)
+                {
+                    hotelDtos.Where(x => x.IdRoom == item.Key).SingleOrDefault().DailyPrice =
+                        SchedulerRepository.GetPrice(item.Value, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                }    
+                
                 responseBase.Data = hotelDtos;
                 return responseBase;
             }
@@ -116,7 +129,24 @@ namespace GoStay.Services.Hotels
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower()));
+
+                    Dictionary<int, IQueryable<SchedulerRoomPrice>> roomSchedulers = new Dictionary<int, IQueryable<SchedulerRoomPrice>>();
+
+                    foreach (var id in Data.Select(x => x.IdRoom))
+                    {
+                        var schedulerRoomPrice = _schedulerRepository.FindAll(x => x.RoomId == id && x.Start.Year <= DateTime.Now.Year && x.Start.Month <= DateTime.Now.Month);
+                        if (schedulerRoomPrice.Count() > 0)
+                        {
+                            roomSchedulers.Add(id, schedulerRoomPrice);
+                        }
+                    }
+                    foreach (var item in roomSchedulers)
+                    {
+                        Data.Where(x => x.IdRoom == item.Key).SingleOrDefault().DailyPrice =
+                            SchedulerRepository.GetPrice(item.Value, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                    }
                     responseBase.Data = Data;
+
                     return responseBase;
                 }
                 else
@@ -153,6 +183,7 @@ namespace GoStay.Services.Hotels
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower()));
+ 
                 responseBase.Data = Data;
                 return responseBase;
 			}

@@ -15,6 +15,7 @@ namespace GoStay.Services.Statisticals
         public ResponseBase Destroy(int Id);
         public ResponseBase GetPrice(int month, int year, int RoomId, int day);
         public ResponseBase GetListRoomPrice(int month, int year, List<int> RoomIds, int day);
+        public ResponseBase UpdateDailyPriceForAllRoom();
 
     }
 }
