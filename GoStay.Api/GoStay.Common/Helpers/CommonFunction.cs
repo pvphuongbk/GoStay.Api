@@ -46,10 +46,7 @@ namespace GoStay.Common.Helpers
 				{
 					dto.Discount = room.Discount;
 					dto.OriginalPrice = (decimal)room.PriceValue;
-					var actualPrice = CalculateRoomPrice(room);
-					dto.ActualPrice = actualPrice;
 					dto.PalletbedRoom = room.Palletbed;
-
                 }
 				if (hotel.HotelRooms.Count>0)
 				{
@@ -91,11 +88,10 @@ namespace GoStay.Common.Helpers
                 var room = hotel.HotelRooms.Where(x => x.Discount != null).MaxBy(x => x.Discount);
                 if (room != null)
                 {
+					dto.IdRoom = room.Id;
                     dto.Discount = room.Discount;
                     dto.OriginalPrice = (decimal)room.PriceValue;
-                    dto.ActualPrice = (decimal)room.NewPrice;
                     dto.PalletbedRoom = room.Palletbed;
-
                 }
 
                 hotelDtos.Add(dto);

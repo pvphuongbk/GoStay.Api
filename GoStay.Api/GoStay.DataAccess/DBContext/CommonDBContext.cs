@@ -558,6 +558,8 @@ namespace GoStay.DataAccess.DBContext
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.CurrentPrice).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.Description).HasMaxLength(1000);
 
 				entity.Property(e => e.Idhotel).HasColumnName("IDHOTEL");
