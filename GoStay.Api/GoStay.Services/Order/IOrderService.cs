@@ -30,6 +30,8 @@ namespace GoStay.Services.Orders
         public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom);
         public ResponseBase DeleteRoomInOrder(int IdRoom, int IdOrder);
         public ResponseBase GetListRoomInOrder(int Id);
+        public ResponseBase UpdatePrePayment(decimal prepayment, int IdOrder);
+
 
     }
 }

@@ -435,6 +435,31 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
+        public ResponseBase UpdatePrePayment(decimal prepayment, int IdOrder)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var oder = _OrderRepository.GetById(IdOrder);
+                oder.DateUpdate = DateTime.Now;
+                oder.Prepayment = prepayment;
+                _OrderRepository.Update(oder);
+
+                _commonUoW.Commit();
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
 
         public ResponseBase UpdateUserIDbySession(int IdUser, string Session)
         {
