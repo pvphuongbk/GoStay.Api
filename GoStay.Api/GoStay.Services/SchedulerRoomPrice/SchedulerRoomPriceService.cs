@@ -198,7 +198,7 @@ namespace GoStay.Services.Statisticals
                     var price = SchedulerRepository.GetPrice(scheduler, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Day);
                     if (price > 0)
                     {
-                        lst.Add(new SchedulerRoomPriceDto { RoomId = idroom, Price = price });
+                        lst.Add(new SchedulerRoomPriceDto { RoomId = idroom, Price = (decimal)price });
                     }
                 }
                 HotelDapperExtensions.ScheduleRoomPrice(lst);

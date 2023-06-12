@@ -9,6 +9,6 @@ namespace GoStay.DataDto.Scheduler
     public class SchedulerRoomPriceDto
     {
         public int RoomId { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

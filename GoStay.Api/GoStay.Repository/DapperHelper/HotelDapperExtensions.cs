@@ -71,32 +71,31 @@ namespace GoStay.Repository.DapperHelper
         {
             try
             {
-                var records = CreatePriceByRoomType(items);
-
-                if (records != null && records.Count > 0)
+                using (SqlData.SqlConnection con = new SqlData.SqlConnection(ConnectionString))
                 {
-                    using (SqlData.SqlConnection con = new SqlData.SqlConnection(ConnectionString))
+                    DataTable dt = new DataTable();
+                    DataColumn id = new DataColumn("RoomId");
+                    DataColumn pri = new DataColumn("Price");
+                    dt.Columns.Add(id);
+                    dt.Columns.Add(pri);
+                    items.ToList().ForEach(dr => { DataRow d = dt.NewRow(); d[id] = dr.RoomId; d[pri] = dr.Price; dt.Rows.Add(d); });
+
+
+                    SqlCommand cmd = new SqlCommand($"exec {Procedures.sq_schedule_Update_Room_Price} @PriceByRoom", con);
+                    var pXeOnlines = new SqlParameter("@PriceByRoom", SqlDbType.Structured);
+                    pXeOnlines.TypeName = "dbo.PriceByRoom";
+                    pXeOnlines.Value = dt;
+                    cmd.Parameters.Add(pXeOnlines);
+
+                    con.Open();
+                    var sReader = cmd.ExecuteReader();
+
+                    while (sReader.Read())
                     {
-                        SqlCommand cmd = new SqlCommand($"exec {Procedures.sq_schedule_Update_Room_Price} @PriceByRoom", con);
-                        var pXeOnlines = new SqlParameter("@PriceByRoom", SqlDbType.Structured);
-                        pXeOnlines.TypeName = "dbo.PriceByRoom";
-                        pXeOnlines.Value = records;
-                        cmd.Parameters.Add(pXeOnlines);
-
-                        con.Open();
-                        var sReader = cmd.ExecuteReader();
-
-                        while (sReader.Read())
-                        {
-                            var re = sReader["Result"] == null ? 0 : int.Parse(sReader["Result"].ToString());
-                            return re > 0;
-                        }
-                        con.Close();
+                        var re = sReader["Result"] == null ? 0 : int.Parse(sReader["Result"].ToString());
+                        return re > 0;
                     }
-                }
-                else
-                {
-                    return false;
+                    con.Close();
                 }
 
                 return true;
@@ -113,7 +112,7 @@ namespace GoStay.Repository.DapperHelper
             try
             {
                 List<SqlDataRecord> datatable = new List<SqlDataRecord>();
-                SqlMetaData[] sqlMetaData = new SqlMetaData[6];
+                SqlMetaData[] sqlMetaData = new SqlMetaData[2];
                 sqlMetaData[0] = new SqlMetaData("RoomId", SqlDbType.Int);
                 sqlMetaData[1] = new SqlMetaData("Price", SqlDbType.Decimal);
 
