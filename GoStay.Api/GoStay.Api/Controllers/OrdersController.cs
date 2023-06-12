@@ -65,6 +65,12 @@ namespace GoStay.Api.Controllers
             var items = _orderService.UpdateStatusOrder(param.Status, param.IdOder);
             return items;
         }
+        [HttpPut("prepayment")]
+        public ResponseBase UpdatePrePayment(UpdatePrePaymentOrderParam param)
+        {
+            var items = _orderService.UpdatePrePayment(param.PrePayment, param.IdOder);
+            return items;
+        }
         [HttpPut("pttt")]
         public ResponseBase UpdatePTTTOrder(UpdatePTTTOrderParam param)
         {

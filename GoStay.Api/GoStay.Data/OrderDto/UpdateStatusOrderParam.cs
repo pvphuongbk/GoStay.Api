@@ -11,4 +11,9 @@ namespace GoStay.Data.OrderDto
         public byte Status { get; set; }
         public int IdOder { get; set; }
     }
+    public class UpdatePrePaymentOrderParam
+    {
+        public decimal PrePayment { get; set; }
+        public int IdOder { get; set; }
+    }
 }
