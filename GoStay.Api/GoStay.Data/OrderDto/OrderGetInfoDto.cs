@@ -40,6 +40,8 @@ namespace GoStay.Data.OrderDto
         public int Adult { get; set; }
         public int Children { get; set; }
         public int Infant { get; set; }
+        public decimal? Prepayment { get; set; }
+
     }
 
     public class OrderDetailInfoDto
