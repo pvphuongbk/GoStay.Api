@@ -13,7 +13,7 @@ namespace GoStay.Services.Tours
         ResponseBase GetTourLocationTotal(int IdProvince);
         ResponseBase GetDataSupportTour();
         ResponseBase GetAllTourByUserId(int UserId, int PageIndex, int PageSize);
-        ResponseBase AddTour(TourDto data, int[] IdDistrictTo, int[] Vehicles);
+        ResponseBase AddTour(Tour data, int[] IdDistrictTo, int[] Vehicles);
         ResponseBase AddTourDetail(TourDetail data);
         ResponseBase EditTour(TourAddDto data);
         ResponseBase EditTourDetail(TourDetail data);
@@ -22,6 +22,8 @@ namespace GoStay.Services.Tours
         ResponseBase UpdateTourToCompare(CompareTourParam param);
         ResponseBase GetListToursCompare(string ListId);
         public ResponseBase GetTourByUserIdAndId(int UserId, int Id);
+        public int AddTourStartTime(string time);
+
 
     }
 }

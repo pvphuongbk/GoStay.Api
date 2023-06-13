@@ -1,7 +1,10 @@
-﻿using GoStay.Data.TourDto;
+﻿using AutoMapper;
+using GoStay.Common.Extention;
+using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
 using GoStay.Services.Tours;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
 
 namespace GoStay.Api.Controllers
@@ -11,9 +14,12 @@ namespace GoStay.Api.Controllers
     public class ToursController : ControllerBase
     {
         private readonly ITourService _tourService;
-        public ToursController(ITourService tourService)
+        private readonly IMapper _mapper;
+
+        public ToursController(ITourService tourService, IMapper mapper)
         {
             _tourService = tourService;
+            _mapper = mapper;
         }
         
         [HttpGet("suggest")]
@@ -69,9 +75,33 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("add-tour")]
-        public ResponseBase AddTour(TourAddParam param)
+        public ResponseBase AddTour(TourAddDto tourAdd)
         {
-            var items = _tourService.AddTour(param.tourAddDto, param.IdDistrictTo, param.Vehicles);
+            var tour = new Tour();
+            tourAdd.TourName = tourAdd.TourName.Trim();
+            tour = _mapper.Map<TourAddDto, Tour>(tourAdd);
+            tour.StartDate = new DateTime(2100, 1, 1);
+
+            if (tourAdd.StartDateString != "" && tourAdd.IdStartTime == null)
+            {
+                tourAdd.StartDateString = tourAdd.StartDateString.Trim();
+                try
+                {
+                    tour.StartDate = DateTime.ParseExact(tourAdd.StartDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    tour.IdStartTime = _tourService.AddTourStartTime(tourAdd.StartDateString);
+                }
+            }
+
+            if (tour.Discount is null)
+                tour.Discount = 0;
+            tour.Status = 1;
+            tour.ActualPrice = tour.Price * (100 - (double)tour.Discount) / 100;
+            tour.SearchKey = tour.TourName.RemoveUnicode();
+            tour.SearchKey = tour.SearchKey.Replace(" ", string.Empty).ToLower();
+            var items = _tourService.AddTour(tour, tourAdd.IdDistrictTo, tourAdd.Vehicle);
             return items;
         }
         [HttpPost("add-tour-detail")]
