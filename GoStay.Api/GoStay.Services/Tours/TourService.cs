@@ -357,7 +357,7 @@ namespace GoStay.Services.Tours
                 _commonUoW.BeginTransaction();
 
                 var tour = _tourRepository.FindAll(x => x.Id == data.Id).Take(1).AsNoTracking().SingleOrDefault();
-                if (data.StartDateString != "")
+                if (data.StartDateString != "" && data.StartDateString != null)
                 {
                     data.StartDateString = data.StartDateString.Trim();
                     try
