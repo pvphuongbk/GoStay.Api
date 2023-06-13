@@ -11,7 +11,7 @@ namespace GoStay.DataAccess.Entities
         }
 
         public int Id { get; set; }
-        public string? StartDate { get; set; }
+        public string StartDate { get; set; }
 
         public virtual ICollection<Tour> Tours { get; set; }
     }

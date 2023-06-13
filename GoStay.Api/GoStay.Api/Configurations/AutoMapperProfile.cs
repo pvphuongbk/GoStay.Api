@@ -97,6 +97,8 @@ namespace GoStay.Api.Configurations
             CreateMap<TourRating, TourRatingDto>().ReverseMap();
             CreateMap<Tour, TourAdminDto>().ReverseMap();
             CreateMap<TourDto, Tour>().ReverseMap();
+            CreateMap<TourAddDto, Tour>().ReverseMap();
+
 
 
 

@@ -296,7 +296,7 @@ namespace GoStay.Services.Tours
             }
 
         }
-        public ResponseBase AddTour(TourDto data, int[] IdDistrictTo, int[] Vehicles)
+        public ResponseBase AddTour(Tour data, int[] IdDistrictTo, int[] Vehicles)
         {
             ResponseBase response = new ResponseBase();
 
@@ -304,8 +304,8 @@ namespace GoStay.Services.Tours
             {
                 data.InDate = (int)(System.DateTime.Now - AppConfigs.startDate).TotalSeconds;
                 _commonUoW.BeginTransaction();
-                var tourentity = _mapper.Map<TourDto, Tour>(data);
-                _tourRepository.Insert(tourentity);
+
+                _tourRepository.Insert(data);
                 _commonUoW.Commit();
                 _commonUoW.BeginTransaction();
 
@@ -323,11 +323,12 @@ namespace GoStay.Services.Tours
                 response.Data = data.Id;
                 return response;
             }
-            catch
+            catch(Exception e)
             {
                 _commonUoW.RollBack();
-                response.Data = 0;
+                response.Message = e.Message;
                 return response;
+
             }
         }
         public ResponseBase AddTourDetail(TourDetail data)
