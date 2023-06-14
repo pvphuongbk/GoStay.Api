@@ -34,6 +34,8 @@ namespace GoStay.Data.OrderDto
         public int? Adult { get; set; }
         public int? Children { get; set; }
         public int? Infant { get; set; }
+        public decimal? TotalAmount { get; set; }
+
     }
 
     public class OrderDetailDto

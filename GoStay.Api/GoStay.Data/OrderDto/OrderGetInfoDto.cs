@@ -33,6 +33,7 @@ namespace GoStay.Data.OrderDto
         public bool? IsDeleted { get; set; }
         public DateTime DateUpdate { get; set; }
         public DateTime DateCreate { get; set; }
+        public decimal? TotalAmount { get; set; }
 
         public decimal TotalPrice { get; set; }
         public decimal TotalNewPrice { get; set; }

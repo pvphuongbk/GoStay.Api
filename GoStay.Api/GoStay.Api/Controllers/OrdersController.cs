@@ -71,6 +71,12 @@ namespace GoStay.Api.Controllers
             var items = _orderService.UpdatePrePayment(param.PrePayment, param.IdOder);
             return items;
         }
+        [HttpPut("totalamount")]
+        public ResponseBase UpdateTotalAmount(UpdateTotalAmountOrderParam param)
+        {
+            var items = _orderService.UpdateTotalAmount(param);
+            return items;
+        }
         [HttpPut("pttt")]
         public ResponseBase UpdatePTTTOrder(UpdatePTTTOrderParam param)
         {
