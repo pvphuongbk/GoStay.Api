@@ -326,6 +326,7 @@ namespace GoStay.Services.Tours
             catch(Exception e)
             {
                 _commonUoW.RollBack();
+                response.Data = 0;
                 response.Message = e.Message;
                 return response;
 

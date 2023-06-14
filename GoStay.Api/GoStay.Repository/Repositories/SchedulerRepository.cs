@@ -60,6 +60,57 @@ namespace GoStay.Repository.Repositories
                             }
                         }
                         RecurrenceRule.TryGetValue("FREQ", out freq);
+                        if (freq == "DAILY")
+                        {
+                            if(t1>item.End)
+                            { continue; }
+                            else
+                            {
+                                var DayStart = item.Start;
+                                int countF = 0;
+                                int intervalF = 1;
+                                if (RecurrenceRule.TryGetValue("COUNT", out count))
+                                {
+                                    countF = int.Parse(count);
+                                }
+
+
+                                if (RecurrenceRule.TryGetValue("INTERVAL", out interval))
+                                {
+                                    intervalF = int.Parse(interval);
+                                }
+                                if (countF == 0)
+                                {
+                                    while (DayStart <= t1)
+                                    {
+                                        if (DayStart == t1)
+                                        {
+                                            result.Add(item.DateCreate, item.Price);
+                                            break;
+                                        }
+                                        DayStart = DayStart.AddDays(intervalF);
+                                    }
+                                    continue;
+                                }
+                                else
+                                {
+                                    int i = 1;
+                                    while (DayStart <= t1 && i <= countF)
+                                    {
+                                        if (DayStart == t1)
+                                        {
+                                            result.Add(item.DateCreate, item.Price);
+                                            break;
+                                        }
+
+                                        DayStart = DayStart.AddDays(intervalF);
+                                        i++;
+                                    }
+                                    continue;
+
+                                }
+                            }
+                        }
                         if (freq == "WEEKLY")
                         {
                             if (RecurrenceRule.TryGetValue("BYDAY", out byday))
