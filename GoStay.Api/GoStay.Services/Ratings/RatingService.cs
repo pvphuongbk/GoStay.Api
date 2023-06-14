@@ -204,7 +204,7 @@ namespace GoStay.Services.Reviews
                     return response;
                 }
                 exitsRating.Status = status;
-                _hotelRatingRepository.Insert(exitsRating);
+                _hotelRatingRepository.Update(exitsRating);
 
                 _icommonUoWRepository.Commit();
                 response.Data = "Success";
