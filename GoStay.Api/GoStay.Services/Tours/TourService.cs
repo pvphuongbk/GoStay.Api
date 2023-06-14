@@ -304,7 +304,7 @@ namespace GoStay.Services.Tours
             {
                 data.InDate = (int)(System.DateTime.Now - AppConfigs.startDate).TotalSeconds;
                 _commonUoW.BeginTransaction();
-
+                data.PriceChild = data.ActualPrice * 7 / 10;
                 _tourRepository.Insert(data);
                 _commonUoW.Commit();
                 _commonUoW.BeginTransaction();
