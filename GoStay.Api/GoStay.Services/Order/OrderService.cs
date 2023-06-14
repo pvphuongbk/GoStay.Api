@@ -74,9 +74,8 @@ namespace GoStay.Services.Orders
                 {
                     orderDetailEntity.IdRoom = orderDetail.IdProduct;
                     var room = _roomRepository.GetById(orderDetail.IdProduct);
-                    orderDetailEntity.Price = room.PriceValue;
+                    orderDetailEntity.Price = (decimal)room.CurrentPrice;
                     orderDetailEntity.Discount = room.Discount;
-
                 }
                 if (orderDetail.DetailStyle == 2)
                 {
@@ -278,7 +277,7 @@ namespace GoStay.Services.Orders
                 {
                     orderDetailEntity.IdRoom = orderDetail.IdProduct;
                     var room = _roomRepository.GetById(orderDetail.IdProduct);
-                    orderDetailEntity.Price = room.PriceValue;
+                    orderDetailEntity.Price = (decimal)room.CurrentPrice;
                     orderDetailEntity.Discount = room.Discount;
                 }
                 if (orderDetail.DetailStyle == 2)
