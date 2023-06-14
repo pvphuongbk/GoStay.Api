@@ -186,7 +186,7 @@ namespace GoStay.Services.Statisticals
             try
             {
 
-                var roomIds = _schedulerRepository.FindAll(x => x.Start.Year <= DateTime.Now.Year && x.Start.Month <= DateTime.Now.Month).Select(x => x.RoomId);
+                var roomIds = _schedulerRepository.FindAll(x => x.Start <= DateTime.Now).Select(x => x.RoomId);
                 roomIds= roomIds.Distinct();
                 var schedulers = _schedulerRepository.FindAll(x => roomIds.Contains(x.RoomId));
                 //Dictionary<int,double> roomprices = new Dictionary<int, double>();
