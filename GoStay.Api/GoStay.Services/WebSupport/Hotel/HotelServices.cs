@@ -571,7 +571,7 @@ namespace GoStay.Services.WebSupport
                 if (room != null)
                 {
                     room.Discount = param.Discount;
-                    room.NewPrice = room.PriceValue * (decimal)(100 - room.Discount) / 100;
+                    room.NewPrice = (decimal)room.CurrentPrice * (decimal)(100 - room.Discount) / 100;
                     _roomRepository.Update(room);
                     _commonUoW.Commit();
                     response.Message = "Update Discount Success";
