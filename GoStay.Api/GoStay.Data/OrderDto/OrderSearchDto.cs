@@ -69,6 +69,8 @@ namespace GoStay.DataDto.OrderDto
         public string? HotelName { get; set; }
 
         public double? TotalPrice { get; set; }
+        public decimal? TotalAmount { get; set; }
+
         public string? PaymentMethod { get; set; }
         public string? RoomIdsNames
         {
