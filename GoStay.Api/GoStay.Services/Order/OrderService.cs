@@ -89,6 +89,7 @@ namespace GoStay.Services.Orders
 
                 }
                 _OrderDetailRepository.Insert(orderDetailEntity);
+
                 _commonUoW.Commit();
                 responseBase.Code = ErrorCodeMessage.Success.Key;
                 responseBase.Message = ErrorCodeMessage.Success.Value;
@@ -447,6 +448,33 @@ namespace GoStay.Services.Orders
                 oder.DateUpdate = DateTime.Now;
                 oder.Prepayment = prepayment;
                 _OrderRepository.Update(oder);
+
+                _commonUoW.Commit();
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+        public ResponseBase UpdateTotalAmount(UpdateTotalAmountOrderParam param)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var order = _OrderRepository.GetById(param.IdOrder);
+                order.DateUpdate = DateTime.Now;
+                order.Adult = param.Adult;
+                order.Children = param.Children;
+                order.Infant = param.Infant;
+                order.TotalAmount = param.totalAmount;
+                _OrderRepository.Update(order);
 
                 _commonUoW.Commit();
                 responseBase.Code = ErrorCodeMessage.Success.Key;

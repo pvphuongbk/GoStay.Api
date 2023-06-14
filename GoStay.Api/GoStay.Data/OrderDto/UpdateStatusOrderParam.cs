@@ -16,4 +16,12 @@ namespace GoStay.Data.OrderDto
         public decimal PrePayment { get; set; }
         public int IdOder { get; set; }
     }
+    public class UpdateTotalAmountOrderParam
+    {
+        public int IdOrder { get; set; }
+        public int Adult { get; set; }
+        public int Children { get; set; }
+        public int Infant { get; set; }
+        public decimal totalAmount { get; set; }
+    }
 }
