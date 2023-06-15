@@ -84,7 +84,7 @@ namespace GoStay.Common.Helpers.Order
             }
             hotelRoomOrderDto.Pictures = _pictureRepository.FindAll(x => x.HotelRoomId == roomOrderDetail.Id && x.Type==1)?.Select(x=>x.Url).Take(1).ToList();
             hotelRoomOrderDto.Pictures.AddRange(_pictureRepository.FindAll(x => x.HotelId == hotel.Id && x.Type == 0)?.Select(x => x.Url).Take(1).ToList());
-            hotelRoomOrderDto.PalletbedText = roomOrderDetail.PalletbedNavigation.Text;
+            hotelRoomOrderDto.PalletbedText = roomOrderDetail.PalletbedNavigation?.Text;
 
             hotelRoomOrderDto.Services = _mapper.Map<List<Service>, List<ServiceDetailHotelDto>>
                                         (roomOrderDetail.RoomMamenitis.Select(x => x.IdservicesNavigation).ToList());

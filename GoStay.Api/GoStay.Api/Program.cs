@@ -12,12 +12,15 @@ using GoStay.Services;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.Users;
 using Microsoft.Extensions.Configuration;
+using GoStay.Api.Providers;
+using GoStay.Common.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
 	.AddJsonFile("appsettings.json", optional: false)
 	.Build();
 AppConfigs.LoadAll(config);
+builder.Services.AddHttpContextAccessor();
 //--register CommonDBContext
 builder.Services.AddDbContext<CommonDBContext>(options =>
 			options.UseSqlServer(AppConfigs.SqlConnection, options => { }),
@@ -38,13 +41,13 @@ builder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
 // Add services to the container.
 builder.Services.AddHttpClient<IMyTypedClientServices, MyTypedClientServices>();
 
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var app = builder.Build();
+StaticServiceProvider.Provider = app.Services;
 app.UseDeveloperExceptionPage();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api"));
@@ -60,5 +63,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+//UpdateTimer.Init();
 app.Run();
+
