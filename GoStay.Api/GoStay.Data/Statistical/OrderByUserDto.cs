@@ -10,7 +10,7 @@
         public int Status { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime DateUpdate { get; set; }
-
+        public decimal TotalAmount { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

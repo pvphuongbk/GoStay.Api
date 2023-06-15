@@ -575,7 +575,17 @@ namespace GoStay.Services.Orders
                 }
                 foreach ( var item in listOrder.Select(x=>x.Id))
                 {
-                    listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item).Include(x=>x.IdRoomNavigation).Include(x=>x.IdTourNavigation));
+                    listOrderDetail.AddRange(_OrderDetailRepository.GetMany(x => x.IdOrder == item)
+                        .Include(x=>x.IdRoomNavigation).ThenInclude(x=>x.PalletbedNavigation)
+                        .Include(x => x.IdRoomNavigation).ThenInclude(x => x.RoomMamenitis).ThenInclude(x=>x.IdservicesNavigation)
+                        .Include(x=>x.IdTourNavigation)
+                        .ThenInclude(x=>x.TourDetails).ThenInclude(x=>x.IdStyleNavigation)
+                        .Include(x => x.IdTourNavigation).ThenInclude(x=>x.IdTourStyleNavigation)
+                        .Include(x => x.IdTourNavigation).ThenInclude(x => x.IdTourTopicNavigation)
+                        .Include(x => x.IdTourNavigation).ThenInclude(x => x.IdDistrictFromNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
+                        .Include(x => x.IdTourNavigation).ThenInclude(x => x.IdStartTimeNavigation)
+                        .Include(x => x.IdTourNavigation).ThenInclude(x => x.TourDistrictTos).ThenInclude(x => x.IdDistrictToNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
+                        );
                 }
 
                 var listOrderInfo = new List<OrderGetInfoDto>();
