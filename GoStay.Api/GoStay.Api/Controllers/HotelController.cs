@@ -218,5 +218,17 @@ namespace GoStay.Api.Controllers
             response.Data = result;
             return response;
         }
+        [HttpGet("minnight")]
+        public ResponseBase MinimumNightRoom(int userId, int IdRoom, byte minNight)
+        {
+            var result = _hotelServices.MinimumNightRoom(userId, IdRoom, minNight);
+            return result;
+        }
+        [HttpGet("deadline-preorder")]
+        public ResponseBase DeadlinePreOrderRoom(int userId, int IdRoom, int numMonth)
+        {
+            var result = _hotelServices.DeadlinePreOrderRoom(userId, IdRoom, numMonth);
+            return result;
+        }
     }
 }

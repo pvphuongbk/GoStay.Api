@@ -23,6 +23,7 @@ namespace GoStay.Services.Tours
         ResponseBase GetListToursCompare(string ListId);
         public ResponseBase GetTourByUserIdAndId(int UserId, int Id);
         public int AddTourStartTime(string time);
+        public ResponseBase SavePicture(string url, int idTour, int size);
 
 
     }

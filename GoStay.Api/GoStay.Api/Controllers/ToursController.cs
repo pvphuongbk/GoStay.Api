@@ -15,27 +15,23 @@ namespace GoStay.Api.Controllers
     {
         private readonly ITourService _tourService;
         private readonly IMapper _mapper;
-
         public ToursController(ITourService tourService, IMapper mapper)
         {
             _tourService = tourService;
             _mapper = mapper;
         }
-        
         [HttpGet("suggest")]
         public ResponseBase SuggestTour(string searchText)
         {
             var items = _tourService.SuggestTour(searchText);
             return items;
         }
-
         [HttpGet("tour-homepage")]
         public ResponseBase GetTourHomePage()
         {
             var items = _tourService.GetTourHomePage();
             return items;
         }
-
         [HttpPost("search")]
         public ResponseBase SearchTour(SearchTourRequest request)
         {
@@ -66,14 +62,12 @@ namespace GoStay.Api.Controllers
             var items = _tourService.GetAllTourByUserId( UserId,  PageIndex,  PageSize);
             return items;
         }
-
         [HttpGet("tour-by-id")]
         public ResponseBase GetTourByUserIdAndId(int UserId, int Id)
         {
             var items = _tourService.GetTourByUserIdAndId(UserId, Id);
             return items;
         }
-
         [HttpPost("add-tour")]
         public ResponseBase AddTour(TourAddDto tourAdd)
         {
@@ -144,6 +138,13 @@ namespace GoStay.Api.Controllers
         public ResponseBase GetListToursCompare(string listId)
         {
             var items = _tourService.GetListToursCompare(listId);
+            return items;
+        }
+
+        [HttpPost("save-picture-tour")]
+        public ResponseBase SavePicture(string url, int IdTour, int size)
+        {
+            var items = _tourService.SavePicture(url, IdTour,size);
             return items;
         }
     }

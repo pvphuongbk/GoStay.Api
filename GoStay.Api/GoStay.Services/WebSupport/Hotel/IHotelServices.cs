@@ -33,6 +33,8 @@ namespace GoStay.Services.WebSupport
         public ResponseBase GetListRoomAdmin(RequestGetListRoomAdmin request);
         public ResponseBase ChangeRoomStatus(int IdRoom, int RoomStatus);
         public ResponseBase ChangeStatusRoom(int IdRoom, int RoomStatus);
+        public ResponseBase MinimumNightRoom(int userId, int IdRoom, byte minNight);
+        public ResponseBase DeadlinePreOrderRoom(int userId, int IdRoom, int numMonth);
 
 
     }
