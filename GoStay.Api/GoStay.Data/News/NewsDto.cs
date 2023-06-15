@@ -42,6 +42,8 @@ namespace GoStay.DataDto.News
     {
         public int? UserId { get; set; }
         public int? IdCategory { get; set; }
+        public int? ParentIdCategory { get; set; }
+
         public int? IdTopic { get; set; }
         public int? IdDomain { get; set; }
 
