@@ -16,6 +16,8 @@ namespace GoStay.Repository.Repositories
             p.Add("@IdDomain", filter.IdDomain == null ? null : string.Join(",", filter.IdDomain), System.Data.DbType.String);
 
             p.Add("@IdCategory", filter.IdCategory == null ? null : string.Join(",", filter.IdCategory), System.Data.DbType.String);
+            p.Add("@ParentIdCategory", filter.ParentIdCategory == null ? null : string.Join(",", filter.ParentIdCategory), System.Data.DbType.String);
+
             p.Add("@IdTopic", filter.IdTopic == null ? null : string.Join(",", filter.IdTopic), System.Data.DbType.String);
             p.Add("@TextSearch", filter.TextSearch == null ? null : string.Join(",", filter.TextSearch), System.Data.DbType.String);
             p.Add("@PageIndex", filter.PageIndex, System.Data.DbType.Int32);
