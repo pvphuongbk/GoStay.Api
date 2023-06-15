@@ -602,5 +602,36 @@ namespace GoStay.Services.Tours
             }
 
         }
+        public ResponseBase SavePicture(string url, int idTour,int size)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var picture = new Picture();
+                picture.Url = url;
+                picture.TourId = idTour;
+                picture.Size = size;
+                picture.Type = 2;
+                picture.Datein = DateTime.Now;
+                _commonUoW.BeginTransaction();
+
+                _pictureRepository.Insert(picture);
+                _commonUoW.Commit();
+
+                response.Data = picture.Id;
+                return response;
+            }
+            catch
+            {
+                _commonUoW.RollBack();
+
+                response.Data = 0;
+                return response;
+            }
+
+        }
+
+
     }
 }

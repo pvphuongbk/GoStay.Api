@@ -794,6 +794,54 @@ namespace GoStay.Services.WebSupport
                 return response;
             }
         }
+        public ResponseBase MinimumNightRoom(int userId,int IdRoom, byte minNight)
+        {
+            ResponseBase response = new ResponseBase();
+
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var room = _roomRepository.FindAll(x => x.Id == IdRoom&& x.Iduser== userId).SingleOrDefault();
+                if (minNight > 0)
+                {
+                    room.MinNight = minNight;
+                    _roomRepository.Update(room);
+                }
+                _commonUoW.Commit();
+                response.Data = room.MinNight;
+                return response;
+            }
+            catch
+            {
+                response.Data = "exception";
+                return response;
+            }
+        }
+        public ResponseBase DeadlinePreOrderRoom(int userId, int IdRoom, int numMonth)
+        {
+            ResponseBase response = new ResponseBase();
+
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var room = _roomRepository.FindAll(x => x.Id == IdRoom && x.Iduser == userId).SingleOrDefault();
+                if (numMonth > 0)
+                {
+                    room.DeadLinePreOrder = numMonth;
+                    _roomRepository.Update(room);
+                }
+                _commonUoW.Commit();
+                response.Data = room.DeadLinePreOrder;
+                return response;
+
+            }
+            catch
+            {
+                response.Data = "exception";
+                return response;
+            }
+        }
+
     }
 }
 
