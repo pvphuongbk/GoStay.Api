@@ -66,7 +66,6 @@ namespace GoStay.DataDto.OrderDto
         public string? Phone { get; set; }
 
         public string? Status { get; set; }
-        public string? HotelName { get; set; }
 
         public double? TotalPrice { get; set; }
         public decimal? TotalAmount { get; set; }
@@ -102,6 +101,7 @@ namespace GoStay.DataDto.OrderDto
                     {
                         ListRoomNames.Add(item.Split('$')[1]);
                         ListRoomIds.Add(item.Split('$')[0]);
+                        HotelName = item.Split('$')[2];
                     }
                 }
             }
@@ -109,6 +109,7 @@ namespace GoStay.DataDto.OrderDto
 
         public List<string> ListRoomNames { get; set; } = new List<string>();
         public List<string> ListRoomIds { get; set; } = new List<string>();
+        public string? HotelName { get; set; }
 
         public string? Slug { get; set; }
         public int? Style 
