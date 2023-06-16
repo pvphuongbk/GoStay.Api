@@ -24,7 +24,6 @@ namespace GoStay.Services.Tours
         public ResponseBase GetTourByUserIdAndId(int UserId, int Id);
         public int AddTourStartTime(string time);
         public ResponseBase SavePicture(string url, int idTour, int size);
-
-
+        public ResponseBase SaveListPicture(List<string> datas);
     }
 }

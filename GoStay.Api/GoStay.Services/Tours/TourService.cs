@@ -13,6 +13,8 @@ using GoStay.DataDto;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
@@ -632,6 +634,43 @@ namespace GoStay.Services.Tours
 
         }
 
+        public ResponseBase SaveListPicture(List<string> datas)
+        {
 
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                List<int> result = new List<int>();
+                foreach (var data in datas)
+                {
+                    var item = data.Split(";");
+                    var url = item[0];
+                    var idTour = int.Parse(item[1]);
+                    var size = int.Parse(item[2]);
+                    var picture = new Picture();
+                    picture.Url = url;
+                    picture.TourId = idTour;
+                    picture.Size = size;
+                    picture.Type = 2;
+                    picture.Datein = DateTime.Now;
+                    _commonUoW.BeginTransaction();
+
+                    _pictureRepository.Insert(picture);
+                    result.Add(picture.Id);
+                }
+                _commonUoW.Commit();
+
+                response.Data = result;
+                return response;
+            }
+            catch
+            {
+                _commonUoW.RollBack();
+
+                response.Data = 0;
+                return response;
+            }
+
+        }
     }
 }

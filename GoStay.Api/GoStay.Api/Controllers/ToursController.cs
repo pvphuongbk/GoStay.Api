@@ -147,5 +147,11 @@ namespace GoStay.Api.Controllers
             var items = _tourService.SavePicture(url, IdTour,size);
             return items;
         }
+        [HttpPost("save-listpicture-tour")]
+        public ResponseBase SaveListPicture(List<string> data)
+        {
+            var items = _tourService.SaveListPicture(data);
+            return items;
+        }
     }
 }
