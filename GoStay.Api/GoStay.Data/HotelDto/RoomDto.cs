@@ -30,6 +30,7 @@ namespace GoStay.DataDto.Hotel
         public List<ViewRoomDto> ViewsRoom { get; set; }
         public List<ServiceRoomDto> ServicesRoom { get; set; }
         public List<PictureRoomDto> PicturesRoom { get; set; }
+        public decimal? CurrentPrice { get; set; }
 
 
     }
