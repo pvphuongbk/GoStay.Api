@@ -655,10 +655,9 @@ namespace GoStay.Services.Tours
                     picture.Type = 2;
                     picture.Datein = DateTime.Now;
                     _commonUoW.BeginTransaction();
-
                     _pictureRepository.Insert(picture);
+                    _commonUoW.Commit();
                 }
-                _commonUoW.Commit();
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
 
