@@ -60,6 +60,13 @@ namespace GoStay.Api.Controllers
             var items = _newsServices.GetNewsCategoryTotal(IdDomain);
             return items;
         }
+        [HttpGet("list-category-by-parentid")]
+        public ResponseBase GetListCategoryByParentId(int IdDomain, int ParentId)
+        {
+            var items = _newsServices.GetListCategoryByParentId(IdDomain, ParentId);
+            return items;
+        }
+
         [HttpPost("list-video-news")]
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)
         {
