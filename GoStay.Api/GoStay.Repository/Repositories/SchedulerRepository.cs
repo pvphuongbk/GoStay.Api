@@ -62,10 +62,10 @@ namespace GoStay.Repository.Repositories
                         RecurrenceRule.TryGetValue("FREQ", out freq);
                         if (freq == "DAILY")
                         {
-                            if(t1>item.End)
-                            { continue; }
-                            else
-                            {
+                            //if(t1>item.End)
+                            //{ continue; }
+                            //else
+                            //{
                                 var DayStart = item.Start;
                                 int countF = 0;
                                 int intervalF = 1;
@@ -109,7 +109,7 @@ namespace GoStay.Repository.Repositories
                                     continue;
 
                                 }
-                            }
+                        //}
                         }
                         if (freq == "WEEKLY")
                         {
