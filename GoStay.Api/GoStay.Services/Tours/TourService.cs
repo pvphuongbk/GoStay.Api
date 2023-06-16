@@ -17,6 +17,7 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
 
 namespace GoStay.Services.Tours
@@ -656,18 +657,20 @@ namespace GoStay.Services.Tours
                     _commonUoW.BeginTransaction();
 
                     _pictureRepository.Insert(picture);
-                    result.Add(picture.Id);
                 }
                 _commonUoW.Commit();
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
 
-                response.Data = result;
+                response.Data = "Success";
                 return response;
             }
             catch
             {
                 _commonUoW.RollBack();
-
-                response.Data = 0;
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = ErrorCodeMessage.Exception.Value;
+                response.Data = "exception";
                 return response;
             }
 
