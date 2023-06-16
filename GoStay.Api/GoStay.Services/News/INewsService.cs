@@ -24,6 +24,8 @@ namespace GoStay.Services.Newss
         public ResponseBase GetDataSupportNews();
         public ResponseBase GetNewsTopicTotal(int IdDomain);
         public ResponseBase GetNewsCategoryTotal(int IdDomain);
+        public ResponseBase GetListCategoryByParentId(int IdDomain, int ParentId);
+
 
     }
 }
