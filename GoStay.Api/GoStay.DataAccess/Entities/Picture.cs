@@ -22,7 +22,7 @@ namespace GoStay.DataAccess.Entities
         public int? Type { get; set; }
 		public int? IdAlbum { get; set; }
         public int? IdType { get; set; }
-        public int? IdGroup { get; set; }
+        public byte? ImpLevel { get; set; }
         public DateTime? Datein { get; set; }
         public int? Size { get; set; }
         public int? HotelId { get; set; }
