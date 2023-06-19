@@ -40,23 +40,6 @@ namespace GoStay.DataDto.OrderDto
         public DateTime? DateUpdate { get; set; }
         public string? Ordercode { get; set; }
         public int? IdUser { get; set; }
-        public int? IdHotel { get; set; }
-        public string? TourNameId
-        {
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    IdTour = 0;
-                    TourName = "";
-                }
-                else
-                {
-                    IdTour = int.Parse(value.Split("$")[1]);
-                    TourName = value.Split("$")[0];
-                }
-            }
-        }
 
         public int? IdTour { get; set; }
         public string? TourName { get; set; }
@@ -66,63 +49,28 @@ namespace GoStay.DataDto.OrderDto
         public string? Phone { get; set; }
 
         public string? Status { get; set; }
+        public int? Style { get; set; }
+        public int? Total { get; set; }
+        public string? RoomName { get; set; }
+        public int? IdRoom { get; set; }
+        public string? HotelName { get; set; }
+        public int? IdHotel { get; set; }
 
-        public double? TotalPrice { get; set; }
-        public decimal? TotalAmount { get; set; }
 
         public string? PaymentMethod { get; set; }
-        public string? RoomIdsNames
-        {
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    RoomIdName = new List<string>();
-                }
-                else
-                {
-                    RoomIdName = value.Split(';').ToList();
-
-                }
-            }
-        }
-        public List<string>? RoomIdName
-        {
-            set
-            {
-                if (value==null)
-                {
-                    ListRoomNames = new List<string>();
-                    ListRoomIds = new List<string>();
-                }
-                else
-                {
-                    foreach (var item in value)
-                    {
-                        ListRoomNames.Add(item.Split('$')[1]);
-                        ListRoomIds.Add(item.Split('$')[0]);
-                        HotelName = item.Split('$')[2];
-                    }
-                }
-            }
-        }
-
-        public List<string> ListRoomNames { get; set; } = new List<string>();
-        public List<string> ListRoomIds { get; set; } = new List<string>();
-        public string? HotelName { get; set; }
+        public decimal? TotalAmount { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? Discount { get; set; }
+        public int? Adult { get; set; }
+        public int? Children { get; set; }
+        public int? Infant { get; set; }
+        public int? NumNight { get; set; }
+        public int? NumRoom { get; set; }
+        public DateTime? CheckInDate { get; set; }
+        public DateTime? CheckOutDate { get; set; }
 
         public string? Slug { get; set; }
-        public int? Style 
-        { 
-            get 
-            {
-                if (IdTour == 115)
-                    return 1;
-                else
-                    return 2;
-            } 
-        }
-        public int Total { get; set; }
+
 
     }
 }

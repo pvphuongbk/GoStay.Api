@@ -13,6 +13,8 @@ namespace GoStay.Data.OrderDto
     public class OrderGetInfoDto
     {
         public int Id { get; set; }
+        public int? IdHotel { get; set; }
+
         public string? Ordercode { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }

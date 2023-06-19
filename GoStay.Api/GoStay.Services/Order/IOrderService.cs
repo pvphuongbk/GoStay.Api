@@ -32,6 +32,6 @@ namespace GoStay.Services.Orders
         public ResponseBase UpdatePrePayment(decimal prepayment, int IdOrder);
 
         public ResponseBase UpdateTotalAmount(UpdateTotalAmountOrderParam param);
-        public ResponseBase UpdateOrder(OrderDto order);
+        public ResponseBase UpdateOrder(OrderDto order,int IdOrder);
     }
 }
