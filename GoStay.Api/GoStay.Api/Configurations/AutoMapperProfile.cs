@@ -23,6 +23,8 @@ namespace GoStay.Api.Configurations
 		{
 			CreateMap<HotelRoom, RoomByHotelDto>().ReverseMap();
             CreateMap<HotelRoom,HotelRoomDto>().ReverseMap();
+            CreateMap<HotelRoom, RoomOrderDto>().ReverseMap();
+
             CreateMap<GoStay.DataAccess.Entities.Service, ServiceDetailHotelDto>().ReverseMap();
 
             CreateMap<Order, OrderDto>().ReverseMap();

@@ -10,6 +10,7 @@ namespace GoStay.DataAccess.Entities
         {
             Albums = new HashSet<Album>();
             OrderDetails = new HashSet<OrderDetail>();
+            Orders = new HashSet<Order>();
             Pictures = new HashSet<Picture>();
             RoomMamenitis = new HashSet<RoomMameniti>();
             RoomViews = new HashSet<RoomView>();
@@ -42,6 +43,7 @@ namespace GoStay.DataAccess.Entities
         public virtual Palletbed? PalletbedNavigation { get; set; }
         public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<RoomMameniti> RoomMamenitis { get; set; }
         public virtual ICollection<RoomView> RoomViews { get; set; }

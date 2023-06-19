@@ -12,6 +12,8 @@ using GoStay.Repository.Repositories;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using GoStay.Common.Extention;
+using GoStay.Data.ServiceDto;
+using GoStay.Data.TourDto;
 
 namespace GoStay.Services.Orders
 {
@@ -46,53 +48,37 @@ namespace GoStay.Services.Orders
             _orderFunction = orderFunction;
         }
 
-        public ResponseBase CreateOrder(OrderDto order, OrderDetailDto orderDetail)
+        public ResponseBase CreateOrder(OrderDto order)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
+                if (order.Style == 1)
+                {
+                    var room = _roomRepository.FindAll(x => x.Id == order.IdRoom).SingleOrDefault();
+                    order.Price = room.CurrentPrice;
+                    order.Discount = room.Discount;
+                    order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
+                    order.IdHotel = room.Idhotel;
+                }
+                if (order.Style == 2)
+                {
+                    var tour = _tourRepository.FindAll(x => x.Id == order.IdTour).SingleOrDefault();
+                    order.Price = (decimal)(tour.Price * order.Adult + tour.PriceChild * order.Children);
+                    order.Discount = tour.Discount;
+                    order.TotalAmount = order.Price * (decimal)(100 - order.Discount) / 100;
+                }
+                var ordercheck = _mapper.Map<OrderDto, Order>(order);
+                ordercheck.IdPaymentMethod = order.IdPtthanhToan;
+                ordercheck.DateCreate = DateTime.Now;
                 _commonUoW.BeginTransaction();
-                var orderEntity = _mapper.Map<OrderDto, Order>(order);
-                orderEntity.Style = orderDetail.DetailStyle;
-                orderEntity.Prepayment = 0;
 
-                _OrderRepository.Insert(orderEntity);
-                if (orderDetail.DetailStyle == 1)
-                {
-                    var hotel = _hotelRepository.GetById(order.IdHotel);
-                    hotel.LastOrderTime = DateTime.Now;
-                    _hotelRepository.Update(hotel);
-                }
-                _commonUoW.Commit();
-
-                _commonUoW.BeginTransaction();
-
-                orderDetail.IdOrder = orderEntity.Id;
-
-                var orderDetailEntity = _mapper.Map<OrderDetailDto, OrderDetail>(orderDetail);
-                if (orderDetail.DetailStyle == 1)
-                {
-                    orderDetailEntity.IdRoom = orderDetail.IdProduct;
-                    var room = _roomRepository.GetById(orderDetail.IdProduct);
-                    orderDetailEntity.Price = (decimal)room.CurrentPrice;
-                    orderDetailEntity.Discount = room.Discount;
-                }
-                if (orderDetail.DetailStyle == 2)
-                {
-                    orderDetailEntity.IdTour = orderDetail.IdProduct;
-                    var tour = _tourRepository.GetById(orderDetail.IdProduct);
-                    orderDetailEntity.Price = (decimal)tour.Price;
-                    orderDetailEntity.Discount = tour.Discount;
-                    orderDetailEntity.Num = 0;
-                    orderDetailEntity.IdRoom = 9589;
-
-                }
-                _OrderDetailRepository.Insert(orderDetailEntity);
+                _OrderRepository.Insert(ordercheck);
 
                 _commonUoW.Commit();
                 responseBase.Code = ErrorCodeMessage.Success.Key;
                 responseBase.Message = ErrorCodeMessage.Success.Value;
-                responseBase.Data = GetOrderbyId(orderEntity.Id).Data;
+                responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
                 return responseBase;
             }
             catch (Exception e)
@@ -103,19 +89,65 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-
-        public ResponseBase CheckOrder(OrderDto order, OrderDetailDto orderDetail)
+        public ResponseBase UpdateOrder(OrderDto order)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                if (orderDetail.DetailStyle == 1)
+
+                var ordercheck = _OrderRepository.FindAll(x => x.Id == order.Id).SingleOrDefault();
+                if (order.Style == 1)
                 {
-                    responseBase = CheckOrderHotel(order, orderDetail);
+                    var room = _roomRepository.FindAll(x => x.Id == order.IdRoom).SingleOrDefault();
+                    order.Price = room.CurrentPrice;
+                    order.Discount = room.Discount;
+                    order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
+                    order.IdHotel = room.Idhotel;
+                    order.Status = 1;
                 }
-                if (orderDetail.DetailStyle == 2)
+                if (order.Style == 2)
                 {
-                    responseBase = CheckOrderTour(order, orderDetail);
+                    var tour = _tourRepository.FindAll(x => x.Id == order.IdTour).SingleOrDefault();
+                    order.Price = (decimal)(tour.Price * order.Adult + tour.PriceChild * order.Children);
+                    order.Discount = tour.Discount;
+                    order.TotalAmount = order.Price * (decimal)(100 - order.Discount) / 100;
+                    order.Status = 1;
+                }
+                ordercheck = _mapper.Map<OrderDto, Order>(order);
+                ordercheck.DateUpdate = DateTime.Now;
+                _commonUoW.BeginTransaction();
+
+                _OrderRepository.Update(ordercheck);
+                _commonUoW.Commit();
+
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
+
+
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                responseBase.Data = null;
+                return responseBase;
+            }
+        }
+
+        public ResponseBase CheckOrder(OrderDto order)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                if (order.Style == 1)
+                {
+                    responseBase = CheckOrderHotel(order);
+                }
+                if (order.Style == 2)
+                {
+                    responseBase = CheckOrderTour(order);
 
                 }
 
@@ -128,7 +160,7 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-        public ResponseBase CheckOrderHotel(OrderDto order, OrderDetailDto orderDetail)
+        public ResponseBase CheckOrderHotel(OrderDto order)
         {
             ResponseBase responseBase = new ResponseBase();
             try
@@ -136,54 +168,49 @@ namespace GoStay.Services.Orders
                 Order ordercheck = null;
                 if (order.IdUser > 1)
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status < 3)
-                        .Include(x => x.OrderDetails).OrderBy(x=>x.Status)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdRoom == order.IdRoom )
                         .FirstOrDefault();
                 }
                 else
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status < 3 && x.Session == order.Session)
-                        .Include(x => x.OrderDetails).OrderBy(x => x.Status)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdRoom == order.IdRoom && x.Session == order.Session)
                         .FirstOrDefault();
                 }
 
                 if (ordercheck is null)
                 {
+                    if (order.IdUser > 1)
+                    {
+                        var ordercheck2 = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == order.IdHotel && x.Status<3)
+                            .FirstOrDefault();
+                        if (ordercheck2!=null)
+                        {
+                            responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
+                            responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                            responseBase.Data = UpdateOrder(order).Data;
+                        }
+                    } 
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
-                    responseBase.Data = CreateOrder(order, orderDetail).Data;
+                    responseBase.Data = CreateOrder(order).Data;
                 }
                 else
                 {
-                    int addDetail = 0;
-                    foreach (var item in ordercheck.OrderDetails)
+                    if (ordercheck.Status >= 3)
                     {
-                        if (item.IdRoom == orderDetail.IdProduct)
-                        {
-                            addDetail++;
-                            if (ordercheck.Status == 3)
-                            {
-                                responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
-                                responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
-                                responseBase.Data = CreateOrder(order, orderDetail).Data;
-                                return responseBase;
-                            }
-                            else
-                            {
-                                responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
-                                responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
-                                responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
-                                return responseBase;
-                            }
-                        }
-                    }
-                    if (addDetail == 0)
-                    {
-                        responseBase.Code = CheckOrderCodeMessage.CreateNewDetail.Key;
-                        responseBase.Message = CheckOrderCodeMessage.CreateNewDetail.Value;
-                        responseBase.Data = AddOrderDetail(ordercheck.Id, orderDetail).Data;
+                        responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                        responseBase.Data = CreateOrder(order).Data;
                         return responseBase;
                     }
+                    else
+                    {
+                        responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                        responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
+                        return responseBase;
+                    }
+
 
                 }
                 return responseBase;
@@ -196,7 +223,7 @@ namespace GoStay.Services.Orders
             }
         }
 
-        public ResponseBase CheckOrderTour(OrderDto order, OrderDetailDto orderDetail)
+        public ResponseBase CheckOrderTour(OrderDto order)
         {
             ResponseBase responseBase = new ResponseBase();
             try
@@ -205,13 +232,13 @@ namespace GoStay.Services.Orders
                 
                 if (order.IdUser > 1)
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status < 3)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdTour== order.IdTour)
                     .Include(x => x.OrderDetails)
                     .SingleOrDefault();
                 }
                 else
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdHotel == orderDetail.IdProduct && x.Status < 3&& x.Session == order.Session)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdTour == order.IdTour && x.Session == order.Session)
                     .Include(x => x.OrderDetails)
                     .SingleOrDefault();
                 }
@@ -221,14 +248,24 @@ namespace GoStay.Services.Orders
                 {
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
-                    responseBase.Data = CreateOrder(order, orderDetail).Data;
+                    responseBase.Data = CreateOrder(order).Data;
                 }
                 else
                 {
-                    responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
-                    responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
-                    responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
-                    return responseBase;
+                    if (ordercheck.Status < 3)
+                    {
+                        responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                        responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
+                        return responseBase;
+                    }
+                    else
+                    {
+                        responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                        responseBase.Data = CreateOrder(order).Data;
+                        return responseBase;
+                    }
                 }
                 return responseBase;
             }
@@ -240,31 +277,6 @@ namespace GoStay.Services.Orders
             }
         }
 
-        public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom)
-        {
-            ResponseBase responseBase = new ResponseBase();
-            try
-            {
-
-                var ordercheck = _OrderRepository.FindAll(x => x.IdUser == UserId && x.IdHotel == IdHotel && x.Status < 3 && x.OrderDetails.Where(y => y.IdRoom == IdRoom).Any());
-                var count = ordercheck.Count();
-                if (ordercheck.Count()==0)
-                {
-                    responseBase.Data = 0;
-                }
-                else
-                {
-                    responseBase.Data = ordercheck.Select(x=>x.Id).First();
-                }
-                return responseBase;
-            }
-            catch (Exception e)
-            {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
-                responseBase.Message = e.Message;
-                return responseBase;
-            }
-        }
         public ResponseBase AddOrderDetail(int IdOrder, OrderDetailDto orderDetail)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -596,7 +608,7 @@ namespace GoStay.Services.Orders
 
                     for (int j = 0;j< listdetail.Count();j++)
                     {
-                        listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                        //listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
                     }
                 }
 
@@ -639,7 +651,7 @@ namespace GoStay.Services.Orders
 
                     for (int j = 0; j < listdetail.Count(); j++)
                     {
-                        listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
+                        //listOrderInfo[i].ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listdetail[j]));
                     }
                 }
 
@@ -680,7 +692,7 @@ namespace GoStay.Services.Orders
 
                     foreach (var detail in order.OrderDetails)
                     {
-                        orderInfor.ListOrderDetails.Add(_orderFunction.CreateOrderDetailInfoDto(detail));
+                        //orderInfor.ListOrderDetails.Add(_orderFunction.CreateOrderDetailInfoDto(detail));
                     }
                 }
 
@@ -703,23 +715,23 @@ namespace GoStay.Services.Orders
                 var orderInfo = new OrderGetInfoDto();
                 var listOrderDetail = new List<OrderDetail>();
 
-                var order = _OrderRepository.FindAll(x => x.Id == Id)?
+                var order = _OrderRepository.FindAll(x => x.Id == Id)
                     //room
-                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x=>x.IdRoomNavigation)
+                    .Include(x=>x.IdRoomNavigation)
                             .ThenInclude(x=>x.RoomViews).ThenInclude(x=>x.IdViewNavigation)
-                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                    .Include(x => x.IdRoomNavigation)
                             .ThenInclude(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
-                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
+                    .Include(x => x.IdRoomNavigation)
                             .ThenInclude(x => x.PalletbedNavigation)
                     //tour
-                    .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdTourNavigation).ThenInclude(x=>x.TourDistrictTos)
+                    .Include(x=>x.IdTourNavigation).ThenInclude(x=>x.TourDistrictTos)
                         .ThenInclude(x=>x.IdDistrictToNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
-                    .Include(x=>x.OrderDetails).ThenInclude(x=>x.IdTourNavigation).ThenInclude(x=>x.IdTourStyleNavigation)
-                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdTourTopicNavigation)
-                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.TourDetails)
-                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdDistrictFromNavigation)
+                    .Include(x=>x.IdTourNavigation).ThenInclude(x=>x.IdTourStyleNavigation)
+                    .Include(x => x.IdTourNavigation).ThenInclude(x => x.IdTourTopicNavigation)
+                    .Include(x => x.IdTourNavigation).ThenInclude(x => x.TourDetails)
+                    .Include(x => x.IdTourNavigation).ThenInclude(x => x.IdDistrictFromNavigation)
                         .ThenInclude(x=>x.IdTinhThanhNavigation)
-                    .Include(x => x.OrderDetails).ThenInclude(x => x.IdTourNavigation).ThenInclude(x => x.IdStartTimeNavigation)
+                    .Include(x => x.IdTourNavigation).ThenInclude(x => x.IdStartTimeNavigation)
                     //exception
                     .Include(x => x.IdPaymentMethodNavigation)
                     .Include(x => x.StatusNavigation)
@@ -733,19 +745,26 @@ namespace GoStay.Services.Orders
                     return responseBase;
                 }    
 
-                listOrderDetail= order.OrderDetails.ToList();
-
                 orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
-                orderInfo.Status =order.Status;
-                orderInfo.StatusDetail = order.StatusNavigation.Status;
                 orderInfo.PaymentMethod = order.IdPaymentMethodNavigation.PhuongThuc;
 
-                for (int j = 0; j < listOrderDetail.Count(); j++)
+                if(orderInfo.Style==1)
                 {
-                    orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listOrderDetail[j]));
+                    var room = _roomRepository.FindAll(x => x.Id == order.IdRoom).SingleOrDefault();
+                    orderInfo.Room = CreateHotelRoomOrderDto(room);
+                    orderInfo.Room.NumNight = order.NumNight;
+                    orderInfo.Room.NumRoom = order.NumRoom;
+
                 }
-                orderInfo.TotalPrice = orderInfo.ListOrderDetails.Sum(x => x.Price);
-                orderInfo.TotalNewPrice = orderInfo.ListOrderDetails.Sum(x => x.NewPrice);
+                if (orderInfo.Style == 2)
+                {
+                    var tour = _tourRepository.FindAll(x => x.Id == order.IdTour).SingleOrDefault();
+                    orderInfo.Tour = CreateTourOrderDto(tour);
+                    orderInfo.Tour.Adult = (int)order.Adult;
+                    orderInfo.Tour.Children = (int)order.Children;
+                    orderInfo.Tour.Infant = (int)order.Infant;
+
+                }
                 responseBase.Data = orderInfo;
                 return responseBase;
             }
@@ -937,43 +956,25 @@ namespace GoStay.Services.Orders
             }
             
         }
-        public ResponseBase GetListRoomInOrder(int Id)
+        public ResponseBase GetRoomInOrder(int Id)
         {
             IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _pictureRepository, _userRepository);
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var orderInfo = new OrderGetInfoDto();
-                var listOrderDetail = new List<OrderDetail>();
 
-                var order = _OrderRepository.FindAll(x => x.Id == Id)?
-                    //room
-                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
-                            .ThenInclude(x => x.RoomViews).ThenInclude(x => x.IdViewNavigation)
-                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
-                            .ThenInclude(x => x.RoomMamenitis).ThenInclude(x => x.IdservicesNavigation)
-                    .Include(x => x.OrderDetails.OrderByDescending(x => x.DateCreate)).ThenInclude(x => x.IdRoomNavigation)
-                            .ThenInclude(x => x.PalletbedNavigation)
-                    //tour
-                    //exception
-                    .SingleOrDefault();
+                var room = _roomRepository.FindAll(x=>x.Id == Id).SingleOrDefault();
 
 
-                if (order == null)
+                if (room == null)
                 {
-                    responseBase.Data = orderInfo;
+                    responseBase.Data = null;
                     return responseBase;
                 }
 
-                listOrderDetail = order.OrderDetails.ToList();
+                var roomDto = CreateHotelRoomOrderDto(room);
 
-                orderInfo = _mapper.Map<Order, OrderGetInfoDto>(order);
-
-                for (int j = 0; j < listOrderDetail.Count(); j++)
-                {
-                    orderInfo.ListOrderDetails.Add(orderFunction.CreateOrderDetailInfoDto(listOrderDetail[j]));
-                }
-                responseBase.Data = orderInfo.ListOrderDetails;
+                responseBase.Data = roomDto;
                 return responseBase;
             }
             catch (Exception e)
@@ -983,5 +984,71 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
+
+
+
+        public RoomOrderDto CreateHotelRoomOrderDto(HotelRoom roomOrderDetail)
+        {
+            var hotelRoomOrderDto = _mapper.Map<HotelRoom, RoomOrderDto>(roomOrderDetail);
+            var hotel = _hotelRepository.GetById(roomOrderDetail.Idhotel);
+            hotelRoomOrderDto.HotelName = hotel.Name;
+            hotelRoomOrderDto.RoomName = roomOrderDetail.Name;
+
+            hotelRoomOrderDto.Address = hotel.Address;
+            hotelRoomOrderDto.Rating = hotel.Rating;
+            hotelRoomOrderDto.ReviewScore = (int?)hotel.ReviewScore;
+            hotelRoomOrderDto.NumberReviewers = hotel.NumberReviewers;
+            if (roomOrderDetail.RoomViews != null && roomOrderDetail.RoomViews.Count() > 0)
+            {
+                hotelRoomOrderDto.ViewDirection = roomOrderDetail.RoomViews.FirstOrDefault().IdViewNavigation.ViewDirection1;
+            }
+            hotelRoomOrderDto.Pictures = _pictureRepository.FindAll(x => x.HotelRoomId == roomOrderDetail.Id && x.Type == 1)?.Select(x => x.Url).Take(1).ToList();
+            hotelRoomOrderDto.Pictures.AddRange(_pictureRepository.FindAll(x => x.HotelId == hotel.Id && x.Type == 0)?.Select(x => x.Url).Take(1).ToList());
+            hotelRoomOrderDto.PalletbedText = roomOrderDetail.PalletbedNavigation?.Text;
+
+            hotelRoomOrderDto.Services = _mapper.Map<List<Service>, List<ServiceDetailHotelDto>>
+                                        (roomOrderDetail.RoomMamenitis.Select(x => x.IdservicesNavigation).ToList());
+
+            return hotelRoomOrderDto;
+        }
+        public TourOrderDto CreateTourOrderDto(Tour tourOrderDetail)
+        {
+            var tourOrderDto = _mapper.Map<Tour, TourOrderDto>(tourOrderDetail);
+            tourOrderDto.TourStyle = tourOrderDetail.IdTourStyleNavigation.TourStyle1;
+            tourOrderDto.TourTopic = tourOrderDetail.IdTourTopicNavigation.TourTopic1;
+            tourOrderDto.UserName = _userRepository.GetById(tourOrderDto.IdUser)?.UserName;
+            tourOrderDto.ProvinceFrom = tourOrderDetail.IdDistrictFromNavigation.IdTinhThanhNavigation.TenTt;
+            if (tourOrderDetail.IdStartTimeNavigation != null)
+            {
+                tourOrderDto.StartTime = tourOrderDetail.IdStartTimeNavigation.StartDate;
+            }
+            tourOrderDto.Pictures = _pictureRepository.FindAll(x => x.TourId == tourOrderDetail.Id && x.Type == 2)?.Select(x => x.Url).Take(2).ToList();
+            var listTourDetail = tourOrderDetail.TourDetails.ToList();
+
+            tourOrderDto.TourDetails = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(listTourDetail);
+            var listprovinceto = new List<string>();
+            foreach (var item in tourOrderDetail.TourDistrictTos.Select(x => x.IdDistrictToNavigation.IdTinhThanhNavigation.TenTt))
+            {
+                listprovinceto.Add(item);
+            }
+            tourOrderDto.ProvinceTo = listprovinceto;
+            return tourOrderDto;
+        }
+        //public ResponseBase GetBookedDateRoom(int IdRoom)
+        //{
+        //    ResponseBase responseBase = new ResponseBase();
+        //    try
+        //    {
+        //        var orders = _OrderRepository.FindAll(x=>x.check)
+        //        responseBase.Data = orderInfo.ListOrderDetails;
+        //        return responseBase;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        responseBase.Code = ErrorCodeMessage.Exception.Key;
+        //        responseBase.Message = e.Message;
+        //        return responseBase;
+        //    }
+        //}
     }
 }

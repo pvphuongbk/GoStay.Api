@@ -769,6 +769,10 @@ namespace GoStay.DataAccess.DBContext
 
             modelBuilder.Entity<Order>(entity =>
             {
+                entity.Property(e => e.CheckInDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CheckOutDate).HasColumnType("datetime");
+
                 entity.Property(e => e.DateCreate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -781,11 +785,17 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.MoreInfo).HasMaxLength(500);
 
+                entity.Property(e => e.MoreInfor).HasMaxLength(500);
+
                 entity.Property(e => e.Ordercode)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Prepayment).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Price)
+                    .HasColumnType("decimal(18, 0)")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Session)
                     .HasMaxLength(50)
@@ -799,6 +809,16 @@ namespace GoStay.DataAccess.DBContext
                     .HasForeignKey(d => d.IdPaymentMethod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Orders_OrderPhuongThucTT");
+
+                entity.HasOne(d => d.IdRoomNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.IdRoom)
+                    .HasConstraintName("FK_Orders_HotelRoom");
+
+                entity.HasOne(d => d.IdTourNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.IdTour)
+                    .HasConstraintName("FK_Orders_Tours");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Orders)
@@ -815,10 +835,6 @@ namespace GoStay.DataAccess.DBContext
             modelBuilder.Entity<OrderDetail>(entity =>
             {
                 entity.ToTable("OrderDetail");
-
-                entity.Property(e => e.ChechIn).HasColumnType("datetime");
-
-                entity.Property(e => e.CheckOut).HasColumnType("datetime");
 
                 entity.Property(e => e.DateCreate)
                     .HasColumnType("datetime")

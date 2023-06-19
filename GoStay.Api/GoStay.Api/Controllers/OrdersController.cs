@@ -20,25 +20,25 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("order")]
-        public ResponseBase CreateOrder(CreateOrderParam order)
+        public ResponseBase CreateOrder(OrderDto order)
         {
-            var items = _orderService.CreateOrder(order.order, order.orderDetail);
+            var items = _orderService.CreateOrder(order);
             return items;
         }
 
         [HttpPost("check-order")]
-        public ResponseBase CheckOrder(CreateOrderParam order)
+        public ResponseBase CheckOrder(OrderDto order)
         {
-            var items = _orderService.CheckOrder(order.order, order.orderDetail);
+            var items = _orderService.CheckOrder(order);
             return items;
         }
 
-        [HttpGet("check-existing")]
-        public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom)
-        {
-            var items = _orderService.OrderExisting(UserId, IdHotel, IdRoom);
-            return items;
-        }
+        //[HttpGet("check-existing")]
+        //public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom)
+        //{
+        //    var items = _orderService.OrderExisting(UserId, IdHotel, IdRoom);
+        //    return items;
+        //}
 
 
         [HttpPost("detail")]
@@ -158,9 +158,9 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("list-room-in-order")]
-        public ResponseBase GetListRoomInOrder(int IdOrder)
+        public ResponseBase GetRoomInOrder(int IdRoom)
         {
-            var items = _orderService.GetListRoomInOrder( IdOrder);
+            var items = _orderService.GetRoomInOrder(IdRoom);
             return items;
         }
     }
