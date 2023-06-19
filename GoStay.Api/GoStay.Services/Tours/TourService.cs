@@ -186,7 +186,6 @@ namespace GoStay.Services.Tours
                                 .Include(x=>x.IdTourStyleNavigation)
                                 .Include(x => x.IdTourTopicNavigation)
                                 .Include(x => x.IdDistrictFromNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
-                                .Include(x=>x.OrderDetails)
                                 .Include(x=>x.Pictures)
                                 .Include(x=>x.TourDistrictTos).ThenInclude(x=>x.IdDistrictToNavigation).ThenInclude(x=>x.IdTinhThanhNavigation)
                                 .Include(x=>x.IdStartTimeNavigation).SingleOrDefault();
