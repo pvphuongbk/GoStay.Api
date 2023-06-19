@@ -89,13 +89,13 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-        public ResponseBase UpdateOrder(OrderDto order)
+        public ResponseBase UpdateOrder(OrderDto order, int IdOrder)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
 
-                var ordercheck = _OrderRepository.FindAll(x => x.Id == order.Id).SingleOrDefault();
+                var ordercheck = _OrderRepository.FindAll(x => x.Id == IdOrder).SingleOrDefault();
                 if (order.Style == 1)
                 {
                     var room = _roomRepository.FindAll(x => x.Id == order.IdRoom).SingleOrDefault();
@@ -113,8 +113,26 @@ namespace GoStay.Services.Orders
                     order.TotalAmount = order.Price * (decimal)(100 - order.Discount) / 100;
                     order.Status = 1;
                 }
-                ordercheck = _mapper.Map<OrderDto, Order>(order);
+                ordercheck.Title = order.Title;
+                ordercheck.MoreInfo = order.MoreInfo;
+                ordercheck.Session = order.Session;
+                ordercheck.Ordercode = order.Ordercode;
+                ordercheck.Adult = order.Adult;
+                ordercheck.Children = order.Children;
+                ordercheck.Infant = order.Infant;
+                ordercheck.CheckInDate = order.CheckInDate;
+                ordercheck.CheckOutDate = order.CheckOutDate;
+                ordercheck.IdRoom = order.IdRoom;
+                ordercheck.NumNight = order.NumNight;
+                ordercheck.NumRoom = order.NumRoom;
+                ordercheck.Price = order.Price;
+                ordercheck.Discount = order.Discount;
+                ordercheck.TotalAmount = order.TotalAmount;
+                ordercheck.Status = order.Status;
+                ordercheck.Discount = order.Discount;
                 ordercheck.DateUpdate = DateTime.Now;
+                ordercheck.IdPaymentMethod = order.IdPtthanhToan;
+
                 _commonUoW.BeginTransaction();
 
                 _OrderRepository.Update(ordercheck);
@@ -187,12 +205,16 @@ namespace GoStay.Services.Orders
                         {
                             responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                             responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
-                            responseBase.Data = UpdateOrder(order).Data;
+                            responseBase.Data = UpdateOrder(order, ordercheck2.Id).Data;
+                            return responseBase;
+
                         }
                     } 
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
                     responseBase.Data = CreateOrder(order).Data;
+                    return responseBase;
+
                 }
                 else
                 {
@@ -233,25 +255,43 @@ namespace GoStay.Services.Orders
                 if (order.IdUser > 1)
                 {
                     ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdTour== order.IdTour)
-                    .Include(x => x.OrderDetails)
                     .SingleOrDefault();
                 }
                 else
                 {
                     ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdTour == order.IdTour && x.Session == order.Session)
-                    .Include(x => x.OrderDetails)
                     .SingleOrDefault();
                 }
 
 
                 if (ordercheck is null)
                 {
+                    if (order.IdUser > 1)
+                    {
+                        var ordercheck2 = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.Style == 2 && x.Status < 3)
+                            .FirstOrDefault();
+                        if (ordercheck2 != null)
+                        {
+                            responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
+                            responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                            responseBase.Data = UpdateOrder(order, ordercheck2.Id).Data;
+                            return responseBase;
+                        }
+                    }
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
                     responseBase.Data = CreateOrder(order).Data;
+                    return responseBase;
                 }
                 else
                 {
+                    if(ordercheck.Adult != order.Adult || ordercheck.Children != order.Children|| ordercheck.Infant != order.Infant)
+                    {
+                        responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                        responseBase.Data = UpdateOrder(order, ordercheck.Id).Data;
+                        return responseBase;
+                    }    
                     if (ordercheck.Status < 3)
                     {
                         responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
