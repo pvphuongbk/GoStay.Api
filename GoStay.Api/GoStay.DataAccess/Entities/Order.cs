@@ -28,8 +28,20 @@ namespace GoStay.DataAccess.Entities
         public decimal? Prepayment { get; set; }
         public byte? Style { get; set; }
         public decimal? TotalAmount { get; set; }
+        public DateTime? CheckInDate { get; set; }
+        public DateTime? CheckOutDate { get; set; }
+        public int? IdRoom { get; set; }
+        public int? IdTour { get; set; }
+        public decimal? Price { get; set; }
+        public double? Discount { get; set; }
+        public byte? NumNight { get; set; }
+        public byte? NumRoom { get; set; }
+
+        public string? MoreInfor { get; set; }
 
         public virtual OrderPhuongThucTt IdPaymentMethodNavigation { get; set; } = null!;
+        public virtual HotelRoom? IdRoomNavigation { get; set; }
+        public virtual Tour? IdTourNavigation { get; set; }
         public virtual User IdUserNavigation { get; set; } = null!;
         public virtual OrderStatus? StatusNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

@@ -9,7 +9,7 @@ namespace GoStay.Services.Orders
 {
     public interface IOrderService
     {
-        public ResponseBase CreateOrder(OrderDto dataOrder, OrderDetailDto dataOrderRoom);
+        public ResponseBase CreateOrder(OrderDto dataOrder);
         public ResponseBase UpdateMoreInfoOrder(string moreinfo, int IdOrder);
         public ResponseBase AddOrderDetail(int IdOrder, OrderDetailDto orderDetail);
         public ResponseBase UpdateOrderDetail(InsertOrderDetailDto orderDetail);
@@ -21,18 +21,17 @@ namespace GoStay.Services.Orders
         public ResponseBase GetOrderbyUserID(int IDUser);
         public ResponseBase GetOrderbySession(string session);
         ResponseBase GetOrderbySession2(string session);
-        public ResponseBase CheckOrder(OrderDto order, OrderDetailDto orderDetai);
+        public ResponseBase CheckOrder(OrderDto order);
         public ResponseBase GetOrderbyId(int Id);
         ResponseBase GetOrderTotalMoneyByMonth(int month, int year, int status);
         ResponseBase GetOrderByMonth(int month, int year, int status);
         ResponseBase GetOrderRoomByMonth(int month, int year, int status);
         ResponseBase GetListOrderSearch(OrderSearchParam param);
-        public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom);
         public ResponseBase DeleteRoomInOrder(int IdRoom, int IdOrder);
-        public ResponseBase GetListRoomInOrder(int Id);
+        public ResponseBase GetRoomInOrder(int Id);
         public ResponseBase UpdatePrePayment(decimal prepayment, int IdOrder);
 
         public ResponseBase UpdateTotalAmount(UpdateTotalAmountOrderParam param);
-
+        public ResponseBase UpdateOrder(OrderDto order);
     }
 }
