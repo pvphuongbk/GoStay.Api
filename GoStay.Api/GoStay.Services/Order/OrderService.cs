@@ -103,6 +103,11 @@ namespace GoStay.Services.Orders
                     order.Discount = room.Discount;
                     order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
                     order.IdHotel = room.Idhotel;
+                    ordercheck.IdRoom = order.IdRoom;
+                    ordercheck.NumNight = order.NumNight;
+                    ordercheck.NumRoom = order.NumRoom;
+                    ordercheck.CheckInDate = order.CheckInDate;
+                    ordercheck.CheckOutDate = order.CheckOutDate;
                     order.Status = 1;
                 }
                 if (order.Style == 2)
@@ -112,19 +117,16 @@ namespace GoStay.Services.Orders
                     order.Discount = tour.Discount;
                     order.TotalAmount = order.Price * (decimal)(100 - order.Discount) / 100;
                     order.Status = 1;
+                    ordercheck.IdTour = order.IdTour;
+                    ordercheck.Adult = order.Adult;
+                    ordercheck.Children = order.Children;
+                    ordercheck.Infant = order.Infant;
+
                 }
                 ordercheck.Title = order.Title;
                 ordercheck.MoreInfo = order.MoreInfo;
                 ordercheck.Session = order.Session;
                 ordercheck.Ordercode = order.Ordercode;
-                ordercheck.Adult = order.Adult;
-                ordercheck.Children = order.Children;
-                ordercheck.Infant = order.Infant;
-                ordercheck.CheckInDate = order.CheckInDate;
-                ordercheck.CheckOutDate = order.CheckOutDate;
-                ordercheck.IdRoom = order.IdRoom;
-                ordercheck.NumNight = order.NumNight;
-                ordercheck.NumRoom = order.NumRoom;
                 ordercheck.Price = order.Price;
                 ordercheck.Discount = order.Discount;
                 ordercheck.TotalAmount = order.TotalAmount;
@@ -166,9 +168,7 @@ namespace GoStay.Services.Orders
                 if (order.Style == 2)
                 {
                     responseBase = CheckOrderTour(order);
-
                 }
-
                 return responseBase;
             }
             catch (Exception e)
@@ -203,13 +203,12 @@ namespace GoStay.Services.Orders
                             .FirstOrDefault();
                         if (ordercheck2!=null)
                         {
-                            responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
-                            responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                            responseBase.Code = CheckOrderCodeMessage.UpdateOrder.Key;
+                            responseBase.Message = CheckOrderCodeMessage.UpdateOrder.Value;
                             responseBase.Data = UpdateOrder(order, ordercheck2.Id).Data;
                             return responseBase;
-
                         }
-                    } 
+                    }
                     responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
                     responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
                     responseBase.Data = CreateOrder(order).Data;
@@ -227,10 +226,21 @@ namespace GoStay.Services.Orders
                     }
                     else
                     {
-                        responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
-                        responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
-                        responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
-                        return responseBase;
+                        if (ordercheck.NumNight != order.NumNight || ordercheck.NumRoom != order.NumRoom 
+                            || ordercheck.CheckInDate != order.CheckInDate || ordercheck.CheckOutDate != order.CheckOutDate)
+                        {
+                            responseBase.Code = CheckOrderCodeMessage.UpdateOrder.Key;
+                            responseBase.Message = CheckOrderCodeMessage.UpdateOrder.Value;
+                            responseBase.Data = UpdateOrder(order,ordercheck.Id).Data;
+                            return responseBase;
+                        }
+                        else
+                        {
+                            responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
+                            responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                            responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
+                            return responseBase;
+                        }
                     }
 
 
@@ -272,8 +282,8 @@ namespace GoStay.Services.Orders
                             .FirstOrDefault();
                         if (ordercheck2 != null)
                         {
-                            responseBase.Code = CheckOrderCodeMessage.CreateNewOrder.Key;
-                            responseBase.Message = CheckOrderCodeMessage.CreateNewOrder.Value;
+                            responseBase.Code = CheckOrderCodeMessage.UpdateOrder.Key;
+                            responseBase.Message = CheckOrderCodeMessage.UpdateOrder.Value;
                             responseBase.Data = UpdateOrder(order, ordercheck2.Id).Data;
                             return responseBase;
                         }
@@ -287,8 +297,8 @@ namespace GoStay.Services.Orders
                 {
                     if(ordercheck.Adult != order.Adult || ordercheck.Children != order.Children|| ordercheck.Infant != order.Infant)
                     {
-                        responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
-                        responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
+                        responseBase.Code = CheckOrderCodeMessage.UpdateOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.UpdateOrder.Value;
                         responseBase.Data = UpdateOrder(order, ordercheck.Id).Data;
                         return responseBase;
                     }    
@@ -540,8 +550,6 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
-
-
         public ResponseBase UpdateUserIDbySession(int IdUser, string Session)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -1074,21 +1082,106 @@ namespace GoStay.Services.Orders
             tourOrderDto.ProvinceTo = listprovinceto;
             return tourOrderDto;
         }
-        //public ResponseBase GetBookedDateRoom(int IdRoom)
-        //{
-        //    ResponseBase responseBase = new ResponseBase();
-        //    try
-        //    {
-        //        var orders = _OrderRepository.FindAll(x=>x.check)
-        //        responseBase.Data = orderInfo.ListOrderDetails;
-        //        return responseBase;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        responseBase.Code = ErrorCodeMessage.Exception.Key;
-        //        responseBase.Message = e.Message;
-        //        return responseBase;
-        //    }
-        //}
+        public ResponseBase GetBookedDateRoom(int IdRoom)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var ordersCICO = _OrderRepository.FindAll(x => x.IdRoom == IdRoom && x.Status>=3).Select(x => new
+                {
+                    CheckInDate = x.CheckInDate,
+                    CheckOutDate = x.CheckOutDate,
+                });
+                List<string> data = new List<string>();
+                foreach(var item in ordersCICO)
+                {
+                    var datapartial = GetDate((DateTime)item.CheckInDate, (DateTime)item.CheckOutDate);
+                    data.AddRange(datapartial);
+                }    
+                responseBase.Data = data;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+        public List<string> GetDate(DateTime from, DateTime to)
+        {
+            List<string> data = new List<string>();
+            var monthfrom = from.Month;
+            var dayfrom  = from.Day;
+            var monthto = to.Month;
+            var dayto = to.Day;
+            var year = to.Year;
+
+            if (monthto==monthfrom)
+            {
+                for (int i = dayfrom; i <= dayto; i++)
+                {
+                    data.Add($"{i}/{monthto}");
+                }
+            }
+            else
+            {
+                if(monthto==2|| monthto == 4 || monthto == 6 || monthto == 8 || monthto == 9 || monthto == 11 || monthto == 1)
+                {
+                    for (int i = dayfrom; i <= 31; i++)
+                    {
+                        data.Add($"{i}/{monthfrom}");
+                    }
+                    for (int i = 1; i <= dayto; i++)
+                    {
+                        data.Add($"{i}/{monthto}");
+                    }
+                }
+                if (monthto == 3)
+                {
+                    bool isLeap=false;
+                    if (year %400==0)
+                        isLeap=true;
+                    if(year%4==0 && year%100 !=0)
+                        isLeap = true;
+
+                    if (isLeap == true)
+                    {
+                        for (int i = dayfrom; i <= 29; i++)
+                        {
+                            data.Add($"{i}/{2}");
+                        }
+                        for (int i = 1; i <= dayto; i++)
+                        {
+                            data.Add($"{i}/{3}");
+                        }
+                    }
+                    else
+                    {
+                        for (int i = dayfrom; i <= 28; i++)
+                        {
+                            data.Add($"{i}/{2}");
+                        }
+                        for (int i = 1; i <= dayto; i++)
+                        {
+                            data.Add($"{i}/{3}");
+                        }
+                    }
+                }
+                if (monthto == 5 || monthto == 7 || monthto == 10 || monthto == 12)
+                {
+                    for (int i = dayfrom; i <= 30; i++)
+                    {
+                        data.Add($"{i}/{monthfrom}");
+                    }
+                    for (int i = 1; i <= dayto; i++)
+                    {
+                        data.Add($"{i}/{monthto}");
+                    }
+                }
+            }
+
+            return data;
+        }
     }
 }

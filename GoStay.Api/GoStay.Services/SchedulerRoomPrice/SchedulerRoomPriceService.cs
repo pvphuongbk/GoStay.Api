@@ -180,6 +180,26 @@ namespace GoStay.Services.Statisticals
             }
         }
 
+        public ResponseBase GetRoomPriceInFuture(DateTime futuretime, int RoomId)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var scheduler = _schedulerRepository.FindAll(x => x.RoomId == RoomId).OrderByDescending(x=>x.DateCreate);
+                var data = SchedulerRepository.GetFutureDayPriceRoom(scheduler, futuretime);
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                responseBase.Data = data;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
+
         public ResponseBase UpdateDailyPriceForAllRoom()
         {
             ResponseBase responseBase = new ResponseBase();
