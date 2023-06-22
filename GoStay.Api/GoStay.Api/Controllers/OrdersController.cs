@@ -33,12 +33,12 @@ namespace GoStay.Api.Controllers
             return items;
         }
 
-        //[HttpGet("check-existing")]
-        //public ResponseBase OrderExisting(int UserId, int IdHotel, int IdRoom)
-        //{
-        //    var items = _orderService.OrderExisting(UserId, IdHotel, IdRoom);
-        //    return items;
-        //}
+        [HttpGet("booked-date")]
+        public ResponseBase GetBookedDateRoom(int IdRoom)
+        {
+            var items = _orderService.GetBookedDateRoom(IdRoom);
+            return items;
+        }
 
 
         [HttpPost("detail")]

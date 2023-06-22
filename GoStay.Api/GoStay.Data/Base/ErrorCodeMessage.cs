@@ -15,8 +15,8 @@
     {
         #region Return Code (0 - 99): Common error
         public static readonly KeyValuePair<int, string> CreateNewOrder = new KeyValuePair<int, string>(0, "Create new order");
-        public static readonly KeyValuePair<int, string> CreateNewDetail = new KeyValuePair<int, string>(1, "Create New Detail");
         public static readonly KeyValuePair<int, string> GetOldOrder = new KeyValuePair<int, string>(2, "Get Old Order");
+        public static readonly KeyValuePair<int, string> UpdateOrder = new KeyValuePair<int, string>(3, "Update Order");
 
         #endregion
     }

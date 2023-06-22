@@ -16,6 +16,7 @@ namespace GoStay.Services.Statisticals
         public ResponseBase GetPrice(int month, int year, int RoomId, int day);
         public ResponseBase GetListRoomPrice(int month, int year, List<int> RoomIds, int day);
         public ResponseBase UpdateDailyPriceForAllRoom();
+        public ResponseBase GetRoomPriceInFuture(DateTime futuretime, int RoomId);
 
     }
 }
