@@ -78,7 +78,7 @@ namespace GoStay.Api.Controllers
                 var serviceroom = roomDto.ServicesRooms;
 
                 hotelRoom.NewPrice = hotelRoom.PriceValue * (100 - (decimal)hotelRoom.Discount) / 100;
-
+                hotelRoom.CurrentPrice = hotelRoom.PriceValue;
                 var resultAddroom = _hotelServices.AddRoom(hotelRoom);
                 response.Message = response.Message + resultAddroom.Message;
 
