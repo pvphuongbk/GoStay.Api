@@ -186,13 +186,13 @@ namespace GoStay.Services.Orders
                 Order ordercheck = null;
                 if (order.IdUser > 1)
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdRoom == order.IdRoom )
-                        .FirstOrDefault();
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdRoom == order.IdRoom&&x.Status<3 )
+                        .SingleOrDefault();
                 }
                 else
                 {
                     ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdRoom == order.IdRoom && x.Session == order.Session)
-                        .FirstOrDefault();
+                        .SingleOrDefault();
                 }
 
                 if (ordercheck is null)
@@ -264,7 +264,7 @@ namespace GoStay.Services.Orders
                 
                 if (order.IdUser > 1)
                 {
-                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdTour== order.IdTour)
+                    ordercheck = _OrderRepository.FindAll(x => x.IdUser == order.IdUser && x.IdTour== order.IdTour&&x.Status<3)
                     .SingleOrDefault();
                 }
                 else
