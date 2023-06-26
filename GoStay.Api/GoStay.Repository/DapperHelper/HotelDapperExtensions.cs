@@ -49,7 +49,7 @@ namespace GoStay.Repository.DapperHelper
                 if (room != null)
                 {
                     hotelDetail.Discount = room.Discount;
-                    hotelDetail.OriginalPrice = (decimal)room.PriceValue;
+                    hotelDetail.OriginalPrice = (decimal)room.CurrentPrice;
                     hotelDetail.ActualPrice = (decimal)room.NewPrice;
                 }
 

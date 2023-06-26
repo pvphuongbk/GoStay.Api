@@ -274,7 +274,7 @@ namespace GoStay.Repository.Repositories
             return result;
         }
 
-        public static Dictionary<string, double> GetFutureDayPriceRoom(IQueryable<SchedulerRoomPrice> schedulerRoomPrices, DateTime EndDate)
+        public static Dictionary<string, double> GetFutureDayPriceRoom(IQueryable<SchedulerRoomPrice> schedulerRoomPrices, DateTime EndDate, double discount)
         {
             try
             {
@@ -284,7 +284,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (scheduler.RecurrenceRule == null)
                     {
-                        var data = GetFutureDayNonFreq(scheduler, EndDate);
+                        var data = GetFutureDayNonFreq(scheduler, EndDate, discount);
                         foreach(var item in data)
                         {
                             if(finalData.ContainsKey(item.Key)==false)
@@ -298,7 +298,7 @@ namespace GoStay.Repository.Repositories
                         rule.TryGetValue("FREQ", out freq);
                         if (freq == "DAILY")
                         {
-                            var data = GetFutureDayFreqIsDaily(scheduler, EndDate);
+                            var data = GetFutureDayFreqIsDaily(scheduler, EndDate, discount);
                             foreach (var item in data)
                             {
                                 if (finalData.ContainsKey(item.Key) == false)
@@ -307,7 +307,7 @@ namespace GoStay.Repository.Repositories
                         }
                         if (freq == "WEEKLY")
                         {
-                            var data = GetFutureDayFreqIsWeekly(scheduler, EndDate);
+                            var data = GetFutureDayFreqIsWeekly(scheduler, EndDate, discount);
                             foreach (var item in data)
                             {
                                 if (finalData.ContainsKey(item.Key) == false)
@@ -316,7 +316,7 @@ namespace GoStay.Repository.Repositories
                         }
                         if (freq == "MONTHLY")
                         {
-                            var data = GetFutureDayFreqIsMonthly(scheduler, EndDate);
+                            var data = GetFutureDayFreqIsMonthly(scheduler, EndDate, discount);
                             foreach (var item in data)
                             {
                                 if (finalData.ContainsKey(item.Key) == false)
@@ -334,7 +334,7 @@ namespace GoStay.Repository.Repositories
             }
         }
 
-        public static Dictionary<string, double> GetFutureDayNonFreq(SchedulerRoomPrice scheduler, DateTime EndDate)
+        public static Dictionary<string, double> GetFutureDayNonFreq(SchedulerRoomPrice scheduler, DateTime EndDate, double discount)
         {
             try
             {
@@ -353,7 +353,7 @@ namespace GoStay.Repository.Repositories
                     }
 
                 }
-                
+                var price = scheduler.Price * (100 - discount) / 100;
                 DateTime start = (DateTime.Today > scheduler.Start) ? DateTime.Today : scheduler.Start;
                 DateTime end = (EndDate < scheduler.End) ? EndDate : scheduler.End;
 
@@ -361,7 +361,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (tException.Contains(time))
                         continue;
-                    result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
+                    result.Add($"{time.Day}/{time.Month}/{time.Year}", price);
                 }
                 return result;
             }
@@ -370,7 +370,7 @@ namespace GoStay.Repository.Repositories
                 return null;
             }
         }
-        public static Dictionary<string, double> GetFutureDayFreqIsDaily(SchedulerRoomPrice scheduler, DateTime EndDate)
+        public static Dictionary<string, double> GetFutureDayFreqIsDaily(SchedulerRoomPrice scheduler, DateTime EndDate,double discount)
         {
             try
             {
@@ -389,6 +389,7 @@ namespace GoStay.Repository.Repositories
                     }
 
                 }
+                var price = scheduler.Price * (100 - discount) / 100;
                 var RecurrenceRule = new Dictionary<string, string>();
                 var count = "";
                 var interval = "";
@@ -430,7 +431,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (tException.Contains(time))
                         continue;
-                    result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
+                    result.Add($"{time.Day}/{time.Month}/{time.Year}", price);
                 }    
                 return result;
             }
@@ -439,7 +440,7 @@ namespace GoStay.Repository.Repositories
                 return null;
             }
         }
-        public static Dictionary<string, double> GetFutureDayFreqIsWeekly(SchedulerRoomPrice scheduler, DateTime EndDate)
+        public static Dictionary<string, double> GetFutureDayFreqIsWeekly(SchedulerRoomPrice scheduler, DateTime EndDate, double discount)
         {
             try
             {
@@ -486,6 +487,7 @@ namespace GoStay.Repository.Repositories
                     }
                     RecurrenceRule.TryGetValue("BYDAY", out byday);
                 }
+                var price = scheduler.Price * (100 - discount) / 100;
                 var listDOWstring = byday.Split(",");
                 var listDOWint = new List<int>();
                 foreach(var item in listDOWstring)
@@ -529,7 +531,7 @@ namespace GoStay.Repository.Repositories
                     {
                         if (tException.Contains(time))
                             continue;
-                        result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
+                        result.Add($"{time.Day}/{time.Month}/{time.Year}", price);
 
                     }
                     
@@ -541,7 +543,7 @@ namespace GoStay.Repository.Repositories
                 return null;
             }
         }
-        public static Dictionary<string, double> GetFutureDayFreqIsMonthly(SchedulerRoomPrice scheduler, DateTime EndDate)
+        public static Dictionary<string, double> GetFutureDayFreqIsMonthly(SchedulerRoomPrice scheduler, DateTime EndDate, double discount)
         {
             try
             {
@@ -560,6 +562,7 @@ namespace GoStay.Repository.Repositories
                     }
 
                 }
+                var price = scheduler.Price * (100 - discount) / 100;
                 var RecurrenceRule = new Dictionary<string, string>();
                 var bymonthday = "";
                 var count = "";
@@ -624,7 +627,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (tException.Contains(time))
                         continue;
-                    result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
+                    result.Add($"{time.Day}/{time.Month}/{time.Year}", price);
                 }
                 
                 return result;

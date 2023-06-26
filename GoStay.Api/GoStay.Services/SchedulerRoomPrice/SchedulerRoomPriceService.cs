@@ -186,7 +186,8 @@ namespace GoStay.Services.Statisticals
             try
             {
                 var scheduler = _schedulerRepository.FindAll(x => x.RoomId == RoomId).OrderByDescending(x=>x.DateCreate);
-                var data = SchedulerRepository.GetFutureDayPriceRoom(scheduler, futuretime);
+                var discount = _roomRepository.GetById(RoomId).Discount;
+                var data = SchedulerRepository.GetFutureDayPriceRoom(scheduler, futuretime, (double)discount);
                 responseBase.Code = ErrorCodeMessage.Success.Key;
                 responseBase.Message = ErrorCodeMessage.Success.Value;
                 responseBase.Data = data;
