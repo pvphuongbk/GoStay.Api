@@ -34,7 +34,8 @@ namespace GoStay.Data.HotelDto
         [JsonIgnore]
         public string StrPictures { get; set; }
         public List<ServiceDetailHotelDto> Services { get; set; }
-
+        public byte? MinNight { get; set; }
+        public int? DeadLinePreOrder { get; set; }
     }
     public class RoomAdminDto
     {
