@@ -16,7 +16,7 @@ namespace GoStay.Services.Tours
         ResponseBase AddTour(Tour data, int[] IdDistrictTo, int[] Vehicles);
         ResponseBase AddTourDetail(TourDetail data);
         ResponseBase EditTour(TourAddDto data);
-        ResponseBase EditTourDetail(TourDetail data);
+        ResponseBase EditTourDetail(TourDetailDto data);
         ResponseBase DeleteTour(int id);
         ResponseBase RemoveTourDetail(int IdDetail);
         ResponseBase UpdateTourToCompare(CompareTourParam param);
@@ -25,5 +25,8 @@ namespace GoStay.Services.Tours
         public int AddTourStartTime(string time);
         public ResponseBase SavePicture(string url, int idTour, int size);
         public ResponseBase SaveListPicture(List<string> datas);
+        public ResponseBase GetListTourDetail(int IdTour);
+        public ResponseBase GetListPictureTour(int IdTour);
+        public ResponseBase DeletePictureTour(int IdPicture);
     }
 }

@@ -156,4 +156,5 @@ namespace GoStay.Data.TourDto
         public string? SearchKey { get; set; }
 
     }
+    
 }
