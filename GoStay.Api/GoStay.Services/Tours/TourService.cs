@@ -682,7 +682,7 @@ namespace GoStay.Services.Tours
             try
             {
 
-                var topics = _tourDetailRepository.FindAll(x=>x.IdTours == IdTour).ToList();
+                var topics = _tourDetailRepository.FindAll(x=>x.IdTours == IdTour && x.Deleted!=1).ToList();
                 var data = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(topics);
                 response.Data = data;
                 return response;
