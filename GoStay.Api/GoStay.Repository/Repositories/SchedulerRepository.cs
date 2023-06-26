@@ -361,7 +361,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (tException.Contains(time))
                         continue;
-                    result.Add(time.ToString("d/M/yyyy"), scheduler.Price);
+                    result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
                 }
                 return result;
             }
@@ -370,7 +370,6 @@ namespace GoStay.Repository.Repositories
                 return null;
             }
         }
-
         public static Dictionary<string, double> GetFutureDayFreqIsDaily(SchedulerRoomPrice scheduler, DateTime EndDate)
         {
             try
@@ -431,7 +430,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (tException.Contains(time))
                         continue;
-                    result.Add(time.ToString("d/M/yyyy"), scheduler.Price);
+                    result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
                 }    
                 return result;
             }
@@ -530,7 +529,7 @@ namespace GoStay.Repository.Repositories
                     {
                         if (tException.Contains(time))
                             continue;
-                        result.Add(time.ToString("d/M/yyyy"), scheduler.Price);
+                        result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
 
                     }
                     
@@ -625,7 +624,7 @@ namespace GoStay.Repository.Repositories
                 {
                     if (tException.Contains(time))
                         continue;
-                    result.Add(time.ToString("d/M/yyyy"), scheduler.Price);
+                    result.Add($"{time.Day}/{time.Month}/{time.Year}", scheduler.Price);
                 }
                 
                 return result;
