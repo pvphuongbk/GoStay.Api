@@ -111,7 +111,7 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpPut("edit-tour-detail")]
-        public ResponseBase EditTourDetail(TourDetail data)
+        public ResponseBase EditTourDetail(TourDetailDto data)
         {
             var items = _tourService.EditTourDetail(data);
             return items;
@@ -151,6 +151,24 @@ namespace GoStay.Api.Controllers
         public ResponseBase SaveListPicture(List<string> data)
         {
             var items = _tourService.SaveListPicture(data);
+            return items;
+        }
+        [HttpGet("list-tour-detail")]
+        public ResponseBase GetListTourDetail(int IdTour)
+        {
+            var items = _tourService.GetListTourDetail(IdTour);
+            return items;
+        }
+        [HttpGet("list-picture-tour")]
+        public ResponseBase GetListPictureTour(int IdTour)
+        {
+            var items = _tourService.GetListPictureTour(IdTour);
+            return items;
+        }
+        [HttpDelete("picture-tour")]
+        public ResponseBase DeletePictureTour(int IdPicture)
+        {
+            var items = _tourService.DeletePictureTour(IdPicture);
             return items;
         }
     }
