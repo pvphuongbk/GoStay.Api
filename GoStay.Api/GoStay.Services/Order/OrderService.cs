@@ -9,11 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using GoStay.Common.Helpers.Order;
 using GoStay.DataDto.OrderDto;
 using GoStay.Repository.Repositories;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using GoStay.Common.Extention;
 using GoStay.Data.ServiceDto;
 using GoStay.Data.TourDto;
+using System;
 
 namespace GoStay.Services.Orders
 {
@@ -26,6 +25,8 @@ namespace GoStay.Services.Orders
         private readonly ICommonRepository<Hotel> _hotelRepository;
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<User> _userRepository;
+        private readonly ICommonRepository<SchedulerRoomPrice> _schedulerRoomPrice;
+
         private readonly ICommonUoW _commonUoW;
         private readonly IMapper _mapper;
         private readonly IOrderFunction _orderFunction;
@@ -33,7 +34,7 @@ namespace GoStay.Services.Orders
 
         public OrderService(ICommonRepository<Order> OrderRepository, ICommonRepository<OrderDetail> OrderRoomRepository, ICommonUoW commonUoW,
             IMapper mapper, ICommonRepository<Tour> tourRepository, ICommonRepository<HotelRoom> roomRepository,
-            ICommonRepository<Hotel> hotelRepository, ICommonRepository<Picture> pictureRepository,
+            ICommonRepository<Hotel> hotelRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<SchedulerRoomPrice> schedulerRoomPrice,
             ICommonRepository<User> userRepository, IOrderFunction orderFunction)
         {
             _OrderDetailRepository = OrderRoomRepository;
@@ -46,6 +47,7 @@ namespace GoStay.Services.Orders
             _hotelRepository = hotelRepository;
             _userRepository = userRepository;
             _orderFunction = orderFunction;
+            _schedulerRoomPrice = schedulerRoomPrice;
         }
 
         public ResponseBase CreateOrder(OrderDto order)
@@ -56,9 +58,22 @@ namespace GoStay.Services.Orders
                 if (order.Style == 1)
                 {
                     var room = _roomRepository.FindAll(x => x.Id == order.IdRoom).SingleOrDefault();
-                    order.Price = room.CurrentPrice;
+                    var scheduler = _schedulerRoomPrice.FindAll(x => x.RoomId == room.Id && x.Start <= order.CheckInDate);
+                    List<double> prices = new List<double>();
+                    double totalprice = 0;
+                    for(var time = (DateTime)order.CheckInDate; time < order.CheckOutDate; time = time.AddDays(1))
+                    {
+                        var price = SchedulerRepository.GetPrice(scheduler, time.Month, time.Year, time.Day);
+                        if (price == 0)
+                            price = (double)room.PriceValue;
+                        prices.Add(price);
+                        totalprice = totalprice + price;
+                    }    
+                    
+                    order.Price = (decimal)totalprice;
                     order.Discount = room.Discount;
-                    order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
+                    //order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
+                    order.TotalAmount = (decimal)totalprice * order.NumRoom * (decimal)(100 - room.Discount) / 100;
                     order.IdHotel = room.Idhotel;
                 }
                 if (order.Style == 2)
