@@ -36,6 +36,8 @@ namespace GoStay.Data.HotelDto
         public List<ServiceDetailHotelDto> Services { get; set; }
         public byte? MinNight { get; set; }
         public int? DeadLinePreOrder { get; set; }
+        public decimal CurrentPrice { get; set; }
+
     }
     public class RoomAdminDto
     {
