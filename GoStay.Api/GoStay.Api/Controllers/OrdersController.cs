@@ -151,10 +151,10 @@ namespace GoStay.Api.Controllers
         }
 
 
-        [HttpGet("delete-room-in-order")]
-        public ResponseBase DeleteRoomInOrder(int IdDetail, int IdOrder)
+        [HttpDelete("order")]
+        public ResponseBase RejectOrder(int IdOrder, int IdUser)
         {
-            var items = _orderService.DeleteRoomInOrder(IdDetail, IdOrder);
+            var items = _orderService.RejectOrder(IdOrder, IdUser);
             return items;
         }
         [HttpGet("list-room-in-order")]
