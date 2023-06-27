@@ -601,7 +601,55 @@ namespace GoStay.Services.Orders
                 return responseBase;
             }
         }
+        public ResponseBase RejectOrder(int IdOrder, int IdUser)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var order = _OrderRepository.FindAll(x=>x.Id == IdOrder).Include(x=>x.IdRoomNavigation).Include(x=>x.IdTourNavigation).SingleOrDefault();
+                if(order.Style==1)
+                {
+                    if(order.IdRoomNavigation.Iduser == IdUser)
+                    {
+                        order.IsDeleted = true;
+                        _OrderRepository.Update(order);
+                        _commonUoW.Commit();
+                        responseBase.Code = ErrorCodeMessage.Success.Key;
+                        responseBase.Message = ErrorCodeMessage.Success.Value;
+                        responseBase.Data = "Reject success";
+                        return responseBase;
+                    }
+                }
+                if (order.Style == 2)
+                {
+                    if (order.IdTourNavigation.IdUser == IdUser)
+                    {
+                        order.IsDeleted = true;
+                        _OrderRepository.Update(order);
+                        _commonUoW.Commit();
+                        responseBase.Code = ErrorCodeMessage.Success.Key;
+                        responseBase.Message = ErrorCodeMessage.Success.Value;
+                        responseBase.Data = "Reject success";
+                        return responseBase;
 
+                    }
+                }
+                _commonUoW.Commit();
+
+                responseBase.Code = ErrorCodeMessage.NoPermission.Key;
+                responseBase.Message = ErrorCodeMessage.NoPermission.Value;
+                responseBase.Data = "Reject fail";
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
+        }
         public ResponseBase GetOrderDetailbyOrder(int IdOrder)
         {
             IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _pictureRepository, _userRepository);
@@ -637,7 +685,7 @@ namespace GoStay.Services.Orders
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser)?
+                var listOrder = _OrderRepository.FindAll(x => x.IdUser == IDUser && x.IsDeleted!=true)?
                                     .Include(x=>x.OrderDetails)
                                     .Include(x=>x.IdPaymentMethodNavigation)
                                     .Include(x=>x.StatusNavigation)
