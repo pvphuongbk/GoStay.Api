@@ -256,23 +256,11 @@ namespace GoStay.Services.Orders
                     }
                     else
                     {
-                        if (ordercheck.NumNight != order.NumNight || ordercheck.NumRoom != order.NumRoom 
-                            || ordercheck.CheckInDate != order.CheckInDate || ordercheck.CheckOutDate != order.CheckOutDate)
-                        {
-                            responseBase.Code = CheckOrderCodeMessage.UpdateOrder.Key;
-                            responseBase.Message = CheckOrderCodeMessage.UpdateOrder.Value;
-                            responseBase.Data = UpdateOrder(order,ordercheck.Id).Data;
-                            return responseBase;
-                        }
-                        else
-                        {
-                            responseBase.Code = CheckOrderCodeMessage.GetOldOrder.Key;
-                            responseBase.Message = CheckOrderCodeMessage.GetOldOrder.Value;
-                            responseBase.Data = GetOrderbyId(ordercheck.Id).Data;
-                            return responseBase;
-                        }
+                        responseBase.Code = CheckOrderCodeMessage.UpdateOrder.Key;
+                        responseBase.Message = CheckOrderCodeMessage.UpdateOrder.Value;
+                        responseBase.Data = UpdateOrder(order,ordercheck.Id).Data;
+                        return responseBase;
                     }
-
 
                 }
                 return responseBase;
