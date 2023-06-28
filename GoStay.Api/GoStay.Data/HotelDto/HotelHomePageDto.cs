@@ -56,7 +56,7 @@
                     return (double)OriginalPrice;
             }
         }
-
+        public string? TopService { get; set; }
 
     }
 
