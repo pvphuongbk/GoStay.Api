@@ -30,6 +30,7 @@ namespace GoStay.Data.HotelDto
         public float? Lat { get; set; }
         public float? Lon { get; set; }
         public int? Rating { get; set; }
+        public decimal BasePrice { get; set; }
 
     }
 }
