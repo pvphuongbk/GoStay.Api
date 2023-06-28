@@ -441,7 +441,11 @@ namespace GoStay.Services.Tours
             {
                 _commonUoW.BeginTransaction();
                 var tourdetail = _tourDetailRepository.FindAll(x => x.Id == data.Id).SingleOrDefault();
-                tourdetail = _mapper.Map<TourDetailDto,TourDetail>(data);
+
+                tourdetail.Stt = data.Stt;
+                tourdetail.IdStyle = data.IdStyle;
+                tourdetail.Title = data.Title;
+                tourdetail.Details = data.Details;
                 _tourDetailRepository.Update(tourdetail);
                 _commonUoW.Commit();
                 response.Data = "Success";
