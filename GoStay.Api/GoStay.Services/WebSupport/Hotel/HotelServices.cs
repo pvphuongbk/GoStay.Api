@@ -233,6 +233,10 @@ namespace GoStay.Services.WebSupport
                 }
                 data.SearchKey = data.Name.RemoveUnicode().Replace(" ", string.Empty).ToLower();
                 data.RoomStatus = 0;
+                data.CurrentPrice = data.PriceValue;
+                data.MinNight = 1;
+                data.DeadLinePreOrder = 12;
+
                 _commonUoW.BeginTransaction();
                 _roomRepository.Insert(data);
                 _commonUoW.Commit();
@@ -311,6 +315,10 @@ namespace GoStay.Services.WebSupport
                 var temp = _roomRepository.FindAll().Where(x => x.Id == data.Id).Take(1).AsNoTracking();
                 data.CreatedDate = temp.FirstOrDefault().CreatedDate;
                 data.RemainNum = temp.FirstOrDefault().RemainNum;
+                data.CurrentPrice = temp.FirstOrDefault().CurrentPrice;
+                data.MinNight = temp.FirstOrDefault().MinNight;
+                data.DeadLinePreOrder = temp.FirstOrDefault().DeadLinePreOrder;
+
                 _roomRepository.Update(data);
                 _hotelRepository.Update(hotel);
                 _commonUoW.Commit();
