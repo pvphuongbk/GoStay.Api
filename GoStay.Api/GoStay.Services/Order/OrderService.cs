@@ -114,9 +114,24 @@ namespace GoStay.Services.Orders
                 if (order.Style == 1)
                 {
                     var room = _roomRepository.FindAll(x => x.Id == order.IdRoom).SingleOrDefault();
-                    order.Price = room.CurrentPrice;
+
+                    var scheduler = _schedulerRoomPrice.FindAll(x => x.RoomId == room.Id && x.Start <= order.CheckInDate);
+                    List<double> prices = new List<double>();
+                    double totalprice = 0;
+                    for (var time = (DateTime)order.CheckInDate; time < order.CheckOutDate; time = time.AddDays(1))
+                    {
+                        var price = SchedulerRepository.GetPrice(scheduler, time.Month, time.Year, time.Day);
+                        if (price == 0)
+                            price = (double)room.PriceValue;
+                        prices.Add(price);
+                        totalprice = totalprice + price;
+                    }
+
+                    order.Price = (decimal)totalprice;
                     order.Discount = room.Discount;
-                    order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
+                    //order.TotalAmount = room.CurrentPrice * order.NumRoom * order.NumNight * (decimal)(100 - room.Discount) / 100;
+                    order.TotalAmount = (decimal)totalprice * order.NumRoom * (decimal)(100 - room.Discount) / 100;
+
                     order.IdHotel = room.Idhotel;
                     ordercheck.IdRoom = order.IdRoom;
                     ordercheck.NumNight = order.NumNight;
