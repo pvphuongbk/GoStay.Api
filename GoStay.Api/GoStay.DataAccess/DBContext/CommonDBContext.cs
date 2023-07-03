@@ -1317,7 +1317,7 @@ namespace GoStay.DataAccess.DBContext
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.Descriptions).HasMaxLength(1000);
+                //entity.Property(e => e.Descriptions).HasMaxLength(1000);
 
                 entity.Property(e => e.Discount).HasDefaultValueSql("((0))");
 

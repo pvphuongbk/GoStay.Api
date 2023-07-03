@@ -100,6 +100,8 @@ namespace GoStay.Data.TourDto
         public byte IdTourStyle { get; set; }
         public byte IdTourTopic { get; set; }
         public string? StartDateString { get; set; }
+        public int? IdStartTime { get; set; }
+
         public int IdDistrictFrom { get; set; }
         public int[] IdDistrictTo { get; set; }
         public double Price { get; set; }
@@ -112,7 +114,6 @@ namespace GoStay.Data.TourDto
         public int[]? Vehicle { get; set; }
         public int? Rating { get; set; }
         public string? Descriptions { get; set; }
-        public int? IdStartTime { get; set; }
 
     }
     public class TourAddParam
