@@ -1016,7 +1016,15 @@ namespace GoStay.Services.Orders
         {
             ResponseBase response = new ResponseBase();
             var Data = OrderRepository.SearchListOrder(param);
-            Data.ForEach(x => x.Slug = x.HotelName?.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+            Data.ForEach(x => x.Slug = x.HotelName!=null? 
+                        x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                            .Replace(".", "-")
+                            .Replace("/", "-").Replace("--", string.Empty)
+                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                            .Replace("&", "-").Replace("@", string.Empty).ToLower() 
+                        : x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                             .Replace(".", "-")
                             .Replace("/", "-").Replace("--", string.Empty)
                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
