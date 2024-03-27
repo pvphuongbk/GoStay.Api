@@ -6,6 +6,9 @@ namespace GoStay.Services.Newss
 {
     public interface INewsService
     {
+        public ResponseBase GetNewsDefault(int idUser, int idNews);
+        public ResponseBase GetListNews2(GetListNewsParam param);
+
         public ResponseBase AddNews(NewsDto news);
         public ResponseBase EditNews(NewsDto news);
         public ResponseBase DeleteNews(int Id);

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using GoStay.Common;
+using GoStay.Common.Configuration;
 using GoStay.Common.Extention;
+using GoStay.Common.Helpers;
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
@@ -43,6 +45,253 @@ namespace GoStay.Services.Newss
             _topicRepository = topicRepository;
             _videoRepository = videoRepository;
             _languageRepository = languageRepository;
+        }
+        public ResponseBase GetNewsDefault(int idUser, int idNews)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var data = new NewsParamDto();
+                var idRecord = 0;
+                var exception = "";
+                var categories = _newsCategoryRepository.FindAll(x=>x.Iddomain== AppConfigs.IdDomain).Select(x=> new NewsCategoryDataDto
+                {
+                    Id = x.Id,
+                    Category = x.Category,
+                    CategoryChi = x.CategoryChi,
+                    CategoryEng = x.CategoryEng,
+                }).ToList();
+                data.Categories = categories;
+                var topics = _topicRepository.FindAll(x => x.Iddomain==AppConfigs.IdDomain).Select(x => new TopicNewsDataDto
+                {
+                    Id=x.Id,
+                    Topic = x.Topic,
+                }).ToList();
+                data.Topics = topics;
+                var tempRecord = _newsRepository.FindAll(x => x.Id == idUser && x.Status==0).AsNoTracking();
+
+                if(tempRecord.Any())
+                {
+                    var tempRecordIds = tempRecord.Select(x => x.Id);
+                    if (tempRecord.Count()>1)
+                    {
+                        
+                        //topics
+                        var oldTopics = _newsTopicRepository.FindAll(x=>tempRecordIds.Contains(x.IdNews));
+                        if (oldTopics.Any())
+                        {
+                            try
+                            {
+                                _commonUoW.BeginTransaction();
+                                _newsTopicRepository.RemoveMultiple(oldTopics);
+                                _commonUoW.Commit();
+                            }
+                            catch
+                            {
+                                exception += "Remove old topic fail";
+                            }
+                        }
+                        //pictures
+                        var oldPicture = _pictureRepository.FindAll(x => tempRecordIds.Contains((x.NewsId!=null)?(int)x.NewsId:0));
+
+                        if (oldPicture.Any())
+                        {
+                            //FileHelper.DeleteFolder($"/uploads/SGOland/ctv/{newsEntity.IdUser}/news/{Id}");
+                            try
+                            {
+                                _commonUoW.BeginTransaction();
+                                _pictureRepository.RemoveMultiple(oldPicture);
+                                _commonUoW.Commit();
+                            }
+                            catch
+                            {
+                                exception += "Remove old pictures fail";
+                            }
+                        }
+                        try
+                        {
+                            idRecord=0;
+                            _commonUoW.BeginTransaction();
+                            _newsRepository.RemoveMultiple(tempRecord);
+                            _commonUoW.Commit();
+                        }
+                        catch
+                        {
+                            exception += "Remove old news fail";
+                        }
+                    }
+                    else
+                    {
+                        idRecord=tempRecord.SingleOrDefault().Id;
+                    }
+                }
+                idRecord = idNews;
+                if(idRecord==0)
+                {
+                    var newRecord = new News()
+                    {
+                        IdCategory = categories.Min(x => x.Id),
+                        IdUser = idUser,
+                        DateCreate = DateTime.Now,
+                        DateEdit = DateTime.Now,
+                        Status = 0,
+                        Keysearch = "",
+                        Title = "",
+                        Description = "",
+                        Content = "",
+                        Deleted = 0,
+                        LangId=1,
+                        Click = 0,
+                        Tag = "",
+                        Iddomain = AppConfigs.IdDomain,
+                    };
+
+                    try
+                    {
+                        _commonUoW.BeginTransaction();
+                        _newsRepository.Insert(newRecord);
+                        _commonUoW.Commit();
+                        idRecord = newRecord.Id;
+                    }
+                    catch
+                    {
+                        exception += "Add temp news fail";
+                    }
+                }
+
+                var news = _newsRepository.FindAll(x=>x.Id==idRecord)
+                                            .Include(x=>x.NewsTopics)
+                                            .Include(x=>x.IdUserNavigation)
+                                            .SingleOrDefault()
+                                            ;
+                data.News = new NewsDataDto()
+                {
+                    Id = news.Id,
+                    IdCategory = news.IdCategory,
+                    IdUser = news.IdUser,
+                    Keysearch= news.Keysearch,
+                    Title = news.Title,
+                    Description = news.Description,
+                    LangId = news.LangId,
+                    IdDomain = news.Iddomain,
+                    PictureTitle = "",
+                    DateCreate = news.DateCreate,
+                    Topics = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).ToList(),
+                    UserData = new UserDataDto()
+                    {
+                        UserId = news.IdUser,
+                        FirstName = news.IdUserNavigation.FirstName,
+                        LastName = news.IdUserNavigation.LastName,
+                    },
+                    Status = news.Status,
+                    Category = categories.SingleOrDefault(x => x.Id==news.IdCategory),
+                    Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty)
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()
+                };
+                
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = data;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+        public ResponseBase GetListNews2(GetListNewsParam param)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var data = new List<NewsDataDto>();
+                if (AppConfigs.AdminIds.Contains(param.UserId))
+                {
+                    param.UserId=0;
+                }
+                var listNews = _newsRepository.FindAll(x=>((param.UserId>0) ? x.IdUser==param.UserId : x.Id>0)
+                                                        &&((param.Status>0)?x.Status==param.Status:x.Status>0)
+                                                        &&((param.IdCategory>0) ? x.IdCategory==param.IdCategory : x.IdCategory>0)
+                                                        &&((param.IdTopic>0) ? x.NewsTopics.Select(y=>y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id>0)
+                                                        &&((param.IdDomain>0) ? x.Iddomain==param.IdDomain : x.Iddomain==AppConfigs.IdDomain)
+                                                        &&((param.TextSearch!=null) ? x.Keysearch.Contains(param.TextSearch) : x.Id>0))
+                                                .Include(x=>x.IdCategoryNavigation)
+                                                .Include(x=>x.NewsTopics).ThenInclude(x=>x.IdNewsTopicNavigation)
+                                                .Include(x=>x.IdUserNavigation).AsNoTracking();
+                var count = listNews.Count(); 
+                var pageSize = param.PageSize;
+                var pageIndex = param.PageIndex;
+                if(pageIndex> ((count-1)/pageSize+1))
+                {
+                    response.Code = ErrorCodeMessage.OutRange.Key;
+                    response.Message = ErrorCodeMessage.OutRange.Value;
+                    response.Data = listNews;
+                    return response;
+                }
+                data = listNews.Select(x=> new NewsDataDto
+                {
+                    Id = x.Id,
+                    IdCategory = x.IdCategory,
+                    IdUser = x.IdUser,
+                    Keysearch= x.Keysearch,
+                    Title = x.Title,
+                    Description = x.Description,
+                    LangId = x.LangId,
+                    PictureTitle = x.PictureTitle,
+                    DateCreate = x.DateCreate,
+                    IdDomain = x.Iddomain,
+                    Status = x.Status,
+                    Topics = x.NewsTopics.Select(z=>z.IdNewsTopicNavigation).Select(y =>new TopicNewsDataDto
+                    {
+                        Id=y.Id,
+                        Topic = y.Topic,
+                    }).ToList(),
+                    UserData = new UserDataDto()
+                    {
+                        UserId = x.IdUser,
+                        FirstName = x.IdUserNavigation.FirstName,
+                        LastName = x.IdUserNavigation.LastName,
+                    },
+                    Category = new NewsCategoryDataDto
+                    {
+                        Id = x.IdCategory,
+                        Category = x.IdCategoryNavigation.Category,
+                        CategoryChi = x.IdCategoryNavigation.CategoryChi,
+                        CategoryEng = x.IdCategoryNavigation.CategoryEng,
+                    },
+                    Slug = x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty)
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()
+                }).Skip(pageSize*(pageIndex-1)).Take(pageSize).ToList();
+
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = data;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
         }
         public ResponseBase GetListNews(GetListNewsParam param)
         {

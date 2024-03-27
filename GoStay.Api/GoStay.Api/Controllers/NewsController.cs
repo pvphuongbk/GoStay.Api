@@ -22,7 +22,18 @@ namespace GoStay.Api.Controllers
             _mapper = mapper;
             _client = client;
         }
-
+        [HttpGet("news-default")]
+        public ResponseBase GetNewsDefault(int idUser, int idNews)
+        {
+            var items = _newsServices.GetNewsDefault(idUser, idNews);
+            return items;
+        }
+        [HttpPost("listv2")]
+        public ResponseBase GetListNews2(GetListNewsParam param)
+        {
+            var items = _newsServices.GetListNews2(param);
+            return items;
+        }
         [HttpPost("list")]
         public ResponseBase GetListNews(GetListNewsParam param)
         {

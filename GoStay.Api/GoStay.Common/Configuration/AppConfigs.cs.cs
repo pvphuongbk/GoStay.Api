@@ -19,7 +19,8 @@ namespace GoStay.Common.Configuration
 			GoogleClientSecret = GetConfigValue("Google:ClientSecret", "No value");
 			FacebookClientId = GetConfigValue("Facebook:ClientId", "No value");
 			FacebookClientSecret = GetConfigValue("Facebook:ClientSecret", "No value");
-		}
+            RootPath = GetConfigValue("Template:RootPath", "");
+        }
 
         public static string FormatCurrency(string currencyCode, decimal amount)
         {
@@ -56,8 +57,9 @@ namespace GoStay.Common.Configuration
         }
         const string BuildVersionMetadataPrefix = "+build";
         const string dateFormat = "yyyy-MM-ddTHH:mm:ss:fffZ";
-
-
+        public static int IdDomain = 1;
+        public static string RootPath { get; set; }
+        public static List<int> AdminIds { get; set; }=new List<int>() { 9};
         public static DateTime GetLinkerTime(Assembly assembly)
         {
             var attribute = assembly
