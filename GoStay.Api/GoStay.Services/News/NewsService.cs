@@ -144,6 +144,7 @@ namespace GoStay.Services.Newss
                         Click = 0,
                         Tag = "",
                         Iddomain = AppConfigs.IdDomain,
+
                     };
 
                     try
@@ -183,6 +184,7 @@ namespace GoStay.Services.Newss
                         FirstName = news.IdUserNavigation.FirstName,
                         LastName = news.IdUserNavigation.LastName,
                     },
+                    Content = news.Content,
                     Status = news.Status,
                     Category = categories.SingleOrDefault(x => x.Id==news.IdCategory),
                     Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
@@ -251,6 +253,7 @@ namespace GoStay.Services.Newss
                     DateCreate = x.DateCreate,
                     IdDomain = x.Iddomain,
                     Status = x.Status,
+                    Content = x.Content,
                     Topics = x.NewsTopics.Select(z=>z.IdNewsTopicNavigation).Select(y =>new TopicNewsDataDto
                     {
                         Id=y.Id,
@@ -312,6 +315,66 @@ namespace GoStay.Services.Newss
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = listNews;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+        public ResponseBase SubmitNews(NewsDataDto news)
+        {
+
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                _commonUoW.BeginTransaction();
+                var newsEntity = _newsRepository.GetById(news.Id);
+                if (newsEntity ==null)
+                {
+                    response.Code = ErrorCodeMessage.NotFound.Key;
+                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    response.Data = "Not found";
+                    return response;
+                }
+                newsEntity.IdCategory = (int)news.IdCategory;
+                newsEntity.Title = news.Title;
+                newsEntity.Description = news.Description;
+                newsEntity.Keysearch = news.Title.RemoveUnicode().Replace(" ",string.Empty).ToLower();
+                newsEntity.DateEdit = DateTime.UtcNow;
+                newsEntity.LangId = (int)news.LangId;
+                newsEntity.Iddomain = (int)news.IdDomain;
+                newsEntity.Content = news.Content;
+                newsEntity.Status = news.Status;
+
+                _newsRepository.Update(newsEntity);
+                _commonUoW.Commit();
+                _commonUoW.BeginTransaction();
+                var oldtopic = _newsTopicRepository.FindAll(x => x.IdNews==news.Id);
+                if(oldtopic.Any())
+                {
+                    _newsTopicRepository.RemoveMultiple(oldtopic);
+                }
+
+                if (news.Topics.Any())
+                {
+                    var newTopic = news.Topics.Select(x => new NewsTopic
+                    {
+                        IdNews = newsEntity.Id,
+                        IdNewsTopic = x.Id
+                    });
+                    _newsTopicRepository.InsertMultiple(newTopic);
+                }
+                _commonUoW.Commit();
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsEntity.Id;
                 return response;
 
             }

@@ -34,6 +34,12 @@ namespace GoStay.Api.Controllers
             var items = _newsServices.GetListNews2(param);
             return items;
         }
+        [HttpPut("submit-news")]
+        public ResponseBase SubmitNews(NewsDataDto newsDto)
+        {
+            var item = _newsServices.SubmitNews(newsDto);
+            return item;
+        }
         [HttpPost("list")]
         public ResponseBase GetListNews(GetListNewsParam param)
         {

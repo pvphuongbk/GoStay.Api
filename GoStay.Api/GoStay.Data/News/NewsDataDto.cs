@@ -17,11 +17,12 @@ namespace GoStay.DataDto.News
         public string? Description { get; set; }
         public int? LangId { get; set; }
         public int? IdDomain { get; set; }
-        public string Slug { get; set; }
+        public string? Slug { get; set; }
+        public string? Content { get; set; }
 
         public byte Status { get; set; }
         public DateTime? DateCreate { get; set; }
-        public string PictureTitle { get; set; }
+        public string? PictureTitle { get; set; }
 
         public List<TopicNewsDataDto>? Topics { get; set; } 
         public UserDataDto? UserData { get; set; } 
