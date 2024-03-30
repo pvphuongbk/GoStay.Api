@@ -24,7 +24,12 @@ namespace GoStay.DataDto.News
         public DateTime? DateCreate { get; set; }
         public string? PictureTitle { get; set; }
 
-        public List<TopicNewsDataDto>? Topics { get; set; } 
+        public List<TopicNewsDataDto>? Topics { get; set; }
+        public List<int>? TopicIds { get; set; }
+        public List<string>? TopicValues
+        {
+            get; set;
+        }
         public UserDataDto? UserData { get; set; } 
         public NewsCategoryDataDto? Category {  get; set; }
     }

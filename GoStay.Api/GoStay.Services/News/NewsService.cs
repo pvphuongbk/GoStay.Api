@@ -68,7 +68,7 @@ namespace GoStay.Services.Newss
                     Topic = x.Topic,
                 }).ToList();
                 data.Topics = topics;
-                var tempRecord = _newsRepository.FindAll(x => x.Id == idUser && x.Status==0).AsNoTracking();
+                var tempRecord = _newsRepository.FindAll(x => x.IdUser == idUser && x.Status==0).AsNoTracking();
 
                 if(tempRecord.Any())
                 {
@@ -125,7 +125,10 @@ namespace GoStay.Services.Newss
                         idRecord=tempRecord.SingleOrDefault().Id;
                     }
                 }
-                idRecord = idNews;
+                if (idNews > 0)
+                {
+                    idRecord = idNews;
+                }
                 if(idRecord==0)
                 {
                     var newRecord = new News()
@@ -178,6 +181,8 @@ namespace GoStay.Services.Newss
                     PictureTitle = "",
                     DateCreate = news.DateCreate,
                     Topics = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).ToList(),
+                    TopicIds = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x=>x.Id).ToList(),
+                    TopicValues = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x => x.Topic).ToList(),
                     UserData = new UserDataDto()
                     {
                         UserId = news.IdUser,
@@ -333,6 +338,11 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
+                var topics = _topicRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain).Select(x => new TopicNewsDataDto
+                {
+                    Id = x.Id,
+                    Topic = x.Topic,
+                }).ToList();
                 _commonUoW.BeginTransaction();
                 var newsEntity = _newsRepository.GetById(news.Id);
                 if (newsEntity ==null)
@@ -348,9 +358,10 @@ namespace GoStay.Services.Newss
                 newsEntity.Keysearch = news.Title.RemoveUnicode().Replace(" ",string.Empty).ToLower();
                 newsEntity.DateEdit = DateTime.UtcNow;
                 newsEntity.LangId = (int)news.LangId;
-                newsEntity.Iddomain = (int)news.IdDomain;
+                newsEntity.Iddomain = AppConfigs.IdDomain;
                 newsEntity.Content = news.Content;
                 newsEntity.Status = news.Status;
+                news.TopicIds = topics.Where(x => news.TopicValues.Contains(x.Topic)).Select(x => x.Id).ToList();
 
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
@@ -361,12 +372,12 @@ namespace GoStay.Services.Newss
                     _newsTopicRepository.RemoveMultiple(oldtopic);
                 }
 
-                if (news.Topics.Any())
+                if (news.TopicIds.Any())
                 {
-                    var newTopic = news.Topics.Select(x => new NewsTopic
+                    var newTopic = news.TopicIds.Select(x => new NewsTopic
                     {
                         IdNews = newsEntity.Id,
-                        IdNewsTopic = x.Id
+                        IdNewsTopic = x
                     });
                     _newsTopicRepository.InsertMultiple(newTopic);
                 }
