@@ -9,6 +9,7 @@ using GoStay.Data.HotelDto;
 using GoStay.Data.ServiceDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.HotelDto;
 using GoStay.Repository.DapperHelper;
 using GoStay.Repository.Repositories;
@@ -18,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 
 namespace GoStay.Services.Hotels
 {
@@ -29,14 +31,14 @@ namespace GoStay.Services.Hotels
         private readonly ICommonRepository<Picture> _pictureRepository;
         private readonly ICommonRepository<TypeHotel> _typeHotelRepository;
         private readonly ICommonRepository<SchedulerRoomPrice> _schedulerRepository;
-
+        private readonly CommonUoW _commonUoWRepository;
 
 
 
         private readonly IMapper _mapper;
 		public HotelService(ICommonRepository<Hotel> hotelRepository, ICommonRepository<HotelRoom> hotelRoomRepository, IMapper mapper,
 			ICommonRepository<Service> serviceRepository, ICommonRepository<Picture> pictureRepository, ICommonRepository<TypeHotel> typeHotelRepository,
-            ICommonRepository<SchedulerRoomPrice> schedulerRepository)
+            ICommonRepository<SchedulerRoomPrice> schedulerRepository, ICommonUoW commonUoWRepository)
 		{
 			_hotelRepository = hotelRepository;
 			_hotelRoomRepository = hotelRoomRepository;
@@ -45,23 +47,56 @@ namespace GoStay.Services.Hotels
 			_pictureRepository = pictureRepository;
 			_typeHotelRepository = typeHotelRepository;
             _schedulerRepository = schedulerRepository;
-
+            _commonUoWRepository = (CommonUoW)commonUoWRepository;
         }
         public ResponseBase GetListHotelTopFlashSale(int number)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var hotels = _hotelRepository.FindAll(x => x.Deleted != 1)
+                var temp = _hotelRepository.FindAll(x => x.Deleted != 1)
                                                 .Include(x => x.Pictures.Take(5))
                                                 .Include(x => x.IdTinhThanhNavigation)
                                                 .Include(x => x.IdQuanNavigation)
-                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted!=1))
+                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
                                                 .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
-												.Take(number)
-                                                .ToList();
+                                                .Take(number).AsNoTracking();
+
+                var hotels = temp.ToList();
                 
                 var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotels);
+
+
+                //List<HotelHomePageDto> hotelDtos = (from ht in _commonUoWRepository.Context.Hotels.AsNoTracking()
+                //                                              join pt in _commonUoWRepository.Context.Pictures.AsNoTracking() on ht.Id equals pt.HotelId
+                //                                              join tt in _commonUoWRepository.Context.TinhThanhs.AsNoTracking() on ht.IdTinhThanh equals tt.Id
+                //                                              join q in _commonUoWRepository.Context.Quans.AsNoTracking() on ht.IdQuan equals q.Id
+                //                                              join r in _commonUoWRepository.Context.HotelRooms.AsNoTracking() on ht.Id equals r.Idhotel && r.Status == 1 && r.Deleted != 1
+                //                                        where (mr.Status == MrfStatus.Approved || mr.Status == MrfStatus.Procurement_In_Progress)
+                //                                                    && ma.MrfStatus == MrfStatus.Warehouse_Delivery
+                //                                                    && mm.Status == MrfEvaluationStatus.AD_Delivered && me.EventID == dto.eventid
+                //&& ma.MaterialNumber == (matNo != null ? matNo : ma.MaterialNumber)
+                //                                              select new LogisticDeliveredPageListDto
+                //                                              {
+                //                                                  ID = me.ID,
+                //                                                  Category = me.Services.Any() ? MrfLogisticPageListCategory.Service : MrfLogisticPageListCategory.Material,
+                //                                                  SplitOrderChangeQuantity = (mm.IsSplitOrder && !mm.IsChangeQuantity) ? "Split Order" :
+                //                                                          ((!mm.IsSplitOrder && mm.IsChangeQuantity) ? "Change Quantity" : null),
+                //                                                  CoNo = me.CoNo,
+                //                                                  AwardedBidder = (me.VendorMasterID == null) ? null : me.VendorMaster.CompanyName,
+                //                                                  Buyer = _calculationEngine.reverseName(me.Buyer.AccountName),
+                //                                                  COIssuanceDate = me.CoIssuanceDate.ToString("dd-MMM-yyyy"),
+                //                                                  Incoterm = me.IncotermListId == null ? null : me.IncotermList.IncoTerm,
+                //                                                  ETA = me.EvaluationETA,
+                //                                                  COValue = me.COValue,
+                //                                                  ModifiedDate = me.ModifiedDate
+                //                                              }).ToList();
+
+
+
+
+
+
                 Dictionary<int, IQueryable<SchedulerRoomPrice>> roomSchedulers = new Dictionary<int, IQueryable<SchedulerRoomPrice>>();
 
                 foreach (var id in hotelDtos.Select(x => x.IdRoom))

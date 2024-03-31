@@ -234,7 +234,7 @@ namespace GoStay.Services.Newss
                                                         &&((param.TextSearch!=null) ? x.Keysearch.Contains(param.TextSearch) : x.Id>0))
                                                 .Include(x=>x.IdCategoryNavigation)
                                                 .Include(x=>x.NewsTopics).ThenInclude(x=>x.IdNewsTopicNavigation)
-                                                .Include(x=>x.IdUserNavigation).AsNoTracking();
+                                                .Include(x=>x.IdUserNavigation).OrderBy(x=>x.Status).AsNoTracking();
                 var count = listNews.Count(); 
                 var pageSize = param.PageSize;
                 var pageIndex = param.PageIndex;
