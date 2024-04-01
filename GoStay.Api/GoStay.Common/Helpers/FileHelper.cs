@@ -1,4 +1,5 @@
-﻿using GoStay.Common.Enums;
+﻿using GoStay.Common.Configuration;
+using GoStay.Common.Enums;
 using GoStay.Common.Extention;
 using System.Text;
 
@@ -57,5 +58,46 @@ namespace GoStay.Common.Helpers
 			content = $"[{time.ToString("HH:mm:ss")}] " + content;
 			WriteFile(fullPath, content);
 		}
-	}
+
+        public static bool DeleteFile(string path)
+        {
+            var result = false;
+            try
+            {
+                var physicalPath = AppConfigs.RootPath + path;
+                if (File.Exists(physicalPath))
+                {
+                    File.Delete(physicalPath);
+                    result = true;
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return result;
+            }
+        }
+        public static bool DeleteFolder(string path)
+        {
+            var result = false;
+            try
+            {
+                var physicalPath = AppConfigs.RootPath + path;
+                var dir = new DirectoryInfo(physicalPath);
+
+                if (Directory.Exists(physicalPath))
+                {
+                    dir.Delete(true);
+                    result = true;
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return result;
+            }
+        }
+    }
 }

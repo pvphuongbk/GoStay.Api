@@ -40,7 +40,7 @@ namespace GoStay.DataDto.News
     }
     public class GetListNewsParam
     {
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int? IdCategory { get; set; }
         public int? ParentIdCategory { get; set; }
 
