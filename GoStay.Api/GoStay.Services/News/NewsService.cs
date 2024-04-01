@@ -222,7 +222,7 @@ namespace GoStay.Services.Newss
             try
             {
                 var data = new List<NewsDataDto>();
-                if (AppConfigs.AdminIds.Contains(param.UserId))
+                if (AppConfigs.AdminIds.Contains(param.UserId??0))
                 {
                     param.UserId=0;
                 }
