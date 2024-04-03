@@ -9,6 +9,7 @@ namespace GoStay.Services.Newss
         public ResponseBase GetNewsDefault(int idUser, int idNews);
         public ResponseBase GetListNews2(GetListNewsParam param);
         public ResponseBase SubmitNews(NewsDataDto news);
+        public ResponseBase UpdateStatusNews(UpdateStatusNewsParam param);
 
         public ResponseBase AddNews(NewsDto news);
         public ResponseBase EditNews(NewsDto news);
