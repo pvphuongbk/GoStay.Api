@@ -57,4 +57,10 @@ namespace GoStay.DataDto.News
         public List<NewsCategoryDataDto> Categories{ get; set; } = new List<NewsCategoryDataDto>();
         public List<TopicNewsDataDto> Topics { get; set; } = new List<TopicNewsDataDto>();
     }
+    public class UpdateStatusNewsParam
+    {
+        public int Id { get; set; }
+        public byte Status { get; set; }
+        public int IdUser { get; set; }
+    }
 }
