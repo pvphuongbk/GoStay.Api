@@ -361,7 +361,7 @@ namespace GoStay.Services.Newss
                 newsEntity.Iddomain = AppConfigs.IdDomain;
                 newsEntity.Content = news.Content;
                 newsEntity.Status = news.Status;
-                if (news.TopicValues.Any())
+                if (news.TopicValues!=null && news.TopicValues.Any())
                 {
                     news.TopicIds = topics.Where(x => news.TopicValues.Contains(x.Topic)).Select(x => x.Id).ToList();
                 }
