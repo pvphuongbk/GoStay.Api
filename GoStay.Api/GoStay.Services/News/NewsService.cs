@@ -178,11 +178,11 @@ namespace GoStay.Services.Newss
                     Description = news.Description,
                     LangId = news.LangId,
                     IdDomain = news.Iddomain,
-                    PictureTitle = "",
+                    PictureTitle =(idNews>0) ? news.PictureTitle:"",
                     DateCreate = news.DateCreate,
-                    Topics = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).ToList(),
-                    TopicIds = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x=>x.Id).ToList(),
-                    TopicValues = topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x => x.Topic).ToList(),
+                    Topics = (idNews > 0) ? topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).ToList(): new List<TopicNewsDataDto>(),
+                    TopicIds = (idNews > 0) ? topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x=>x.Id).ToList(): new List<int>(),
+                    TopicValues = (idNews > 0) ? topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x => x.Topic).ToList(): new List<string>(),
                     UserData = new UserDataDto()
                     {
                         UserId = news.IdUser,
@@ -235,7 +235,7 @@ namespace GoStay.Services.Newss
                                                         &&((param.TextSearch!=null) ? x.Keysearch.Contains(param.TextSearch) : x.Id>0))
                                                 .Include(x=>x.IdCategoryNavigation)
                                                 .Include(x=>x.NewsTopics).ThenInclude(x=>x.IdNewsTopicNavigation)
-                                                .Include(x=>x.IdUserNavigation).OrderBy(x=>x.Status).AsNoTracking();
+                                                .Include(x=>x.IdUserNavigation).OrderBy(x=>x.Status).ThenByDescending(x=>x.DateEdit).AsNoTracking();
                 var count = listNews.Count(); 
                 var pageSize = param.PageSize;
                 var pageIndex = param.PageIndex;
@@ -361,8 +361,10 @@ namespace GoStay.Services.Newss
                 newsEntity.Iddomain = AppConfigs.IdDomain;
                 newsEntity.Content = news.Content;
                 newsEntity.Status = news.Status;
-                news.TopicIds = topics.Where(x => news.TopicValues.Contains(x.Topic)).Select(x => x.Id).ToList();
-
+                if (news.TopicValues.Any())
+                {
+                    news.TopicIds = topics.Where(x => news.TopicValues.Contains(x.Topic)).Select(x => x.Id).ToList();
+                }
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
                 _commonUoW.BeginTransaction();
