@@ -370,6 +370,9 @@ namespace GoStay.Services.Newss
                 if(oldtopic.Any())
                 {
                     _newsTopicRepository.RemoveMultiple(oldtopic);
+                    _commonUoW.Commit();
+                    _commonUoW.BeginTransaction();
+
                 }
 
                 if (news.TopicIds.Any())
