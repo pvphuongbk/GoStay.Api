@@ -226,7 +226,8 @@ namespace GoStay.Services.Newss
                 {
                     param.UserId=0;
                 }
-                var listNews = _newsRepository.FindAll(x=>((param.UserId>0) ? x.IdUser==param.UserId : x.Id>0)
+                var listNews = _newsRepository.FindAll(x=>x.Deleted!=1
+                                                        &&((param.UserId>0) ? x.IdUser==param.UserId : x.Id>0)
                                                         &&((param.Status>0)?x.Status==param.Status:x.Status>0)
                                                         &&((param.IdCategory>0) ? x.IdCategory==param.IdCategory : x.IdCategory>0)
                                                         &&((param.IdTopic>0) ? x.NewsTopics.Select(y=>y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id>0)
@@ -315,7 +316,6 @@ namespace GoStay.Services.Newss
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty)
-
                                             .ToLower()));
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
