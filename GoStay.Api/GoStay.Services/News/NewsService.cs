@@ -10,6 +10,8 @@ using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.News;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
@@ -437,6 +439,75 @@ namespace GoStay.Services.Newss
             }
 
         }
+
+        public ResponseBase GetNewsForHomePage(int latestQuantity,int categoryQuantity,int hotQuantlty, DateTime dateStart, DateTime dateEnd)
+        {
+
+            ResponseBase response = new ResponseBase();
+            var data = new NewsTabHome()
+            {
+                HotNews = new List<NewsHomeData>(),
+                LatestNews = new List<NewsHomeData>(),
+                NewsForCategories = new Dictionary<int, List<NewsHomeData>>()
+            };
+            try
+            {
+                var allnews = _newsRepository.FindAll(x=>x.Status== (int)NewsStatus.Accepted &&x.Deleted!=1 &&x.Iddomain==AppConfigs.IdDomain)
+                                             .Include(x=>x.IdCategoryNavigation)
+                                             .Include(x=>x.IdUserNavigation)
+                                             .Include(x=>x.NewsTopics).ThenInclude(y=>y.IdNewsTopicNavigation)
+                                             .AsNoTracking();
+                var temp = allnews.Select(x => new NewsHomeData
+                {
+                    Id = x.Id,
+                    Status = x.Status,
+                    Title = x.Title,
+                    DateCreate = x.DateEdit,
+                    IdCategory = x.IdCategory,
+                    PictureTitle = x.PictureTitle,
+                    Description = x.Description,
+                    Category = x.IdCategoryNavigation.Category,
+                    CategoryChi = x.IdCategoryNavigation.CategoryChi,
+                    CategoryEng = x.IdCategoryNavigation.CategoryEng,
+                    UserName = x.IdUserNavigation.UserName,
+                    Click = x.Click??0,
+                    Slug = (x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty)
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty)
+                                            .ToLower() : ""
+                });
+
+                data.LatestNews = temp.OrderByDescending(x=>x.DateCreate).Take(latestQuantity).ToList();
+
+                data.HotNews = temp.Where(x=>x.DateCreate>=dateStart && x.DateCreate<=dateEnd).OrderByDescending(x=>x.Click).Take(hotQuantlty).ToList();
+
+                var temp2 = _newsCategoryRepository.FindAll(x=>x.Iddomain==AppConfigs.IdDomain).Select(x=>x.Id);
+
+                foreach (var cate in temp2)
+                {
+                    var news = temp.Where(x=>x.IdCategory==cate).OrderByDescending(x => x.DateCreate).Take(categoryQuantity).ToList();
+                    data.NewsForCategories.Add(cate, news);
+                }
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = data;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+
         public ResponseBase GetListNewsHomePage()
         {
 

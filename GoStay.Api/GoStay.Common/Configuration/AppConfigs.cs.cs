@@ -21,7 +21,6 @@ namespace GoStay.Common.Configuration
 			FacebookClientSecret = GetConfigValue("Facebook:ClientSecret", "No value");
             RootPath = GetConfigValue("Template:RootPath", "");
         }
-
         public static string FormatCurrency(string currencyCode, decimal amount)
         {
             CultureInfo culture = (from c in CultureInfo.GetCultures(CultureTypes.SpecificCultures)

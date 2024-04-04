@@ -5,6 +5,7 @@ using GoStay.Services;
 using GoStay.Services.Newss;
 using GoStay.DataDto.News;
 using GoStay.DataAccess.Entities;
+using System.Globalization;
 
 namespace GoStay.Api.Controllers
 {
@@ -56,6 +57,14 @@ namespace GoStay.Api.Controllers
         public ResponseBase GetListNewsHomePage()
         {
             var items = _newsServices.GetListNewsHomePage();
+            return items;
+        }
+        [HttpGet("tab-home")]
+        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantity, string dateStart, string dateEnd)
+        {
+            var start = DateTime.ParseExact(dateStart, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var end = DateTime.ParseExact(dateEnd, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var items = _newsServices.GetNewsForHomePage(latestQuantity, categoryQuantity, hotQuantity, start, end);
             return items;
         }
         [HttpGet("news")]
