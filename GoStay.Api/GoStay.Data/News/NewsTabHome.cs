@@ -8,6 +8,7 @@ namespace GoStay.DataDto.News
 {
     public class NewsTabHome
     {
+        public List<CategoryNews> Categories { get; set; }
         public Dictionary<int,List<NewsHomeData>> NewsForCategories { get; set; }
         public List<NewsHomeData> HotNews { get; set; }
         public List<NewsHomeData> LatestNews { get; set; }
@@ -27,5 +28,10 @@ namespace GoStay.DataDto.News
         public string UserName { get; set; }
         public int Click { get; set; }
         public string Slug { get; set; }
+    }
+    public class CategoryNews
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

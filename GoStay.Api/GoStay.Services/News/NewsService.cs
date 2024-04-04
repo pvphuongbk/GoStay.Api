@@ -439,7 +439,6 @@ namespace GoStay.Services.Newss
             }
 
         }
-
         public ResponseBase GetNewsForHomePage(int latestQuantity,int categoryQuantity,int hotQuantlty, DateTime dateStart, DateTime dateEnd)
         {
 
@@ -471,7 +470,7 @@ namespace GoStay.Services.Newss
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
                     Click = x.Click??0,
-                    Slug = (x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                    Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                                             .Replace("/", "-").Replace("--", string.Empty)
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
@@ -484,7 +483,13 @@ namespace GoStay.Services.Newss
 
                 data.HotNews = temp.Where(x=>x.DateCreate>=dateStart && x.DateCreate<=dateEnd).OrderByDescending(x=>x.Click).Take(hotQuantlty).ToList();
 
-                var temp2 = _newsCategoryRepository.FindAll(x=>x.Iddomain==AppConfigs.IdDomain).Select(x=>x.Id);
+                data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain==AppConfigs.IdDomain)
+                                    .Select(x=> new CategoryNews
+                                    {
+                                        Id= x.Id,
+                                        Name = x.Category
+                                    }).ToList();
+                var temp2 = data.Categories.Select(x=>x.Id);
 
                 foreach (var cate in temp2)
                 {
@@ -1198,5 +1203,6 @@ namespace GoStay.Services.Newss
                 return responseBase;
             }
         }
+        
     }
 }
