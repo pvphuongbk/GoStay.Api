@@ -280,12 +280,7 @@ namespace GoStay.Services.Newss
                         CategoryChi = x.IdCategoryNavigation.CategoryChi,
                         CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     },
-                    Slug = x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()
+                    Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
                 }).Skip(pageSize*(pageIndex-1)).Take(pageSize).ToList();
 
 
@@ -312,13 +307,7 @@ namespace GoStay.Services.Newss
             {
 
                 var listNews = NewsRepository.SearchListNews(param);
-                listNews.ForEach(x=>x.Slug=(x.Title.RemoveUnicode().Replace(" ", "-").Replace(",",string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty)
-                                            .ToLower()));
+                listNews.ForEach(x=>x.Slug=(x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = listNews;
@@ -470,13 +459,7 @@ namespace GoStay.Services.Newss
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
                     Click = x.Click??0,
-                    Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty)
-                                            .ToLower() : ""
+                    Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar() : ""
                 });
 
                 data.LatestNews = temp.OrderByDescending(x=>x.DateCreate).Take(latestQuantity).ToList();
@@ -526,12 +509,7 @@ namespace GoStay.Services.Newss
                 foreach(var Id in categories)
                 {
                     var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id,IdDomain=1, PageIndex = 1, PageSize = 10 });
-                    data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()));
+                    data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
                     dicNews.Add(Id,data);
                 }
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -556,12 +534,7 @@ namespace GoStay.Services.Newss
             try
             {
                 var data = NewsRepository.GetListTopNews(IdCategory, IdTopic);
-                data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()));
+                data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -614,12 +587,7 @@ namespace GoStay.Services.Newss
                     Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
                     Tag = news.Tag,
                     UserName = news.IdUserNavigation.UserName,
-                    Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()
+                    Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
                 };
 
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -910,12 +878,7 @@ namespace GoStay.Services.Newss
                 filter.TextSearch = filter.TextSearch.Replace(" ", string.Empty).ToLower();
 
                 var list = NewsRepository.SearchListVideoNews(filter);
-                list.ForEach(x=>x.Slug = x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
+                list.ForEach(x=>x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = list;
