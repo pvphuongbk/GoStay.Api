@@ -470,13 +470,7 @@ namespace GoStay.Services.Newss
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
                     Click = x.Click??0,
-                    Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty)
-                                            .ToLower() : ""
+                    Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar() : ""
                 });
 
                 data.LatestNews = temp.OrderByDescending(x=>x.DateCreate).Take(latestQuantity).ToList();

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 
 using System.ComponentModel;
+using System.Linq;
 
 namespace GoStay.Common.Extention
 {
@@ -20,6 +21,10 @@ namespace GoStay.Common.Extention
                                             "o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o",
                                             "u","u","u","u","u","u","u","u","u","u","u",
                                             "y","y","y","y","y",};
+
+        public static string[] arr3 = new string[] {",",".","+","-","_","(",")","*","&","^","%","$","#","@","!","`","~","{","}","[","]",
+                                                            ":",";","'","\"","\\","|",">","<","/","?"};
+
         public static string FirstCharToUpper(this string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -44,6 +49,18 @@ namespace GoStay.Common.Extention
                 text = text.Replace(arr1[i], arr2[i]);
                 text = text.Replace(arr1[i].ToUpper(), arr2[i].ToUpper());
             }
+            return text;
+        }
+        public static string ReplaceSpecialChar(this string text)
+        {
+            foreach (var c in arr3)
+            {
+                if(text.Contains(c))
+                {
+                    text=text.Replace(c,string.Empty);
+                }    
+            }
+            text=text.Replace(" ", "-");
             return text;
         }
     }
