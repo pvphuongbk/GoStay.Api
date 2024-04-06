@@ -20,6 +20,7 @@ namespace GoStay.DataDto.News
         public string Title { get; set; }
         public DateTime DateCreate { get; set; }
         public int IdCategory { get; set; }
+        public List<int>? IdTopics { get; set; }
         public string? PictureTitle { get; set; }
         public string? Description { get; set; }
         public string Category { get; set; }

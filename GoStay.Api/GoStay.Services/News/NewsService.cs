@@ -428,7 +428,7 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase GetNewsForHomePage(int latestQuantity,int categoryQuantity,int hotQuantlty, DateTime dateStart, DateTime dateEnd)
+        public ResponseBase GetNewsForHomePage(int latestQuantity,int categoryQuantity,int hotQuantlty, DateTime dateStart, DateTime dateEnd, int idcategory, int idtopic)
         {
 
             ResponseBase response = new ResponseBase();
@@ -440,7 +440,10 @@ namespace GoStay.Services.Newss
             };
             try
             {
-                var allnews = _newsRepository.FindAll(x=>x.Status== (int)NewsStatus.Accepted &&x.Deleted!=1 &&x.Iddomain==AppConfigs.IdDomain)
+                var allnews = _newsRepository.FindAll(x=>x.Status== (int)NewsStatus.Accepted &&x.Deleted!=1 
+                                                         &&x.Iddomain==AppConfigs.IdDomain
+                                                         && ((idcategory>0)?x.IdCategory==idcategory:x.Id>0)
+                                                         && ((idtopic>0) ? x.NewsTopics.Select(y=>y.IdNewsTopic).Contains(idtopic):x.Id>0))
                                              .Include(x=>x.IdCategoryNavigation)
                                              .Include(x=>x.IdUserNavigation)
                                              .Include(x=>x.NewsTopics).ThenInclude(y=>y.IdNewsTopicNavigation)
@@ -452,6 +455,7 @@ namespace GoStay.Services.Newss
                     Title = x.Title,
                     DateCreate = x.DateEdit,
                     IdCategory = x.IdCategory,
+                    IdTopics = x.NewsTopics.Select(y=>y.IdNewsTopic).ToList(),
                     PictureTitle = x.PictureTitle,
                     Description = x.Description,
                     Category = x.IdCategoryNavigation.Category,
