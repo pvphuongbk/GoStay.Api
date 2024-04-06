@@ -60,11 +60,11 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("tab-home")]
-        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantity, string dateStart, string dateEnd)
+        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantity, string dateStart, string dateEnd,int idcategory, int idtopic)
         {
             var start = DateTime.ParseExact(dateStart, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var end = DateTime.ParseExact(dateEnd, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var items = _newsServices.GetNewsForHomePage(latestQuantity, categoryQuantity, hotQuantity, start, end);
+            var items = _newsServices.GetNewsForHomePage(latestQuantity, categoryQuantity, hotQuantity, start, end, idcategory, idtopic);
             return items;
         }
         [HttpGet("news")]
