@@ -812,7 +812,6 @@ namespace GoStay.Services.Newss
                     newsEntity.Click = 0;
                 }
                 newsEntity.Click = newsEntity.Click+1;
-                newsEntity.DateEdit = DateTime.UtcNow;
 
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
