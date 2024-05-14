@@ -1,5 +1,6 @@
 ﻿using GoStay.Common.Enums;
 using GoStay.Common.Extention;
+using GoStay.Common.Helpers;
 using GoStay.Data.Base;
 using GoStay.Data.Statistical;
 using GoStay.DataAccess.Entities;
@@ -110,7 +111,7 @@ namespace GoStay.Services.Statisticals
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Statistical");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -143,7 +144,7 @@ namespace GoStay.Services.Statisticals
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Statistical");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -162,7 +163,7 @@ namespace GoStay.Services.Statisticals
                 }
                 catch (Exception e)
                 {
-                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Statistical");
                     responseBase.Message = e.Message;
                     return responseBase;
                 }
@@ -215,7 +216,7 @@ namespace GoStay.Services.Statisticals
                 }
                 catch (Exception e)
                 {
-                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Statistical");
                     responseBase.Message = e.Message;
                     return responseBase;
                 }
@@ -244,7 +245,7 @@ namespace GoStay.Services.Statisticals
                 }
                 catch (Exception e)
                 {
-                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Statistical");
                     responseBase.Message = e.Message;
                     return responseBase;
                 }

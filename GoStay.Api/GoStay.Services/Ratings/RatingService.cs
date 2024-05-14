@@ -1,4 +1,5 @@
 ﻿using GoStay.Common.Extention;
+using GoStay.Common.Helpers;
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
@@ -37,7 +38,7 @@ namespace GoStay.Services.Reviews
         
         public ResponseBase GetRatingByUser(int hotelId, int userId)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser == userId && x.IdHotel == hotelId).FirstOrDefault();
@@ -53,21 +54,21 @@ namespace GoStay.Services.Reviews
                         Description = exitsRating.Description,
                     };
 
-                    response.Data = dto;
+                    responseBase.Data = dto;
                 }
 
-                return response;
+                return responseBase;
             }
             catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = e.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase GetRatingByHotel(int hotelId)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var exitsRatings = _hotelRatingRepository.FindAll(x => x.IdHotel == hotelId)
@@ -94,19 +95,19 @@ namespace GoStay.Services.Reviews
                         res.Add(dto);
                     }
                 }
-                response.Data = res;
-                return response;
+                responseBase.Data = res;
+                return responseBase;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = ex.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase GetListRating(int? HotelId, byte? Status,string? NameSearch, int PageIndex, int PageSize)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 if (NameSearch == null)
@@ -118,21 +119,21 @@ namespace GoStay.Services.Reviews
 
                 var Ratings = HotelRepository.GetListRating(HotelId, Status, NameSearch, PageIndex, PageSize);
 
-                response.Code = ErrorCodeMessage.Success.Key;
-                response.Message = ErrorCodeMessage.Success.Value;
-                response.Data = Ratings;
-                return response;
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
+                responseBase.Data = Ratings;
+                return responseBase;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = ex.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase ReviewOrUpdateScore(RatingOrUpdateDto dto)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 dto.LocationScore = CheckScore(dto.LocationScore);
@@ -145,9 +146,9 @@ namespace GoStay.Services.Reviews
                 var (re, check) = UpdateScoreForHotel(dto);
                 if (!check)
                 {
-                    response.Message = "User Id không tồn tại";
-                    response.Code = ErrorCodeMessage.NotFound.Key;
-                    return response;
+                    responseBase.Message = "User Id không tồn tại";
+                    responseBase.Code = ErrorCodeMessage.NotFound.Key;
+                    return responseBase;
                 }
 
                 var exitsRating = _hotelRatingRepository.FindAll(x => x.IdUser == dto.UserId && x.IdHotel == dto.HotelId).FirstOrDefault();
@@ -181,45 +182,45 @@ namespace GoStay.Services.Reviews
                 }
 
                 _icommonUoWRepository.Commit();
-                response.Data = re;
-                return response;
+                responseBase.Data = re;
+                return responseBase;
             }
             catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = e.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase UpdateStatusRating(int Id, byte status)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var exitsRating = _hotelRatingRepository.FindAll(x => x.Id ==Id).SingleOrDefault();
                 if(exitsRating == null)
                 {
-                    response.Code = ErrorCodeMessage.NotFound.Key;
-                    response.Message = ErrorCodeMessage.NotFound.Value;
-                    return response;
+                    responseBase.Code = ErrorCodeMessage.NotFound.Key;
+                    responseBase.Message = ErrorCodeMessage.NotFound.Value;
+                    return responseBase;
                 }
                 exitsRating.Status = status;
                 _hotelRatingRepository.Update(exitsRating);
 
                 _icommonUoWRepository.Commit();
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
             catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = e.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase GetUserBoxReview(int idHotel)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             List<UserBoxReview> listUserBoxReview = new List<UserBoxReview>();
             var rating = _hotelRatingRepository.FindAll(x=>x.IdHotel == idHotel && x.Status==1);
 
@@ -233,44 +234,44 @@ namespace GoStay.Services.Reviews
                         var user = CreatUserBoxReview(item);
                         listUserBoxReview.Add(user);
                     }
-                    response.Data = listUserBoxReview;
-                    return response;
+                    responseBase.Data = listUserBoxReview;
+                    return responseBase;
                 }
-                response.Message = $"{ErrorCodeMessage.NotFound.Value}";
-                response.Data = listUserBoxReview;
-                return response;
+                responseBase.Message = $"{ErrorCodeMessage.NotFound.Value}";
+                responseBase.Data = listUserBoxReview;
+                return responseBase;
 
             }
-            catch
+            catch (Exception e)
             {
-                response.Message = $"{ErrorCodeMessage.Exception.Value}";
-                response.Data = listUserBoxReview;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
 
         public ResponseBase CheckOrdered(int hotelId, int userId)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var exist = _orderRepository.FindAll(x => x.IdUser == userId && x.IdHotel == hotelId).Count();
                 if (exist > 0)
                 {
-                    response.Data = 1;
-                    return response;
+                    responseBase.Data = 1;
+                    return responseBase;
                 }
                 else
                 {
-                    response.Data = 0;
-                    return response;
+                    responseBase.Data = 0;
+                    return responseBase;
                 }
             }
             catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = e.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Rating");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
 

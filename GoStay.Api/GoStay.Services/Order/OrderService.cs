@@ -13,6 +13,7 @@ using GoStay.Common.Extention;
 using GoStay.Data.ServiceDto;
 using GoStay.Data.TourDto;
 using System;
+using GoStay.Common.Helpers;
 
 namespace GoStay.Services.Orders
 {
@@ -98,8 +99,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -179,9 +179,8 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
-                responseBase.Data = null;
                 return responseBase;
             }
         }
@@ -203,7 +202,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -267,7 +266,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -339,7 +338,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -380,8 +379,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -413,8 +411,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -441,8 +438,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -465,8 +461,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -488,8 +483,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -511,8 +505,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -535,8 +528,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -562,8 +554,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -598,8 +589,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -647,8 +637,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -677,7 +666,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -731,7 +720,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -774,7 +763,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -815,7 +804,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -884,7 +873,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -933,7 +922,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -968,7 +957,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -1006,7 +995,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -1014,69 +1003,75 @@ namespace GoStay.Services.Orders
 
         public ResponseBase GetListOrderSearch(OrderSearchParam param)
         {
-            ResponseBase response = new ResponseBase();
-            var Data = OrderRepository.SearchListOrder(param);
-            Data.ForEach(x => x.Slug = x.HotelName!=null? 
-                        x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                            .Replace(".", "-")
-                            .Replace("/", "-").Replace("--", string.Empty)
-                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                            .Replace("&", "-").Replace("@", string.Empty).ToLower() 
-                        : x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                            .Replace(".", "-")
-                            .Replace("/", "-").Replace("--", string.Empty)
-                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
-            response.Data = Data;
-            return response;
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var Data = OrderRepository.SearchListOrder(param);
+                Data.ForEach(x => x.Slug = x.HotelName != null ?
+                            x.HotelName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                .Replace(".", "-")
+                                .Replace("/", "-").Replace("--", string.Empty)
+                                .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                .Replace("(", string.Empty).Replace(")", string.Empty)
+                                .Replace("*", string.Empty).Replace("%", string.Empty)
+                                .Replace("&", "-").Replace("@", string.Empty).ToLower()
+                            : x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                .Replace(".", "-")
+                                .Replace("/", "-").Replace("--", string.Empty)
+                                .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                .Replace("(", string.Empty).Replace(")", string.Empty)
+                                .Replace("*", string.Empty).Replace("%", string.Empty)
+                                .Replace("&", "-").Replace("@", string.Empty).ToLower());
+                responseBase.Data = Data;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
         }
 
         public ResponseBase DeleteRoomInOrder(int IdDetail, int IdOrder)
         {
             IOrderFunction orderFunction = new OrderFunction(_mapper, _hotelRepository, _pictureRepository, _userRepository);
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var orders = _OrderRepository.FindAll(x => x.Id == IdOrder && x.OrderDetails.Any(z=>z.Id== IdDetail)).Include(x => x.OrderDetails);
                 if(orders.Count()<=0)
                 {
-                    response.Code = ErrorCodeMessage.NotFound.Key;
-                    response.Message = ErrorCodeMessage.NotFound.Value;
+                    responseBase.Code = ErrorCodeMessage.NotFound.Key;
+                    responseBase.Message = ErrorCodeMessage.NotFound.Value;
 
-                    response.Data = "Not Found";
-                    return response;
+                    responseBase.Data = "Not Found";
+                    return responseBase;
 
                 }
                 if (orders.Count() > 1)
                 {
-                    response.Code = ErrorCodeMessage.Exception.Key;
-                    response.Message = ErrorCodeMessage.Exception.Value;
+                    responseBase.Code = ErrorCodeMessage.Exception.Key;
+                    responseBase.Message = ErrorCodeMessage.Exception.Value;
 
-                    response.Data = "exception";
-                    return response;
+                    responseBase.Data = "exception";
+                    return responseBase;
 
                 }
                 _commonUoW.BeginTransaction();
                 _OrderDetailRepository.Remove(IdDetail);
                 _commonUoW.Commit();
 
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = ErrorCodeMessage.Exception.Value;
-
-                response.Data = "exception";
-                return response;
-
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
-            
+
         }
         public ResponseBase GetRoomInOrder(int Id)
         {
@@ -1101,7 +1096,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -1177,7 +1172,7 @@ namespace GoStay.Services.Orders
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Order");
                 responseBase.Message = e.Message;
                 return responseBase;
             }

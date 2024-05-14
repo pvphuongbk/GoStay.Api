@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoStay.Common.Helpers;
 using GoStay.Data.Base;
 using GoStay.Data.Ticket;
 using GoStay.DataAccess.Entities;
@@ -46,7 +47,7 @@ namespace GoStay.Services.OrderTickets
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "OrderTicket");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -93,8 +94,7 @@ namespace GoStay.Services.OrderTickets
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "OrderTicket");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -140,7 +140,7 @@ namespace GoStay.Services.OrderTickets
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "OrderTicket");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -190,7 +190,7 @@ namespace GoStay.Services.OrderTickets
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "OrderTicket");
                 responseBase.Message = e.Message;
                 return responseBase;
             }
@@ -229,7 +229,7 @@ namespace GoStay.Services.OrderTickets
             }
             catch (Exception e)
             {
-                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "OrderTicket");
                 responseBase.Message = e.Message;
                 return responseBase;
             }

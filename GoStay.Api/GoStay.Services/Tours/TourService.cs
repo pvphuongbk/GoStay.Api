@@ -2,6 +2,7 @@
 using GoStay.Common;
 using GoStay.Common.Configuration;
 using GoStay.Common.Extention;
+using GoStay.Common.Helpers;
 using GoStay.Data.Base;
 using GoStay.Data.Enums;
 using GoStay.Data.HotelDto;
@@ -69,39 +70,57 @@ namespace GoStay.Services.Tours
 
         public ResponseBase SuggestTour(string searchText)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             // Remove unicode
-            searchText = searchText.RemoveUnicode();
-            searchText = searchText.Replace(" ", string.Empty).ToLower();
-            var Data = TourRepository.SuggestTour(searchText);
+            try
+            {
+                searchText = searchText.RemoveUnicode();
+                searchText = searchText.Replace(" ", string.Empty).ToLower();
+                var Data = TourRepository.SuggestTour(searchText);
 
-            Data.ForEach(x => x.Slug = x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower());
-            response.Data = Data;
-            return response;
+                Data.ForEach(x => x.Slug = x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                                .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                                .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                                .Replace("(", string.Empty).Replace(")", string.Empty)
+                                                .Replace("*", string.Empty).Replace("%", string.Empty)
+                                                .Replace("&", "-").Replace("@", string.Empty).ToLower());
+                responseBase.Data = Data;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
         }
 
         public ResponseBase SearchTour(SearchTourRequest request)
         {
-            ResponseBase response = new ResponseBase();
-            var Data = TourRepository.GetPagingListTours(request);
-            Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()));
-            response.Data = Data;
-            return response;
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var Data = TourRepository.GetPagingListTours(request);
+                Data.ForEach(x => x.Slug = (x.TourName.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                                .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                                .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                                .Replace("(", string.Empty).Replace(")", string.Empty)
+                                                .Replace("*", string.Empty).Replace("%", string.Empty)
+                                                .Replace("&", "-").Replace("@", string.Empty).ToLower()));
+                responseBase.Data = Data;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
         }
         public ResponseBase GetTourHomePage()
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var Data = new List<SearchTourDto>();
@@ -118,13 +137,14 @@ namespace GoStay.Services.Tours
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower()));
-                response.Data = Data;
-                return response;
+                responseBase.Data = Data;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = new TourContentDto();
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
@@ -132,21 +152,22 @@ namespace GoStay.Services.Tours
         public ResponseBase GetAllTourByUserId(int UserId, int PageIndex, int PageSize)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var Data = new List<TourAdminDto>();
                 var count = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1).Count();
                 var tours = _tourRepository.FindAll(x => x.IdUser == UserId && x.Deleted != 1).OrderByDescending(x => x.Id).Skip(PageSize * (PageIndex - 1)).Take(PageSize).ToList();
                 Data = _mapper.Map<List<Tour>, List<TourAdminDto>>(tours);
-                response.Data = Data;
-                response.Count = count;
-                return response;
+                responseBase.Data = Data;
+                responseBase.Count = count;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = new List<TourAdminDto>();
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
@@ -155,7 +176,7 @@ namespace GoStay.Services.Tours
         public ResponseBase GetTourByUserIdAndId(int UserId, int Id)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var Data = new TourAdminDto();
@@ -165,13 +186,14 @@ namespace GoStay.Services.Tours
                 Data.IdDistrictTo = _tourLocationToRepository.FindAll(x => x.IdTour == Id).Select(x => x.IdDistrictTo).ToArray();
                 Data.Vehicles = _tourVehicleRepository.FindAll(x => x.IdTour == Id).Select(x => x.IdVehicle).ToArray();
 
-                response.Data = Data;
-                return response;
+                responseBase.Data = Data;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = new TourAdminDto();
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
@@ -179,7 +201,7 @@ namespace GoStay.Services.Tours
         public ResponseBase GetTourContent(int Id)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var tour = _tourRepository.FindAll(x => x.Id == Id)
@@ -232,38 +254,40 @@ namespace GoStay.Services.Tours
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower();
-                response.Data = tourContent;
-                return response;
+                responseBase.Data = tourContent;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = new TourContentDto();
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
         public ResponseBase GetTourLocationTotal(int IdProvince)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var dicstrictTo = _tourLocationToRepository.FindAll(x => x.IdDistrictToNavigation.IdTinhThanhNavigation != null &&
                                                                     x.IdDistrictToNavigation.IdTinhThanhNavigation.Id == IdProvince).Count();
-                response.Data = dicstrictTo;
-                return response;
+                responseBase.Data = dicstrictTo;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = 0;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
         public ResponseBase GetDataSupportTour()
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var Data = new DataSupportTour();
@@ -289,19 +313,20 @@ namespace GoStay.Services.Tours
                 var vehicles = _vehicleRepository.FindAll().ToList();
                 Data.Vehicles = _mapper.Map<List<Vehicle>, List<VehicleDto>>(vehicles);
 
-                response.Data = Data;
-                return response;
+                responseBase.Data = Data;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = null;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
         public ResponseBase AddTour(Tour data, int[] IdDistrictTo, int[] Vehicles)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
 
             try
             {
@@ -323,39 +348,37 @@ namespace GoStay.Services.Tours
                     _tourVehicleRepository.Insert(new TourVehicle() { IdTour = data.Id, IdVehicle = (byte)item });
                 }
                 _commonUoW.Commit();
-                response.Data = data.Id;
-                return response;
+                responseBase.Data = data.Id;
+                return responseBase;
             }
             catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = 0;
-                response.Message = e.Message;
-                return response;
-
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase AddTourDetail(TourDetail data)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 _commonUoW.BeginTransaction();
                 _tourDetailRepository.Insert(data);
                 _commonUoW.Commit();
-                response.Data = data.Id;
-                return response;
+                responseBase.Data = data.Id;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = 0;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase EditTour(TourAddDto data)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 _commonUoW.BeginTransaction();
@@ -424,19 +447,19 @@ namespace GoStay.Services.Tours
 
                 _commonUoW.Commit();
 
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = "Exception";
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase EditTourDetail(TourDetailDto data)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 _commonUoW.BeginTransaction();
@@ -448,20 +471,20 @@ namespace GoStay.Services.Tours
                 tourdetail.Details = data.Details;
                 _tourDetailRepository.Update(tourdetail);
                 _commonUoW.Commit();
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = "Exception";
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
 
         public ResponseBase DeleteTour(int id)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 _commonUoW.BeginTransaction();
@@ -469,20 +492,20 @@ namespace GoStay.Services.Tours
                 tour.Deleted = 1;
                 _tourRepository.Update(tour);
                 _commonUoW.Commit();
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = "Exception";
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
 
         public ResponseBase RemoveTourDetail(int IdDetail)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 _commonUoW.BeginTransaction();
@@ -492,19 +515,19 @@ namespace GoStay.Services.Tours
                     tourdetailentity.Deleted = 1;
                     _tourDetailRepository.Update(tourdetailentity);
                     _commonUoW.Commit();
-                    response.Data = "Not found";
-                    return response;
+                    responseBase.Data = "Not found";
+                    return responseBase;
 
                 }
                 _commonUoW.Commit();
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = "Exception";
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public int AddTourStartTime(string time)
@@ -535,7 +558,7 @@ namespace GoStay.Services.Tours
 
         public ResponseBase UpdateTourToCompare(CompareTourParam param)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
 
             try
             {
@@ -548,16 +571,16 @@ namespace GoStay.Services.Tours
                     var entity = new CompareTour { IdTours = param.IdTour + ",", Session = param.Session, IdUser = param.IdUser, Deleted = false };
                     _compareTourRepository.Insert(entity);
                     _commonUoW.Commit();
-                    response.Data = entity.IdTours;
-                    return response;
+                    responseBase.Data = entity.IdTours;
+                    return responseBase;
                 }
                 else
                 {
                     if (comparetour.IdTours.Contains(param.IdTour) == true)
                     {
                         _commonUoW.Commit();
-                        response.Data = comparetour.IdTours;
-                        return response;
+                        responseBase.Data = comparetour.IdTours;
+                        return responseBase;
                     }
                     var temp = comparetour.IdTours.Remove(comparetour.IdTours.Length - 1);
                     var stringIdA = temp.Split(",");
@@ -576,22 +599,22 @@ namespace GoStay.Services.Tours
                     comparetour.IdTours = comparetour.IdTours + $"{param.IdTour},";
                     _compareTourRepository.Update(comparetour);
                     _commonUoW.Commit();
-                    response.Data = comparetour.IdTours;
-                    return response;
+                    responseBase.Data = comparetour.IdTours;
+                    return responseBase;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Data = ex.Message;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
 
         public ResponseBase GetListToursCompare(string ListId)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var Data = TourRepository.GetListToursCompare(ListId);
@@ -601,20 +624,21 @@ namespace GoStay.Services.Tours
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower()));
-                response.Data = Data;
-                return response;
+                responseBase.Data = Data;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = new TourContentDto();
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
         public ResponseBase SavePicture(string url, int idTour, int size)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 var picture = new Picture();
@@ -628,15 +652,14 @@ namespace GoStay.Services.Tours
                 _pictureRepository.Insert(picture);
                 _commonUoW.Commit();
 
-                response.Data = picture.Id;
-                return response;
+                responseBase.Data = picture.Id;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-
-                response.Data = 0;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
@@ -644,7 +667,7 @@ namespace GoStay.Services.Tours
         public ResponseBase SaveListPicture(List<string> datas)
         {
 
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 List<int> result = new List<int>();
@@ -664,59 +687,59 @@ namespace GoStay.Services.Tours
                     _pictureRepository.Insert(picture);
                     _commonUoW.Commit();
                 }
-                response.Code = ErrorCodeMessage.Success.Key;
-                response.Message = ErrorCodeMessage.Success.Value;
+                responseBase.Code = ErrorCodeMessage.Success.Key;
+                responseBase.Message = ErrorCodeMessage.Success.Value;
 
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                _commonUoW.RollBack();
-                response.Code = ErrorCodeMessage.Exception.Key;
-                response.Message = ErrorCodeMessage.Exception.Value;
-                response.Data = "exception";
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
 
         }
         public ResponseBase GetListTourDetail(int IdTour)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
 
                 var topics = _tourDetailRepository.FindAll(x=>x.IdTours == IdTour && x.Deleted!=1).ToList();
                 var data = _mapper.Map<List<TourDetail>, List<TourDetailDto>>(topics);
-                response.Data = data;
-                return response;
+                responseBase.Data = data;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = null;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase GetListPictureTour(int IdTour)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
 
                 var topics = _pictureRepository.FindAll(x => x.TourId == IdTour && x.Deleted!=1).ToList();
                 var data = _mapper.Map<List<Picture>, List<PictureRoomDto>>(topics);
-                response.Data = data;
-                return response;
+                responseBase.Data = data;
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = null;
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
         public ResponseBase DeletePictureTour(int IdPicture)
         {
-            ResponseBase response = new ResponseBase();
+            ResponseBase responseBase = new ResponseBase();
             try
             {
                 _commonUoW.BeginTransaction();
@@ -724,13 +747,14 @@ namespace GoStay.Services.Tours
                 pic.Deleted = 1;
                 _pictureRepository.Update(pic);
                 _commonUoW.Commit();
-                response.Data = "Success";
-                return response;
+                responseBase.Data = "Success";
+                return responseBase;
             }
-            catch
+            catch (Exception e)
             {
-                response.Data = "Fail";
-                return response;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Tour");
+                responseBase.Message = e.Message;
+                return responseBase;
             }
         }
 

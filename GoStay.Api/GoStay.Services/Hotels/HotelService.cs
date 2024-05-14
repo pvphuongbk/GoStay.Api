@@ -118,6 +118,7 @@ namespace GoStay.Services.Hotels
             }
             catch (Exception e)
             {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
                 responseBase.Code = ErrorCodeMessage.Exception.Key;
                 responseBase.Message = e.Message;
                 return responseBase;
@@ -143,7 +144,9 @@ namespace GoStay.Services.Hotels
 			}
 			catch (Exception e)
 			{
-				responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
+
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
 				responseBase.Message = e.Message;
 				return responseBase;
 			}
@@ -200,6 +203,7 @@ namespace GoStay.Services.Hotels
             }
             catch (Exception e)
             {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
                 responseBase.Code = ErrorCodeMessage.Exception.Key;
                 responseBase.Message = e.Message;
                 return responseBase;
@@ -224,7 +228,8 @@ namespace GoStay.Services.Hotels
 			}
 			catch (Exception e)
 			{
-				responseBase.Code = ErrorCodeMessage.Exception.Key;
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
 				responseBase.Message = e.Message;
 				return responseBase;
 			}
@@ -250,6 +255,7 @@ namespace GoStay.Services.Hotels
             }
             catch (Exception e)
             {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
                 responseBase.Code = ErrorCodeMessage.Exception.Key;
                 responseBase.Message = e.Message;
                 return responseBase;
@@ -272,6 +278,7 @@ namespace GoStay.Services.Hotels
             }
             catch (Exception e)
             {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
                 responseBase.Code = ErrorCodeMessage.Exception.Key;
                 responseBase.Message = e.Message;
                 return responseBase;
@@ -287,8 +294,9 @@ namespace GoStay.Services.Hotels
                 responseBase.Data = dto;
                 return responseBase;
             }
-            catch
+            catch(Exception e)
             {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
                 var hotelDetailDto = new HotelDetailDto();
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
@@ -342,10 +350,10 @@ namespace GoStay.Services.Hotels
                 responseBase.Data = hotelDetailDto;
                 return responseBase;
             }
-            catch
-			{
-                var hotelDetailDto = new HotelDetailDto();
-                responseBase.Data = hotelDetailDto;
+            catch (Exception e)
+            {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
+                responseBase.Message = e.Message;
                 return responseBase;
             }
         }
@@ -353,20 +361,35 @@ namespace GoStay.Services.Hotels
         public ResponseBase GetAllTypeHotel()
         {
             ResponseBase responseBase = new ResponseBase();
-            var listTypeHotel = _typeHotelRepository.FindAll(x => x.Deleted != 1).ToList();
-			responseBase.Data = listTypeHotel;
-            return responseBase;
+            try
+            {
+                var listTypeHotel = _typeHotelRepository.FindAll(x => x.Deleted != 1).ToList();
+                responseBase.Data = listTypeHotel;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
         }
-
         public ResponseBase GetServicesSearch(int type)
         {
             ResponseBase responseBase = new ResponseBase();
-
-            var listService = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == type)
+            try
+            {
+                var listService = _serviceRepository.FindAll(x => x.Deleted != 1 && x.IdStyle == type)
                                                                 .OrderBy(x => x.AdvantageLevel).Take(30).ToList();
-            responseBase.Data=listService;
-            return responseBase;
-
+                responseBase.Data = listService;
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                FileHelper.GeneratorFileByDay(Common.Enums.FileStype.Error, e.ToString(), "Hotel");
+                responseBase.Message = e.Message;
+                return responseBase;
+            }
         }
     }
 }
