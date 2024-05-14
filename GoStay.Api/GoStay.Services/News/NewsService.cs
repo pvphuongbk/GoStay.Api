@@ -621,7 +621,7 @@ namespace GoStay.Services.Newss
                 {
                     IdCategory = (int)news.IdCategory,
                     IdUser = (int)news.IdUser,
-                    Status = 0,
+                    Status = 1,
                     Title = news.Title,
                     Keysearch = news.Keysearch,
                     Description = news.Description,
