@@ -5,21 +5,23 @@ using System.Reflection;
 
 namespace GoStay.Common.Configuration
 {
-	public class AppConfigs
-	{
-		private static IConfiguration _configuration;
-		public static void LoadAll(IConfiguration configuration)
-		{
-			_configuration = configuration;
-			ApiUrlBase = GetConfigValue("Appconfig:ApiUrlBase", "");
+    public class AppConfigs
+    {
+        private static IConfiguration _configuration;
+        public static void LoadAll(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            ApiUrlBase = GetConfigValue("Appconfig:ApiUrlBase", "");
             ApiAir= GetConfigValue("Appconfig:ApiAir", "");
             ItemPerPage = GetConfigValue("Appconfig:ItemPerPage", 50);
-			SqlConnection = GetConfigValue("ConnectionStrings:GoStaySqlConn", "No connection");
-			GoogleClientId = GetConfigValue("Google:ClientId", "No value");
-			GoogleClientSecret = GetConfigValue("Google:ClientSecret", "No value");
-			FacebookClientId = GetConfigValue("Facebook:ClientId", "No value");
-			FacebookClientSecret = GetConfigValue("Facebook:ClientSecret", "No value");
+            SqlConnection = GetConfigValue("ConnectionStrings:GoStaySqlConn", "No connection");
+            GoogleClientId = GetConfigValue("Google:ClientId", "No value");
+            GoogleClientSecret = GetConfigValue("Google:ClientSecret", "No value");
+            FacebookClientId = GetConfigValue("Facebook:ClientId", "No value");
+            FacebookClientSecret = GetConfigValue("Facebook:ClientSecret", "No value");
+            FullPath = GetConfigValue("Template:FullPath", "wwwroot\\upload\\");
             RootPath = GetConfigValue("Template:RootPath", "");
+            GeneralPath = GetConfigValue("Template:GeneralPath", "");
         }
         public static string FormatCurrency(string currencyCode, decimal amount)
         {
@@ -57,8 +59,11 @@ namespace GoStay.Common.Configuration
         const string BuildVersionMetadataPrefix = "+build";
         const string dateFormat = "yyyy-MM-ddTHH:mm:ss:fffZ";
         public static int IdDomain = 1;
+        public static string FullPath { get; set; }
         public static string RootPath { get; set; }
-        public static List<int> AdminIds { get; set; }=new List<int>() { 9};
+        public static string GeneralPath { get; set; }
+
+        public static List<int> AdminIds { get; set; } = new List<int>() { 9 };
         public static DateTime GetLinkerTime(Assembly assembly)
         {
             var attribute = assembly
@@ -86,18 +91,18 @@ namespace GoStay.Common.Configuration
         }
         public static string checkinDate = DateTime.Today.ToString("dd/MM/yyyy");
         public static string checkoutDate = DateTime.Today.AddDays(1).ToString("dd/MM/yyyy");
-		//public static string OrderCode = DateTime.UtcNow.TimeOfDay.TotalSeconds.ToString();
+        //public static string OrderCode = DateTime.UtcNow.TimeOfDay.TotalSeconds.ToString();
         public static DateTime startDate = new DateTime(2022, 1, 1);
         public static string ApiUrlBase { get; set; }
         public static string ApiAir { get; set; }
 
         public static string GoogleClientId { get; set; }
-		public static string GoogleClientSecret { get; set; }
-		public static string FacebookClientId { get; set; }
-		public static string FacebookClientSecret { get; set; }
-		public static int ItemPerPage { get; set; }
-		public static string SqlConnection { get; set; }
-		public static string CurrentUserCK = "CurrentUser";
+        public static string GoogleClientSecret { get; set; }
+        public static string FacebookClientId { get; set; }
+        public static string FacebookClientSecret { get; set; }
+        public static int ItemPerPage { get; set; }
+        public static string SqlConnection { get; set; }
+        public static string CurrentUserCK = "CurrentUser";
         public static string CTNAME = "Việt Nam";
         public static string strTitle = "Gostay - Nền tảng thương mại điện tử cho du lịch hàng đầu Việt Nam";
         /// <summary>
@@ -106,8 +111,8 @@ namespace GoStay.Common.Configuration
         /// 
 
         public static string pls(string _str)
-		{
-			return "Bạn cần nhập vào " + _str;
+        {
+            return "Bạn cần nhập vào " + _str;
         }
 
         public static int acvivemenu = 0;
@@ -115,37 +120,37 @@ namespace GoStay.Common.Configuration
         /// Lấy ra giá trị config trong file .config
         /// </summary>
         private static T GetConfigValue<T>(string configKey, T defaultValue)
-		{
-			var value = defaultValue;
-			var converter = TypeDescriptor.GetConverter(typeof(T));
-			try
-			{
-				if (converter != null)
-				{
-					var setting = _configuration.GetSection(configKey).Value;
-					if (!string.IsNullOrEmpty(setting))
-					{
-						value = (T)converter.ConvertFromString(setting);
-					}
-				}
-			}
-			catch
-			{
-				value = defaultValue;
-			}
-			return value;
-		}
+        {
+            var value = defaultValue;
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            try
+            {
+                if (converter != null)
+                {
+                    var setting = _configuration.GetSection(configKey).Value;
+                    if (!string.IsNullOrEmpty(setting))
+                    {
+                        value = (T)converter.ConvertFromString(setting);
+                    }
+                }
+            }
+            catch
+            {
+                value = defaultValue;
+            }
+            return value;
+        }
 
         public static string Activecss(int tab, int tabactive)
-		{
-			if(tab == tabactive)
-			{
-				return "active";
-			}
-			else
-			{
-				return "";
-			}
-		}
+        {
+            if (tab == tabactive)
+            {
+                return "active";
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }
