@@ -22,6 +22,8 @@ namespace GoStay.DataDto.News
 
         public byte Status { get; set; }
         public DateTime? DateCreate { get; set; }
+        public DateTime DateEdit { get; set; }
+
         public string? PictureTitle { get; set; }
 
         public List<TopicNewsDataDto>? Topics { get; set; }
