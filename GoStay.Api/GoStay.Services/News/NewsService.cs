@@ -273,6 +273,7 @@ namespace GoStay.Services.Newss
                         UserId = x.IdUser,
                         FirstName = x.IdUserNavigation.FirstName,
                         LastName = x.IdUserNavigation.LastName,
+                        UserName = x.IdUserNavigation.UserName
                     },
                     Category = new NewsCategoryDataDto
                     {
@@ -284,7 +285,7 @@ namespace GoStay.Services.Newss
                     Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
                 }).Skip(pageSize*(pageIndex-1)).Take(pageSize).OrderByDescending(x => x.DateEdit).ToList();
 
-              
+
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -589,6 +590,7 @@ namespace GoStay.Services.Newss
                     LangId = news.LangId,
                     DateCreate = news.DateCreate,
                     Language = news.Lang.Language1,
+                    IdDomain = news.Iddomain,
                     IdTopics = news.NewsTopics.Select(x => x.IdNewsTopic).ToList(),
                     Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
                     Tag = news.Tag,
