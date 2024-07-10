@@ -576,27 +576,49 @@ namespace GoStay.Services.Newss
                     response.Message = ErrorCodeMessage.NotFound.Value;
                     return response;
                 }
-                var newsDetail = new NewsDetailDto()
+                var newsDetail = new NewsDetailDto();
+
+                newsDetail.Id = news.Id;
+                newsDetail.IdCategory = news.IdCategory;
+                newsDetail.Status = news.Status;
+                newsDetail.IdUser = news.IdUser;
+                newsDetail.Title = news.Title;
+                newsDetail.Content = news.Content;
+                newsDetail.PictureTitle = news.PictureTitle;
+                newsDetail.Description = news.Description;
+                newsDetail.Category = news.IdCategoryNavigation.Category;
+                newsDetail.LangId = news.LangId;
+                newsDetail.DateCreate = news.DateCreate;
+                newsDetail.Language = news.Lang.Language1;
+                newsDetail.IdDomain = news.Iddomain;
+                newsDetail.IdTopics = news.NewsTopics.Select(x => x.IdNewsTopic).ToList();
+
+                newsDetail.Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList();
+                newsDetail.Tag = news.Tag;
+                newsDetail.UserName = news.IdUserNavigation.UserName;
+                newsDetail.Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar();
+
+                var newserelate = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
+                var c = newserelate.OrderByDescending(x => x.DateCreate).Take(5);
+                if (c != null && c.Any())
                 {
-                    Id = news.Id,
-                    IdCategory = news.IdCategory,
-                    Status = news.Status,
-                    IdUser = news.IdUser,
-                    Title = news.Title,
-                    Content = news.Content,
-                    PictureTitle = news.PictureTitle,
-                    Description = news.Description,
-                    Category = news.IdCategoryNavigation.Category,
-                    LangId = news.LangId,
-                    DateCreate = news.DateCreate,
-                    Language = news.Lang.Language1,
-                    IdDomain = news.Iddomain,
-                    IdTopics = news.NewsTopics.Select(x => x.IdNewsTopic).ToList(),
-                    Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
-                    Tag = news.Tag,
-                    UserName = news.IdUserNavigation.UserName,
-                    Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
-                };
+                    newsDetail.NewRelates = c.Select(x => new NewRelateDto
+                    {
+
+                        Id = x.Id,
+                        Title = x.Title,
+
+                        PictureTitle = x.PictureTitle,
+                        DateCreate = x.DateCreate,
+                        UserData = new UserDataDto()
+                        {
+                            UserId = x.IdUser,
+                            FirstName = x.IdUserNavigation.FirstName,
+                            LastName = x.IdUserNavigation.LastName,
+                            UserName = x.IdUserNavigation.UserName
+                        },
+                    }).ToList();
+                }
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
