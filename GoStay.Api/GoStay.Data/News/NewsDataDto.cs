@@ -22,6 +22,8 @@ namespace GoStay.DataDto.News
 
         public byte Status { get; set; }
         public DateTime? DateCreate { get; set; }
+        public DateTime DateEdit { get; set; }
+
         public string? PictureTitle { get; set; }
 
         public List<TopicNewsDataDto>? Topics { get; set; }
@@ -30,8 +32,8 @@ namespace GoStay.DataDto.News
         {
             get; set;
         }
-        public UserDataDto? UserData { get; set; } 
-        public NewsCategoryDataDto? Category {  get; set; }
+        public UserDataDto? UserData { get; set; }
+        public NewsCategoryDataDto? Category { get; set; }
     }
     public class NewsCategoryDataDto
     {
@@ -50,11 +52,12 @@ namespace GoStay.DataDto.News
         public int UserId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? UserName { get; set; }
     }
     public class NewsParamDto
     {
         public NewsDataDto News { get; set; } = new NewsDataDto();
-        public List<NewsCategoryDataDto> Categories{ get; set; } = new List<NewsCategoryDataDto>();
+        public List<NewsCategoryDataDto> Categories { get; set; } = new List<NewsCategoryDataDto>();
         public List<TopicNewsDataDto> Topics { get; set; } = new List<TopicNewsDataDto>();
     }
     public class UpdateStatusNewsParam

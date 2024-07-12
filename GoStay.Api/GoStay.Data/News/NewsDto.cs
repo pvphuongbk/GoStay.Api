@@ -37,6 +37,7 @@ namespace GoStay.DataDto.News
         public string? Tag { get; set; }
         public string? UserName { get; set; }
         public DateTime DateCreate { get; set; }
+        public List<NewRelateDto>? NewRelates { get; set; }
     }
     public class GetListNewsParam
     {
@@ -125,7 +126,7 @@ namespace GoStay.DataDto.News
         public string? Name { get; set; }
         public string? Slug
         {
-            get;set;
+            get; set;
         }
         public int? Click { get; set; }
     }
@@ -215,5 +216,14 @@ namespace GoStay.DataDto.News
         public string? CategoryChi { get; set; }
         public string Slug { get; set; }
         public int Total { get; set; }
+    }
+
+    public class NewRelateDto
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public string? PictureTitle { get; set; }
+        public DateTime? DateCreate { get; set; }
+        public UserDataDto? UserData { get; set; }
     }
 }
