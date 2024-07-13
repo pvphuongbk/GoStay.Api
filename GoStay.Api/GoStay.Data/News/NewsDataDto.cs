@@ -66,4 +66,16 @@ namespace GoStay.DataDto.News
         public byte Status { get; set; }
         public int IdUser { get; set; }
     }
+
+    public class NewsAdminData
+    {
+        public List<NewsDataDto> ListNews { get; set; }
+        public List<NewsDataDto>? ListNewsTop { get; set; }
+        public int Total { get; set; }
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+        public int? IdDomain { get; set; }
+    }
+
+
 }
