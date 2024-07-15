@@ -223,12 +223,11 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
-                var data = new NewsAdminData()
-                {
 
-                    ListNews = new List<NewsDataDto>(),
 
-                };
+                var data = new List<NewsDataDto>();
+
+
 
 
                 if (AppConfigs.AdminIds.Contains(param.UserId??0))
@@ -255,7 +254,7 @@ namespace GoStay.Services.Newss
                     response.Data = listNews;
                     return response;
                 }
-                data.ListNews = listNews.Select(x => new NewsDataDto
+                data = listNews.Select(x => new NewsDataDto
                 {
                     Id = x.Id,
                     IdCategory = x.IdCategory,
@@ -270,6 +269,8 @@ namespace GoStay.Services.Newss
                     Status = x.Status,
                     Content = x.Content,
                     DateEdit = x.DateEdit,
+                    Total = listNews.Count(),
+
                     Topics = x.NewsTopics.Select(z => z.IdNewsTopicNavigation).Select(y => new TopicNewsDataDto
                     {
                         Id=y.Id,
@@ -291,9 +292,6 @@ namespace GoStay.Services.Newss
                     },
                     Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
                 }).Skip(pageSize*(pageIndex-1)).Take(pageSize).OrderByDescending(x => x.DateEdit).ToList();
-
-                data.Total = listNews.Count();
-                data.ListNewsTop = data.ListNews.Take(3).ToList();
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
