@@ -23,6 +23,7 @@ namespace GoStay.DataDto.News
         public byte Status { get; set; }
         public DateTime? DateCreate { get; set; }
         public DateTime DateEdit { get; set; }
+        public int Total { get; set; }
 
         public string? PictureTitle { get; set; }
 
