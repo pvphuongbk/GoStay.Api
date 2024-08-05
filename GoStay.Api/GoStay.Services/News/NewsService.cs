@@ -56,7 +56,7 @@ namespace GoStay.Services.Newss
                 var data = new NewsParamDto();
                 var idRecord = 0;
                 var exception = "";
-                var categories = _newsCategoryRepository.FindAll(x => x.Iddomain== AppConfigs.IdDomain).Select(x => new NewsCategoryDataDto
+                var categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain).Select(x => new NewsCategoryDataDto
                 {
                     Id = x.Id,
                     Category = x.Category,
@@ -64,18 +64,18 @@ namespace GoStay.Services.Newss
                     CategoryEng = x.CategoryEng,
                 }).ToList();
                 data.Categories = categories;
-                var topics = _topicRepository.FindAll(x => x.Iddomain==AppConfigs.IdDomain).Select(x => new TopicNewsDataDto
+                var topics = _topicRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain).Select(x => new TopicNewsDataDto
                 {
-                    Id=x.Id,
+                    Id = x.Id,
                     Topic = x.Topic,
                 }).ToList();
                 data.Topics = topics;
-                var tempRecord = _newsRepository.FindAll(x => x.IdUser == idUser && x.Status==0).AsNoTracking();
+                var tempRecord = _newsRepository.FindAll(x => x.IdUser == idUser && x.Status == 0).AsNoTracking();
 
                 if (tempRecord.Any())
                 {
                     var tempRecordIds = tempRecord.Select(x => x.Id);
-                    if (tempRecord.Count()>1)
+                    if (tempRecord.Count() > 1)
                     {
 
                         //topics
@@ -94,7 +94,7 @@ namespace GoStay.Services.Newss
                             }
                         }
                         //pictures
-                        var oldPicture = _pictureRepository.FindAll(x => tempRecordIds.Contains((x.NewsId!=null) ? (int)x.NewsId : 0));
+                        var oldPicture = _pictureRepository.FindAll(x => tempRecordIds.Contains((x.NewsId != null) ? (int)x.NewsId : 0));
 
                         if (oldPicture.Any())
                         {
@@ -112,7 +112,7 @@ namespace GoStay.Services.Newss
                         }
                         try
                         {
-                            idRecord=0;
+                            idRecord = 0;
                             _commonUoW.BeginTransaction();
                             _newsRepository.RemoveMultiple(tempRecord);
                             _commonUoW.Commit();
@@ -124,14 +124,14 @@ namespace GoStay.Services.Newss
                     }
                     else
                     {
-                        idRecord=tempRecord.SingleOrDefault().Id;
+                        idRecord = tempRecord.SingleOrDefault().Id;
                     }
                 }
                 if (idNews > 0)
                 {
                     idRecord = idNews;
                 }
-                if (idRecord==0)
+                if (idRecord == 0)
                 {
                     var newRecord = new News()
                     {
@@ -145,7 +145,7 @@ namespace GoStay.Services.Newss
                         Description = "",
                         Content = "",
                         Deleted = 0,
-                        LangId=1,
+                        LangId = 1,
                         Click = 0,
                         Tag = "",
                         Iddomain = AppConfigs.IdDomain,
@@ -165,7 +165,7 @@ namespace GoStay.Services.Newss
                     }
                 }
 
-                var news = _newsRepository.FindAll(x => x.Id==idRecord)
+                var news = _newsRepository.FindAll(x => x.Id == idRecord)
                                             .Include(x => x.NewsTopics)
                                             .Include(x => x.IdUserNavigation)
                                             .SingleOrDefault()
@@ -175,12 +175,12 @@ namespace GoStay.Services.Newss
                     Id = news.Id,
                     IdCategory = news.IdCategory,
                     IdUser = news.IdUser,
-                    Keysearch= news.Keysearch,
+                    Keysearch = news.Keysearch,
                     Title = news.Title,
                     Description = news.Description,
                     LangId = news.LangId,
                     IdDomain = news.Iddomain,
-                    PictureTitle =(idNews>0) ? news.PictureTitle : "",
+                    PictureTitle = (idNews > 0) ? news.PictureTitle : "",
                     DateCreate = news.DateCreate,
                     Topics = (idNews > 0) ? topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).ToList() : new List<TopicNewsDataDto>(),
                     TopicIds = (idNews > 0) ? topics.Where(x => news.NewsTopics.Select(y => y.IdNewsTopic).Contains(x.Id)).Select(x => x.Id).ToList() : new List<int>(),
@@ -193,7 +193,7 @@ namespace GoStay.Services.Newss
                     },
                     Content = news.Content,
                     Status = news.Status,
-                    Category = categories.SingleOrDefault(x => x.Id==news.IdCategory),
+                    Category = categories.SingleOrDefault(x => x.Id == news.IdCategory),
                     Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                                             .Replace("/", "-").Replace("--", string.Empty)
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
@@ -225,41 +225,42 @@ namespace GoStay.Services.Newss
             {
 
 
-                var data = new List<NewsDataDto>();
+                var data = new NewsAdminData()
 
-
-
-
-                if (AppConfigs.AdminIds.Contains(param.UserId??0))
                 {
-                    param.UserId=0;
+                    ListNews = new List<NewsDataDto>(),
+                };
+
+                if (AppConfigs.AdminIds.Contains(param.UserId ?? 0))
+                {
+                    param.UserId = 0;
                 }
-                var listNews = _newsRepository.FindAll(x => x.Deleted!=1
-                                                        &&((param.UserId>0) ? x.IdUser==param.UserId : x.Id>0)
-                                                        &&((param.Status>0) ? x.Status==param.Status : x.Status>0)
-                                                        &&((param.IdCategory>0) ? x.IdCategory==param.IdCategory : x.IdCategory>0)
-                                                        &&((param.IdTopic>0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id>0)
-                                                        &&((param.IdDomain>0) ? x.Iddomain==param.IdDomain : x.Iddomain==AppConfigs.IdDomain)
-                                                        &&((param.TextSearch!=null) ? x.Keysearch.Contains(param.TextSearch) : x.Id>0))
+                var listNews = _newsRepository.FindAll(x => x.Deleted != 1
+                                                        && ((param.UserId > 0) ? x.IdUser == param.UserId : x.Id > 0)
+                                                        && ((param.Status > 0) ? x.Status == param.Status : x.Status > 0)
+                                                        && ((param.IdCategory > 0) ? x.IdCategory == param.IdCategory : x.IdCategory > 0)
+                                                        && ((param.IdTopic > 0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id > 0)
+                                                        && ((param.IdDomain > 0) ? x.Iddomain == param.IdDomain : x.Iddomain == AppConfigs.IdDomain)
+                                                        && ((param.TextSearch != null) ? x.Keysearch.Contains(param.TextSearch) : x.Id > 0))
                                                 .Include(x => x.IdCategoryNavigation)
                                                 .Include(x => x.NewsTopics).ThenInclude(x => x.IdNewsTopicNavigation)
                                                 .Include(x => x.IdUserNavigation).OrderBy(x => x.Status).ThenByDescending(x => x.DateEdit).AsNoTracking();
                 var count = listNews.Count();
                 var pageSize = param.PageSize;
                 var pageIndex = param.PageIndex;
-                if (pageIndex> ((count-1)/pageSize+1))
+                if (pageIndex > ((count - 1) / pageSize + 1))
                 {
                     response.Code = ErrorCodeMessage.OutRange.Key;
                     response.Message = ErrorCodeMessage.OutRange.Value;
                     response.Data = listNews;
                     return response;
                 }
-                data = listNews.Select(x => new NewsDataDto
+                data.ListNews = listNews.Select(x => new NewsDataDto
                 {
                     Id = x.Id,
                     IdCategory = x.IdCategory,
                     IdUser = x.IdUser,
-                    Keysearch= x.Keysearch,
+                    Keysearch = x.Keysearch,
                     Title = x.Title,
                     Description = x.Description,
                     LangId = x.LangId,
@@ -273,7 +274,7 @@ namespace GoStay.Services.Newss
 
                     Topics = x.NewsTopics.Select(z => z.IdNewsTopicNavigation).Select(y => new TopicNewsDataDto
                     {
-                        Id=y.Id,
+                        Id = y.Id,
                         Topic = y.Topic,
                     }).ToList(),
                     UserData = new UserDataDto()
@@ -291,7 +292,7 @@ namespace GoStay.Services.Newss
                         CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     },
                     Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
-                }).Skip(pageSize*(pageIndex-1)).Take(pageSize).OrderByDescending(x => x.DateEdit).ToList();
+                }).Skip(pageSize * (pageIndex - 1)).Take(pageSize).OrderByDescending(x => x.DateEdit).ToList();
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -316,7 +317,7 @@ namespace GoStay.Services.Newss
             {
 
                 var listNews = NewsRepository.SearchListNews(param);
-                listNews.ForEach(x => x.Slug=(x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
+                listNews.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = listNews;
@@ -345,7 +346,7 @@ namespace GoStay.Services.Newss
                 }).ToList();
                 _commonUoW.BeginTransaction();
                 var newsEntity = _newsRepository.GetById(news.Id);
-                if (newsEntity ==null)
+                if (newsEntity == null)
                 {
                     response.Code = ErrorCodeMessage.NotFound.Key;
                     response.Message = ErrorCodeMessage.NotFound.Value;
@@ -361,14 +362,14 @@ namespace GoStay.Services.Newss
                 newsEntity.Iddomain = AppConfigs.IdDomain;
                 newsEntity.Content = news.Content;
                 newsEntity.Status = news.Status;
-                if (news.TopicValues!=null && news.TopicValues.Any())
+                if (news.TopicValues != null && news.TopicValues.Any())
                 {
                     news.TopicIds = topics.Where(x => news.TopicValues.Contains(x.Topic)).Select(x => x.Id).ToList();
                 }
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
                 _commonUoW.BeginTransaction();
-                var oldtopic = _newsTopicRepository.FindAll(x => x.IdNews==news.Id);
+                var oldtopic = _newsTopicRepository.FindAll(x => x.IdNews == news.Id);
                 if (oldtopic.Any())
                 {
                     _newsTopicRepository.RemoveMultiple(oldtopic);
@@ -409,10 +410,10 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
-                var data = _newsRepository.FindAll(x => x.Id==param.Id).SingleOrDefault();
-                if (data==null)
+                var data = _newsRepository.FindAll(x => x.Id == param.Id).SingleOrDefault();
+                if (data == null)
                 {
-                    response.Code= ErrorCodeMessage.NotFound.Key;
+                    response.Code = ErrorCodeMessage.NotFound.Key;
                     response.Message = ErrorCodeMessage.NotFound.Value;
                     response.Data = 0;
                     return response;
@@ -449,10 +450,10 @@ namespace GoStay.Services.Newss
             };
             try
             {
-                var allnews = _newsRepository.FindAll(x => x.Status== (int)NewsStatus.Accepted &&x.Deleted!=1
-                                                         &&x.Iddomain==AppConfigs.IdDomain
-                                                         && ((idcategory>0) ? x.IdCategory==idcategory : x.Id>0)
-                                                         && ((idtopic>0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains(idtopic) : x.Id>0))
+                var allnews = _newsRepository.FindAll(x => x.Status == (int)NewsStatus.Accepted && x.Deleted != 1
+                                                         && x.Iddomain == AppConfigs.IdDomain
+                                                         && ((idcategory > 0) ? x.IdCategory == idcategory : x.Id > 0)
+                                                         && ((idtopic > 0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains(idtopic) : x.Id > 0))
                                              .Include(x => x.IdCategoryNavigation)
                                              .Include(x => x.IdUserNavigation)
                                              .Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
@@ -471,25 +472,25 @@ namespace GoStay.Services.Newss
                     CategoryChi = x.IdCategoryNavigation.CategoryChi,
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
-                    Click = x.Click??0,
+                    Click = x.Click ?? 0,
                     Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar() : ""
                 });
 
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
-                data.HotNews = temp.Where(x => x.DateCreate>=dateStart && x.DateCreate<=dateEnd).OrderByDescending(x => x.Click).Take(hotQuantlty).ToList();
+                data.HotNews = temp.Where(x => x.DateCreate >= dateStart && x.DateCreate <= dateEnd).OrderByDescending(x => x.Click).Take(hotQuantlty).ToList();
 
-                data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain==AppConfigs.IdDomain)
+                data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews
                                     {
-                                        Id= x.Id,
+                                        Id = x.Id,
                                         Name = x.Category
                                     }).ToList();
                 var temp2 = data.Categories.Select(x => x.Id);
 
                 foreach (var cate in temp2)
                 {
-                    var news = temp.Where(x => x.IdCategory==cate).OrderByDescending(x => x.DateCreate).Take(categoryQuantity).ToList();
+                    var news = temp.Where(x => x.IdCategory == cate).OrderByDescending(x => x.DateCreate).Take(categoryQuantity).ToList();
                     data.NewsForCategories.Add(cate, news);
                 }
 
@@ -521,7 +522,7 @@ namespace GoStay.Services.Newss
 
                 foreach (var Id in categories)
                 {
-                    var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, IdDomain=1, PageIndex = 1, PageSize = 10 });
+                    var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, IdDomain = 1, PageIndex = 1, PageSize = 10 });
                     data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
                     dicNews.Add(Id, data);
                 }
@@ -663,7 +664,7 @@ namespace GoStay.Services.Newss
                     LangId = (int)news.LangId,
                     PictureTitle = "",
                     Click = 0,
-                    Iddomain= news.IdDomain
+                    Iddomain = news.IdDomain
                 };
 
                 _newsRepository.Insert(newsEntity);
@@ -704,7 +705,7 @@ namespace GoStay.Services.Newss
             {
                 _commonUoW.BeginTransaction();
                 var newsEntity = _newsRepository.GetById(news.Id);
-                if (newsEntity ==null)
+                if (newsEntity == null)
                 {
                     response.Code = ErrorCodeMessage.NotFound.Key;
                     response.Message = ErrorCodeMessage.NotFound.Value;
@@ -726,7 +727,7 @@ namespace GoStay.Services.Newss
                 _commonUoW.Commit();
                 _commonUoW.BeginTransaction();
 
-                _newsTopicRepository.RemoveMultiple(_newsTopicRepository.FindAll(x => x.IdNews==news.Id));
+                _newsTopicRepository.RemoveMultiple(_newsTopicRepository.FindAll(x => x.IdNews == news.Id));
 
                 if (news.IdTopics.Count > 0)
                 {
@@ -843,7 +844,7 @@ namespace GoStay.Services.Newss
                 {
                     newsEntity.Click = 0;
                 }
-                newsEntity.Click = newsEntity.Click+1;
+                newsEntity.Click = newsEntity.Click + 1;
 
                 _newsRepository.Update(newsEntity);
                 _commonUoW.Commit();
@@ -1089,7 +1090,7 @@ namespace GoStay.Services.Newss
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain==2).ToList();
+                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == 2).ToList();
                 var lan = _languageRepository.FindAll().ToList();
                 var topic = _topicRepository.FindAll(x => x.Iddomain == 2).ToList();
                 DataSupportNews data = new DataSupportNews()
@@ -1120,7 +1121,7 @@ namespace GoStay.Services.Newss
 
                 foreach (var item in topic)
                 {
-                    var total = newstopics.Where(x => x.IdNewsTopic==item.Id).Count();
+                    var total = newstopics.Where(x => x.IdNewsTopic == item.Id).Count();
                     newsTopicTotals.Add(new NewsTopicTotal()
                     {
                         Id = item.Id,
@@ -1148,6 +1149,7 @@ namespace GoStay.Services.Newss
             {
                 List<NewsCategoryTotal> newsTopicTotals = new List<NewsCategoryTotal>();
                 var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == IdDomain).Include(x => x.News.Where(y => y.Deleted!=1 && y.Iddomain == IdDomain));
+
 
                 foreach (var item in cate)
                 {
