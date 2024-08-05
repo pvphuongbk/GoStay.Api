@@ -1147,7 +1147,7 @@ namespace GoStay.Services.Newss
             try
             {
                 List<NewsCategoryTotal> newsTopicTotals = new List<NewsCategoryTotal>();
-                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == IdDomain).Include(x => x.News.Where(y => y.Deleted!=1));
+                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == IdDomain).Include(x => x.News.Where(y => y.Deleted!=1 && y.Iddomain == IdDomain));
 
                 foreach (var item in cate)
                 {
