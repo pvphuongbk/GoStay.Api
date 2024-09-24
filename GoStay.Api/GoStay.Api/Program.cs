@@ -53,7 +53,7 @@ app.UseSwagger();
 app.UseSwaggerUI(option =>
 {
 	option.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api");
-	option.RoutePrefix = "codeMaze";
+	option.RoutePrefix = "allapp";
 });
 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api"));
 // Configure the HTTP request pipeline.
