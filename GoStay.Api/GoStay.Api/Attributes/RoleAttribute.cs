@@ -33,7 +33,7 @@ namespace GoStay.Api.Attributes
             {
                 #region Hanld token
                 Microsoft.Extensions.Primitives.StringValues authTokens;
-                filterContext.HttpContext.Request.Headers.TryGetValue("apk", out authTokens);
+                filterContext.HttpContext.Request.Headers.TryGetValue("ApiKey", out authTokens);
                 var _token = authTokens.FirstOrDefault();
                 //var handler = new JwtSecurityTokenHandler();
                 //var jwtSecurityToken = handler.ReadJwtToken(_token);
