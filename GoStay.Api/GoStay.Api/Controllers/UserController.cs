@@ -1,5 +1,6 @@
 
 using BaoTangBn.Service.AuthorityServices;
+using GoStay.Api.Attributes;
 using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.Users;
@@ -9,7 +10,8 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+    //[Authorize]
+    [Route("[controller]")]
 	public class UserController : ControllerBase
 	{
         private readonly IUserService _userServices;

@@ -12,7 +12,8 @@ namespace GoStay.Common.Configuration
         {
             _configuration = configuration;
             ApiUrlBase = GetConfigValue("Appconfig:ApiUrlBase", "");
-            ApiAir= GetConfigValue("Appconfig:ApiAir", "");
+            ApiKey = GetConfigValue("AppSettings:ApiKey", "");
+            ApiAir = GetConfigValue("AppSettings:ApiAir", "");
             ItemPerPage = GetConfigValue("Appconfig:ItemPerPage", 50);
             SqlConnection = GetConfigValue("ConnectionStrings:GoStaySqlConn", "No connection");
             GoogleClientId = GetConfigValue("Google:ClientId", "No value");
@@ -59,6 +60,7 @@ namespace GoStay.Common.Configuration
         const string BuildVersionMetadataPrefix = "+build";
         const string dateFormat = "yyyy-MM-ddTHH:mm:ss:fffZ";
         public static int IdDomain = 1;
+        public static string ApiKey { get; set; }
         public static string FullPath { get; set; }
         public static string RootPath { get; set; }
         public static string GeneralPath { get; set; }
