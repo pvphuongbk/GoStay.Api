@@ -1,4 +1,5 @@
-﻿using GoStay.Common.Extention;
+﻿using GoStay.Api.Attributes;
+using GoStay.Common.Extention;
 using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
@@ -21,6 +22,13 @@ namespace GoStay.Api.Controllers
 
         [HttpGet("hotel-top-flash-sale")]
         public ResponseBase GetListHotelTopFlashSale(int number)
+        {
+            var items = _hotelService.GetListHotelTopFlashSale(number);
+            return items;
+        }
+        [HttpGet("hotel-top-flash-sale-test")]
+        [Authorize]
+        public ResponseBase GetListHotelTopFlashSale2(int number)
         {
             var items = _hotelService.GetListHotelTopFlashSale(number);
             return items;
