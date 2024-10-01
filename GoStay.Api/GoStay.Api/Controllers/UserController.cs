@@ -10,7 +10,7 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
 	[ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("[controller]")]
 	public class UserController : ControllerBase
 	{

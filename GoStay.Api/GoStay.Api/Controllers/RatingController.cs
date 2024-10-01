@@ -1,4 +1,5 @@
-﻿using GoStay.Data.TourDto;
+﻿using GoStay.Api.Attributes;
+using GoStay.Data.TourDto;
 using GoStay.DataDto.RatingDto;
 using GoStay.Services.Ratings;
 using GoStay.Services.Tours;
@@ -8,6 +9,7 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class RatingController : ControllerBase
     {

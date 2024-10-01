@@ -11,7 +11,8 @@ using System.Diagnostics;
 namespace GoStay.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+    [Authorize]
+    [Route("[controller]")]
 	public class HotelsController : ControllerBase
 	{
 		private readonly IHotelService _hotelService;
@@ -22,13 +23,6 @@ namespace GoStay.Api.Controllers
 
         [HttpGet("hotel-top-flash-sale")]
         public ResponseBase GetListHotelTopFlashSale(int number)
-        {
-            var items = _hotelService.GetListHotelTopFlashSale(number);
-            return items;
-        }
-        [HttpGet("hotel-top-flash-sale-test")]
-        [Authorize]
-        public ResponseBase GetListHotelTopFlashSale2(int number)
         {
             var items = _hotelService.GetListHotelTopFlashSale(number);
             return items;

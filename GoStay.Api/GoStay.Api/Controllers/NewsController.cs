@@ -6,10 +6,12 @@ using GoStay.Services.Newss;
 using GoStay.DataDto.News;
 using GoStay.DataAccess.Entities;
 using System.Globalization;
+using GoStay.Api.Attributes;
 
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class NewsController : ControllerBase
     {

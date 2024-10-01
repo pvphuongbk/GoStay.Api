@@ -1,4 +1,5 @@
 
+using GoStay.Api.Attributes;
 using GoStay.Data.Base;
 using GoStay.Services.WebSupport;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,8 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+    [Authorize]
+    [Route("[controller]")]
 	public class WebSupportController : ControllerBase
 	{
 
