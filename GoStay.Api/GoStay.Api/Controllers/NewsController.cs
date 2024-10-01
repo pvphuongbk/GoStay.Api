@@ -11,7 +11,6 @@ using GoStay.Api.Attributes;
 namespace GoStay.Api.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class NewsController : ControllerBase
     {
@@ -26,6 +25,7 @@ namespace GoStay.Api.Controllers
             _client = client;
         }
         [HttpGet("news-default")]
+        [Authorize]
         public ResponseBase GetNewsDefault(int idUser, int idNews)
         {
             var items = _newsServices.GetNewsDefault(idUser, idNews);
@@ -38,30 +38,35 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpPut("submit-news")]
+        [Authorize]
         public ResponseBase SubmitNews(NewsDataDto newsDto)
         {
             var item = _newsServices.SubmitNews(newsDto);
             return item;
         }
         [HttpPut("update-status")]
+        [Authorize]
         public ResponseBase UpdateStatusNews(UpdateStatusNewsParam param)
         {
             var item = _newsServices.UpdateStatusNews(param);
             return item;
         }
         [HttpPost("list")]
+        [Authorize]
         public ResponseBase GetListNews(GetListNewsParam param)
         {
             var items = _newsServices.GetListNews(param);
             return items;
         }
         [HttpGet("list-homepage")]
+        [Authorize]
         public ResponseBase GetListNewsHomePage()
         {
             var items = _newsServices.GetListNewsHomePage();
             return items;
         }
         [HttpGet("tab-home")]
+        [Authorize]
         public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantity, string dateStart, string dateEnd,int idcategory, int idtopic)
         {
             var start = DateTime.ParseExact(dateStart, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -70,12 +75,14 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("news")]
+        [Authorize]
         public ResponseBase GetNews(int Id)
         {
             var items = _newsServices.GetNews(Id);
             return items;
         }
         [HttpGet("video-news")]
+        [Authorize]
         public ResponseBase GetVideoNews(int Id)
         {
             var items = _newsServices.GetVideoNews(Id);
@@ -83,18 +90,21 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpGet("news-topic-total")]
+        [Authorize]
         public ResponseBase GetNewsTopicTotal(int IdDomain)
         {
             var items = _newsServices.GetNewsTopicTotal(IdDomain);
             return items;
         }
         [HttpGet("news-category-total")]
+        [Authorize]
         public ResponseBase GetNewsCategoryTotal(int IdDomain)
         {
             var items = _newsServices.GetNewsCategoryTotal(IdDomain);
             return items;
         }
         [HttpGet("list-category-by-parentid")]
+        [Authorize]
         public ResponseBase GetListCategoryByParentId(int IdDomain, int ParentId)
         {
             var items = _newsServices.GetListCategoryByParentId(IdDomain, ParentId);
@@ -102,6 +112,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("list-video-news")]
+        [Authorize]
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)
         {
             var items = _newsServices.GetListVideoNews(filter);
@@ -109,14 +120,16 @@ namespace GoStay.Api.Controllers
         }
 
 
-        [HttpGet("top-news")] 
+        [HttpGet("top-news")]
+        [Authorize]
         public ResponseBase GetListTopNewsByCategory(int? IdCategory, int? IdTopic)
         {
             var items = _newsServices.GetListTopNewsByCategory(IdCategory, IdTopic);
             return items;
         }
 
-        [HttpGet("data-support")] 
+        [HttpGet("data-support")]
+        [Authorize]
         public ResponseBase GetDataSupportNews()
         {
             var items = _newsServices.GetDataSupportNews();
@@ -124,6 +137,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("add-news")]
+        [Authorize]
         public ResponseBase AddNews(NewsDto newsDto)
         {
             var item = _newsServices.AddNews(newsDto);
@@ -131,6 +145,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPost("add-video-news")]
+        [Authorize]
         public ResponseBase AddVideoNews(VideoModel videoNews)
         {
             var item = _newsServices.AddVideoNews(videoNews);
@@ -138,6 +153,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPut("edit-news")]
+        [Authorize]
         public ResponseBase EditNews(NewsDto newsDto)
         {
             var item = _newsServices.EditNews(newsDto);
@@ -145,6 +161,7 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPut("edit-content-news")]
+        [Authorize]
         public ResponseBase EditContentNews(EditNewsContentParam param)
         {
             var item = _newsServices.EditContentNews(param.Content, param.NewsId);
@@ -152,30 +169,35 @@ namespace GoStay.Api.Controllers
         }
 
         [HttpPut("edit-picturetitle-news")]
+        [Authorize]
         public ResponseBase EditPictureTitleNews(EditNewsPictureTitleParam param)
         {
             var item = _newsServices.EditPictureTitleNews(param.Url,param.NewsId);
             return item;
         }
         [HttpPut("delete-news")]
+        [Authorize]
         public ResponseBase DeleteNews([FromBody]int Id)
         {
             var item = _newsServices.DeleteNews(Id);
             return item;
         }
         [HttpPut("click")]
+        [Authorize]
         public ResponseBase EditClickNews([FromBody] int Id)
         {
             var item = _newsServices.EditClickNews(Id);
             return item;
         }
         [HttpPut("edit-video-news")]
+        [Authorize]
         public ResponseBase EditVideoNews(EditVideoNewsDto videoNews)
         {
             var item = _newsServices.EditVideoNews(videoNews);
             return item;
         }
         [HttpPut("delete-video-news")]
+        [Authorize]
         public ResponseBase DeleteVideoNews([FromBody] int Id)
         {
             var item = _newsServices.DeleteVideoNews(Id);
