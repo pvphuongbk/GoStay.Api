@@ -75,7 +75,6 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("news")]
-        [Authorize]
         public ResponseBase GetNews(int Id)
         {
             var items = _newsServices.GetNews(Id);
