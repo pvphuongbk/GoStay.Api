@@ -1115,7 +1115,12 @@ namespace GoStay.Services.Orders
             var hotel = _hotelRepository.GetById(roomOrderDetail.Idhotel);
             hotelRoomOrderDto.HotelName = hotel.Name;
             hotelRoomOrderDto.RoomName = roomOrderDetail.Name;
-
+            hotelRoomOrderDto.SlugHotel = hotel.Name.RemoveUnicode().RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower();
             hotelRoomOrderDto.Address = hotel.Address;
             hotelRoomOrderDto.Rating = hotel.Rating;
             hotelRoomOrderDto.ReviewScore = (int?)hotel.ReviewScore;

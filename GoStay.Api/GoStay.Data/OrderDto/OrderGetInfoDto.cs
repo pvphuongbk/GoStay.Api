@@ -14,7 +14,6 @@ namespace GoStay.Data.OrderDto
     {
         public int Id { get; set; }
         public int? IdHotel { get; set; }
-
         public string? Ordercode { get; set; }
         public string? Title { get; set; }
         public int IdUser { get; set; }
@@ -49,6 +48,8 @@ namespace GoStay.Data.OrderDto
         public int? IdUser { get; set; }
         public string? RoomName { get; set; }
         public string? HotelName { get; set; }
+        public string SlugHotel { get; set; } = string.Empty;
+
         public string? Address { get; set; }
         public int? Rating { get; set; }
         public int? ReviewScore { get; set; }
