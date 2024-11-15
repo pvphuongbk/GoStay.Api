@@ -165,5 +165,11 @@ namespace GoStay.Api.Controllers
             var items = _orderService.GetRoomInOrder(IdRoom);
             return items;
         }
+        [HttpGet("update-booked-date")]
+        public ResponseBase UpdateBookedDateHotel(int idOrder)
+        {
+            var items = _orderService.UpdateBookedDateHotel(idOrder);
+            return items;
+        }
     }
 }
