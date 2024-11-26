@@ -54,47 +54,21 @@ namespace GoStay.Services.Hotels
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var temp = _hotelRepository.FindAll(x => x.Deleted != 1)
+                var listId = _hotelRepository.FindAll(x => x.Deleted != 1).Select(x => x.Id).ToList();
+                var listfinal = CommonFunction.GetRandomFromList(listId, number);
+                var temp = _hotelRepository.FindAll(x => listfinal.Contains(x.Id))
                                                 .Include(x => x.Pictures.Take(5))
                                                 .Include(x => x.IdTinhThanhNavigation)
                                                 .Include(x => x.IdQuanNavigation)
                                                 .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
+
                                                 .OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
-                                                .Take(number).AsNoTracking();
+                                                //.Take(number)
+                                                .AsNoTracking();
 
                 var hotels = temp.ToList();
                 
                 var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotels);
-
-
-                //List<HotelHomePageDto> hotelDtos = (from ht in _commonUoWRepository.Context.Hotels.AsNoTracking()
-                //                                              join pt in _commonUoWRepository.Context.Pictures.AsNoTracking() on ht.Id equals pt.HotelId
-                //                                              join tt in _commonUoWRepository.Context.TinhThanhs.AsNoTracking() on ht.IdTinhThanh equals tt.Id
-                //                                              join q in _commonUoWRepository.Context.Quans.AsNoTracking() on ht.IdQuan equals q.Id
-                //                                              join r in _commonUoWRepository.Context.HotelRooms.AsNoTracking() on ht.Id equals r.Idhotel && r.Status == 1 && r.Deleted != 1
-                //                                        where (mr.Status == MrfStatus.Approved || mr.Status == MrfStatus.Procurement_In_Progress)
-                //                                                    && ma.MrfStatus == MrfStatus.Warehouse_Delivery
-                //                                                    && mm.Status == MrfEvaluationStatus.AD_Delivered && me.EventID == dto.eventid
-                //&& ma.MaterialNumber == (matNo != null ? matNo : ma.MaterialNumber)
-                //                                              select new LogisticDeliveredPageListDto
-                //                                              {
-                //                                                  ID = me.ID,
-                //                                                  Category = me.Services.Any() ? MrfLogisticPageListCategory.Service : MrfLogisticPageListCategory.Material,
-                //                                                  SplitOrderChangeQuantity = (mm.IsSplitOrder && !mm.IsChangeQuantity) ? "Split Order" :
-                //                                                          ((!mm.IsSplitOrder && mm.IsChangeQuantity) ? "Change Quantity" : null),
-                //                                                  CoNo = me.CoNo,
-                //                                                  AwardedBidder = (me.VendorMasterID == null) ? null : me.VendorMaster.CompanyName,
-                //                                                  Buyer = _calculationEngine.reverseName(me.Buyer.AccountName),
-                //                                                  COIssuanceDate = me.CoIssuanceDate.ToString("dd-MMM-yyyy"),
-                //                                                  Incoterm = me.IncotermListId == null ? null : me.IncotermList.IncoTerm,
-                //                                                  ETA = me.EvaluationETA,
-                //                                                  COValue = me.COValue,
-                //                                                  ModifiedDate = me.ModifiedDate
-                //                                              }).ToList();
-
-
-
-
 
 
                 Dictionary<int, IQueryable<SchedulerRoomPrice>> roomSchedulers = new Dictionary<int, IQueryable<SchedulerRoomPrice>>();
