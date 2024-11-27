@@ -199,18 +199,22 @@ namespace GoStay.Services.Hotels
                     responseBase.Message = "Request param empty";
                     return responseBase;
                 }
-                //if (requestModel.Where(x => x.IsPin == true).Count() > 3)
-                //{
-                //    responseBase.Message = "You can pin max 3 hotel";
-                //    return responseBase;
-                //}
+                var listPresent = _hotelFlashSaleRepository.FindAll();
+
+                if (requestModel.IsPin == true&& requestModel.IsDelete==false)
+                {
+                    if (listPresent.Where(x => x.IsPin == true && x.Deleted == false).Count() >= 3)
+                    {
+                        responseBase.Message = "You can pin max 3 hotel";
+                        return responseBase;
+                    }
+                }
                 var listId = _hotelRepository.FindAll(x => x.Deleted != 1).Select(x => x.Id).ToList();
                 if ( !listId.Contains(requestModel.HotelId))
                 {
                     responseBase.Message = "One or more Hotel not existing";
                     return responseBase;
                 }
-                var listPresent = _hotelFlashSaleRepository.FindAll();
                 var listPresentId = listPresent.Select(x => x.HotelId);
                 var entity = new HotelFlashSale()
                 {
