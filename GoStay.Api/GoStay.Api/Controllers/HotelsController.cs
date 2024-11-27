@@ -4,6 +4,7 @@ using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
+using GoStay.DataDto.HotelFlashSales;
 using GoStay.Services.Hotels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using System.Diagnostics;
 namespace GoStay.Api.Controllers
 {
 	[ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
 	public class HotelsController : ControllerBase
 	{
@@ -85,6 +86,30 @@ namespace GoStay.Api.Controllers
         {
             var items = _hotelService.GetServicesSearch(type);
             return items;
+        }
+        [HttpPut("flash-sale")]
+        public async Task<ResponseBase> UpsertHotelTopFlashSale(List<HotelFlashSaleUpsertRequestModel> requestModel)
+        {
+            var result =await _hotelService.UpsertHotelTopFlashSale(requestModel);
+            return result;
+        }
+        [HttpPost("flash-sale")]
+        public ResponseBase UpsertHotelFlashSale(HotelFlashSaleUpsertRequestModel requestModel)
+        {
+            var result = _hotelService.UpsertHotelFlashSale(requestModel);
+            return result;
+        }
+        [HttpGet("flash-sale-setting-view")]
+        public ResponseBase GetHotelFlashSalePresentData()
+        {
+            var result =  _hotelService.GetHotelFlashSalePresentData();
+            return result;
+        }
+        [HttpGet("flash-sale-add-view")]
+        public ResponseBase GetHotelFlashSaleSelectionData(int pageIndex, int pageSize, string? keyword)
+        {
+            var result = _hotelService.GetHotelFlashSaleSelectionData(pageIndex, pageSize, keyword);
+            return result;
         }
     }
 }

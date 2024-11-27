@@ -26,6 +26,8 @@ namespace GoStay.DataAccess.DBContext
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Domain> Domains { get; set; } = null!;
         public virtual DbSet<Hotel> Hotels { get; set; } = null!;
+        public virtual DbSet<HotelFlashSale> HotelFlashSales { get; set; } = null!;
+
         public virtual DbSet<HotelMameniti> HotelMamenitis { get; set; } = null!;
         public virtual DbSet<HotelPromotion> HotelPromotions { get; set; } = null!;
         public virtual DbSet<HotelRating> HotelRatings { get; set; } = null!;
@@ -427,6 +429,11 @@ namespace GoStay.DataAccess.DBContext
 					.OnDelete(DeleteBehavior.ClientSetNull)
 					.HasConstraintName("FK_HotelMameniti_Services");
 			});
+            modelBuilder.Entity<HotelFlashSale>(entity =>
+            {
+                entity.ToTable("HotelFlashSale");
+
+            });
 
             modelBuilder.Entity<HotelPromotion>(entity =>
             {

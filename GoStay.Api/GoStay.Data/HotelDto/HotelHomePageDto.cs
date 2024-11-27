@@ -41,7 +41,7 @@
         {
             get
             {
-                return (decimal)(DailyBasePrice * (100 - Discount) / 100);
+                return (decimal)(DailyBasePrice * (100 - Discount??0) / 100);
             }
         }
         public int IdRoom { get; set; }
