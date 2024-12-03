@@ -115,6 +115,12 @@ namespace GoStay.Common.Helpers
             }
 			return output;
 		}
-
+        public static List<int> OrderRandomList(List<int> input)
+        {
+			var temp1 = input.Select(x => new { Key = x, Value = new Random().Next(0, 100) });
+			var temp2 = temp1.OrderBy(x => x.Value).ToList();
+			var output = temp2.Select(x=>x.Key).ToList();
+            return output;
+        }
     }
 }

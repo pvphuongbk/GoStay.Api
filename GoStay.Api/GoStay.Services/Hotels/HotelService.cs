@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -196,7 +197,7 @@ namespace GoStay.Services.Hotels
             {
                 if (requestModel==null)
                 {
-                    responseBase.Message = "Request param empty";
+                    responseBase.Data = "Request param empty";
                     return responseBase;
                 }
                 var listPresent = _hotelFlashSaleRepository.FindAll();
@@ -205,14 +206,14 @@ namespace GoStay.Services.Hotels
                 {
                     if (listPresent.Where(x => x.IsPin == true && x.Deleted == false).Count() >= 3)
                     {
-                        responseBase.Message = "You can pin max 3 hotel";
+                        responseBase.Data = "You can pin max 3 hotel";
                         return responseBase;
                     }
                 }
                 var listId = _hotelRepository.FindAll(x => x.Deleted != 1).Select(x => x.Id).ToList();
                 if ( !listId.Contains(requestModel.HotelId))
                 {
-                    responseBase.Message = "One or more Hotel not existing";
+                    responseBase.Data = "One or more Hotel not existing";
                     return responseBase;
                 }
                 var listPresentId = listPresent.Select(x => x.HotelId);
@@ -229,13 +230,13 @@ namespace GoStay.Services.Hotels
                 _commonUoWRepository.BeginTransaction();
                 _hotelFlashSaleRepository.Update(entity);
                 _commonUoWRepository.Commit();
-                responseBase.Data = "Succcess";
+                responseBase.Data = "Success";
                 return responseBase;
             }
             catch (Exception e)
             {
                 responseBase.Code = ErrorCodeMessage.Exception.Key;
-                responseBase.Message = e.Message;
+                responseBase.Data = e.Message;
                 return responseBase;
             }
         }
@@ -244,40 +245,18 @@ namespace GoStay.Services.Hotels
             ResponseBase responseBase = new ResponseBase();
             try
             {
+                var hotelDtos =new List<HotelHomePageDto>();
                 var listFs = _hotelFlashSaleRepository.FindAll(x => x.Deleted == false).ToList();
-                var listFsIds = listFs.Select(x => x.HotelId).ToList();
-
-                var listPinIds = listFs.Where(x=>x.IsPin).Select(x=>x.HotelId).ToList();
-                var listUnPinIds = listFs.Where(x => !x.IsPin).Select(x => x.HotelId).ToList();
-                if (listFs.Count() >= number)
-                    number = 0;
+                if(listFs.Any())
+                {
+                    hotelDtos = GetSelectedFlashSale(listFs);
+                }    
                 else
-                    number -= listFs.Count();
-
-                var listId = _hotelRepository.FindAll(x => x.Deleted != 1&& !listFsIds.Contains(x.Id)).Select(x => x.Id).ToList();
-                var listfinal = CommonFunction.GetRandomFromList(listId, number);
-                listUnPinIds.AddRange(listfinal);
-
-                var hotelsPin = _hotelRepository.FindAll(x => listPinIds.Contains(x.Id))
-                                                .Include(x => x.Pictures.Take(5))
-                                                .Include(x => x.IdTinhThanhNavigation)
-                                                .Include(x => x.IdQuanNavigation)
-                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
-                                                .AsNoTracking().ToList();
-                var hotelsUnPin = _hotelRepository.FindAll(x => listUnPinIds.Contains(x.Id))
-                                                .Include(x => x.Pictures.Take(5))
-                                                .Include(x => x.IdTinhThanhNavigation)
-                                                .Include(x => x.IdQuanNavigation)
-                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
-                                                //.OrderByDescending(x => x.HotelRooms.Max(x => x.Discount))
-                                                //.Take(number)
-                                                .AsNoTracking().ToList();
-                
-                var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotelsPin);
-                var hotelsUnPinDto = CommonFunction.CreateHotelFlashSaleDto(hotelsUnPin);
-
-                hotelDtos.AddRange(hotelsUnPinDto);
-
+                {
+                    //hotelDtos= GetRandomFlashSale(number);
+                    responseBase.Data = hotelDtos;
+                    return responseBase;
+                }    
                 Dictionary<int, IQueryable<SchedulerRoomPrice>> roomSchedulers = new Dictionary<int, IQueryable<SchedulerRoomPrice>>();
 
                 foreach (var id in hotelDtos.Select(x => x.IdRoom))
@@ -304,8 +283,8 @@ namespace GoStay.Services.Hotels
                 return responseBase;
             }
         }
-
-		public ResponseBase GetListRoomByHotel(int hotelId)
+        
+        public ResponseBase GetListRoomByHotel(int hotelId)
 		{
 			ResponseBase responseBase = new ResponseBase();
 			try
@@ -548,6 +527,66 @@ namespace GoStay.Services.Hotels
             responseBase.Data=listService;
             return responseBase;
 
+        }
+        public List<HotelHomePageDto> GetRandomFlashSale(int number)
+        {
+            try
+            {
+                var listId = _hotelRepository.FindAll(x => x.Deleted != 1).Select(x => x.Id).ToList();
+                var listfinal = CommonFunction.GetRandomFromList(listId, number);
+
+                var listRandom = _hotelRepository.FindAll(x => listfinal.Contains(x.Id))
+                                                .Include(x => x.Pictures.Take(5))
+                                                .Include(x => x.IdTinhThanhNavigation)
+                                                .Include(x => x.IdQuanNavigation)
+                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
+                                                .AsNoTracking().ToList();
+
+                var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(listRandom);
+
+                return hotelDtos;
+            }
+            catch (Exception e)
+            {
+                return new List<HotelHomePageDto>();
+            }
+        }
+        public List<HotelHomePageDto> GetSelectedFlashSale(List<HotelFlashSale> listFs)
+        {
+            try
+            {
+                //var listFs = _hotelFlashSaleRepository.FindAll(x => x.Deleted == false).ToList();
+                var listFsIds = listFs.Select(x => x.HotelId).ToList();
+
+                var listPinIds = listFs.Where(x => x.IsPin).Select(x => x.HotelId).ToList();
+                var listUnPinIds = listFs.Where(x => !x.IsPin).Select(x => x.HotelId).ToList();
+
+                var hotelsPin = _hotelRepository.FindAll(x => listPinIds.Contains(x.Id))
+                                                .Include(x => x.Pictures.Take(5))
+                                                .Include(x => x.IdTinhThanhNavigation)
+                                                .Include(x => x.IdQuanNavigation)
+                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
+                                                .AsNoTracking().ToList();
+                var hotelsUnPin = _hotelRepository.FindAll(x => listUnPinIds.Contains(x.Id))
+                                                .Include(x => x.Pictures.Take(5))
+                                                .Include(x => x.IdTinhThanhNavigation)
+                                                .Include(x => x.IdQuanNavigation)
+                                                .Include(x => x.HotelRooms.Where(x => x.Status == 1 && x.Deleted != 1))
+                                                .AsNoTracking().ToList();
+
+                var hotelDtos = CommonFunction.CreateHotelFlashSaleDto(hotelsPin);
+                var hotelsUnPinDto = CommonFunction.CreateHotelFlashSaleDto(hotelsUnPin);
+                hotelsUnPinDto.ForEach(x => x.RandomOrderNumber = new Random().Next(0, 100));
+                var hotelsUnPinFinal = hotelsUnPinDto.OrderBy(x => x.RandomOrderNumber).ToList();
+                hotelDtos.AddRange(hotelsUnPinFinal);
+
+                return hotelDtos;
+            }
+            catch (Exception e)
+            {
+
+                return new List<HotelHomePageDto>();
+            }
         }
     }
 }

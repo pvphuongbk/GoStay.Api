@@ -57,7 +57,7 @@
             }
         }
         public string? TopService { get; set; }
-
+        public int RandomOrderNumber { get; set; } = 1;
     }
 
 }
