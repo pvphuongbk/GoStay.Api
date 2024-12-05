@@ -22,6 +22,8 @@ namespace GoStay.DataAccess.DBContext
 		public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
 		public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
+        public virtual DbSet<CommentNews> CommentNews { get; set; } = null!;
+        public virtual DbSet<CommentVideo> CommentVideos { get; set; } = null!;
         public virtual DbSet<CompareTour> CompareTours { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Domain> Domains { get; set; } = null!;
@@ -259,6 +261,46 @@ namespace GoStay.DataAccess.DBContext
                 entity.Property(e => e.Stt).HasDefaultValueSql("((10))");
 
                 entity.Property(e => e.Title).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<CommentNews>(entity =>
+            {
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.News)
+                    .WithMany(p => p.CommentNews)
+                    .HasForeignKey(d => d.NewsId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CommentNews_News");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.CommentNews)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CommentNews_users");
+            });
+
+            modelBuilder.Entity<CommentVideo>(entity =>
+            {
+                entity.ToTable("CommentVideo");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.CommentVideos)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CommentVideo_users");
+
+                entity.HasOne(d => d.Video)
+                    .WithMany(p => p.CommentVideos)
+                    .HasForeignKey(d => d.VideoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CommentVideo_Video");
             });
 
             modelBuilder.Entity<CompareTour>(entity =>

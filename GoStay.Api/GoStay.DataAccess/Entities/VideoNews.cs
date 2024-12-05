@@ -5,6 +5,10 @@ namespace GoStay.DataAccess.Entities
 {
     public partial class VideoNews
     {
+		public VideoNews()
+        {
+            CommentVideos = new HashSet<CommentVideo>();
+        }
         public int Id { get; set; }
         public string Video { get; set; } = null!;
         public string UrlVideo
@@ -30,5 +34,6 @@ namespace GoStay.DataAccess.Entities
         public virtual NewsCategory? IdCategoryNavigation { get; set; }
         public virtual User? IdUserNavigation { get; set; }
         public virtual Language? Lang { get; set; }
+        public virtual ICollection<CommentVideo> CommentVideos { get; set; }
     }
 }
