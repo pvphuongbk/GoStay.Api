@@ -31,6 +31,15 @@ namespace GoStay.DataDto.Comments
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
     }
+    public class CommentVideoResponseModel
+    {
+        public List<CommentVideoViewModel> ListComment { get; set; }
+        public int UserId { get; set; }
+
+        public string UserName { get; set; } = string.Empty;
+        public string UserAvatar { get; set; } = string.Empty;
+        public int PageIndex { get; set; }
+    }
     public class CommentVideoViewModel
     {
         public CommentVideoModel Comment { get; set; } = new();
@@ -39,7 +48,7 @@ namespace GoStay.DataDto.Comments
     public class CommentVideoModel
     {
         public int Id { get; set; }
-        public int NewsId { get; set; }
+        public int VideoId { get; set; }
         public int UserId { get; set; }
         public string Username { get; set; } = string.Empty;
         public string UserAvatar { get; set; } = string.Empty;

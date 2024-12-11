@@ -28,6 +28,9 @@ namespace GoStay.Services.Newss
         private readonly ICommonRepository<NewsTopic> _newsTopicRepository;
         private readonly ICommonRepository<TopicNews> _topicRepository;
         private readonly ICommonRepository<VideoNews> _videoRepository;
+        private readonly ICommonRepository<CommentNews> _commentNewsRepo;
+        private readonly ICommonRepository<CommentVideo> _commentVideoRepo;
+
 
         private readonly IMapper _mapper;
         private readonly ICommonRepository<Picture> _pictureRepository;
@@ -35,7 +38,8 @@ namespace GoStay.Services.Newss
 
         public NewsService(ICommonRepository<News> newsRepository, IMapper mapper, ICommonUoW commonUoW,
             ICommonRepository<Picture> pictureRepository, ICommonRepository<NewsCategory> newsCategoryRepository, ICommonRepository<User> userRepository
-            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository, ICommonRepository<VideoNews> videoRepository, ICommonRepository<Language> languageRepository)
+            , ICommonRepository<NewsTopic> newsTopicRepository, ICommonRepository<TopicNews> topicRepository, ICommonRepository<VideoNews> videoRepository,
+            ICommonRepository<Language> languageRepository, ICommonRepository<CommentNews> commentNewsRepo, ICommonRepository<CommentVideo> commentVideoRepo)
         {
             _mapper = mapper;
             _pictureRepository = pictureRepository;
@@ -47,6 +51,8 @@ namespace GoStay.Services.Newss
             _topicRepository = topicRepository;
             _videoRepository = videoRepository;
             _languageRepository = languageRepository;
+            _commentNewsRepo = commentNewsRepo;
+            _commentVideoRepo = commentVideoRepo;
         }
         public ResponseBase GetNewsDefault(int idUser, int idNews)
         {
@@ -604,7 +610,8 @@ namespace GoStay.Services.Newss
                 newsDetail.Tag = news.Tag;
                 newsDetail.UserName = news.IdUserNavigation.UserName;
                 newsDetail.Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar();
-
+                var quatityComment = _commentNewsRepo.FindAll(x=>x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
+                newsDetail.QuatityComment = quatityComment;
                 var newserelate = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
                 var c = newserelate.OrderByDescending(x => x.DateCreate).Take(5);
                 if (c != null && c.Any())
@@ -1068,6 +1075,8 @@ namespace GoStay.Services.Newss
                     UserName = news.IdUserNavigation.UserName,
                     Click = news.Click,
                 };
+                var quatityComment = _commentVideoRepo.FindAll(x => x.VideoId == news.Id && x.Published == true && x.Deleted == false).Count();
+                newsDetail.QuatityComment = quatityComment;
                 newsDetail.Avatar = news.IdUserNavigation.Picture;
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;

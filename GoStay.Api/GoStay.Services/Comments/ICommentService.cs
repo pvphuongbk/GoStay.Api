@@ -13,6 +13,7 @@ public interface ICommentService
     public ResponseBase UpsertCommentNews(CommentNewsUpsertRequestModel request);
     public ResponseBase UpsertCommentVideo(CommentVideoUpsertRequestModel request);
     public ResponseBase GetCommentNews(int userId, int newsId, int pageIndex, int pageSize);
+    public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize);
 
 
 }

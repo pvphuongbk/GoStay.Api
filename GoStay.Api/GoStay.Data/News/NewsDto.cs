@@ -38,6 +38,7 @@ namespace GoStay.DataDto.News
         public string? UserName { get; set; }
         public DateTime DateCreate { get; set; }
         public List<NewRelateDto>? NewRelates { get; set; }
+        public int QuatityComment {  get; set; }
     }
     public class GetListNewsParam
     {
@@ -181,6 +182,8 @@ namespace GoStay.DataDto.News
         public DateTime? DateCreate { get; set; }
         public string? Avatar { get; set; }
         public int? Click { get; set; }
+        public int QuatityComment { get; set; }
+
     }
     public class VideoModel
     {

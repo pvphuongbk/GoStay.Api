@@ -57,6 +57,7 @@ public class CommentService : ICommentService
             {
                 CreatedDate = DateTime.Now,
             };
+
             var news = _newsRepository.GetById(request.NewsId);
             if (news == null) 
             {
@@ -84,7 +85,7 @@ public class CommentService : ICommentService
             comment.Content = request.Content;
             comment.ParentId = request.ParentId;
             comment.ModifiedDate = DateTime.Now;
-            comment.Published = false;
+            comment.Published = true;
             comment.Deleted = false;
 
             _commonUoW.BeginTransaction();
@@ -135,7 +136,7 @@ public class CommentService : ICommentService
             comment.Content = request.Content;
             comment.ParentId = request.ParentId;
             comment.ModifiedDate = DateTime.Now;
-            comment.Published = false;
+            comment.Published = true;
             comment.Deleted = false;
 
             _commonUoW.BeginTransaction();
@@ -175,55 +176,151 @@ public class CommentService : ICommentService
                 response.Message = "News not existing";
                 return response;
             }
-            comments = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0)
-                        .Include(x => x.User).Take(pageIndex * pageSize).Select(x => new CommentNewsViewModel
-                        {
-                            Comment = new CommentNewsModel
-                            {
-                                Id = x.Id,
-                                NewsId = x.NewsId,
-                                UserId = x.UserId,
-                                Username = x.User.FirstName + x.User.LastName,
-                                UserAvatar = x.User.Picture,
-                                Content = x.Content,
-                                ParentId = x.ParentId,
-                                CreatedDate = x.CreatedDate,
-                                ModifiedDate = x.ModifiedDate,
-                            },
-                            ReplyComments = new()
-                        }).ToList();
-            if(!comments.Any())
+            var check = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
+            if (check == 0)
             {
-                return response;
-            }
-            var listParentId = comments.Select(x=>x.Comment.Id).ToList();
-            var listReply = _commentNewsRepo.FindAll(x => listParentId.Contains(x.ParentId)).Include(x => x.User).ToList();
+                result.ListComment = comments;
 
-            foreach (var item in comments)
-            {
-                var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
-                if (!listReply.Any())
-                    continue;
-                item.ReplyComments = rep.Select(x=> new CommentNewsModel
-                {
-                    Id = x.Id,
-                    NewsId = x.NewsId,
-                    UserId = x.UserId,
-                    Username = x.User.FirstName + x.User.LastName,
-                    UserAvatar = x.User.Picture,
-                    Content = x.Content,
-                    ParentId = x.ParentId,
-                    CreatedDate = x.CreatedDate,
-                    ModifiedDate = x.ModifiedDate,
-                    
-                }).ToList();
             }
-            result.ListComment = comments;
+            else
+            {
+                comments = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Published == true && x.Deleted == false)
+                            .Include(x => x.User).OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize).Select(x => new CommentNewsViewModel
+                            {
+                                Comment = new CommentNewsModel
+                                {
+                                    Id = x.Id,
+                                    NewsId = x.NewsId,
+                                    UserId = x.UserId,
+                                    Username = x.User.FirstName + x.User.LastName,
+                                    UserAvatar = x.User.Picture,
+                                    Content = x.Content,
+                                    ParentId = x.ParentId,
+                                    CreatedDate = x.CreatedDate,
+                                    ModifiedDate = x.ModifiedDate,
+                                },
+                                ReplyComments = new()
+                            }).ToList();
+                if (!comments.Any())
+                {
+                    return response;
+                }
+                var listParentId = comments.Select(x => x.Comment.Id).ToList();
+                var listReply = _commentNewsRepo.FindAll(x => listParentId.Contains(x.ParentId)).Include(x => x.User).ToList();
+
+                foreach (var item in comments)
+                {
+                    var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
+                    if (!listReply.Any())
+                        continue;
+                    item.ReplyComments = rep.Select(x => new CommentNewsModel
+                    {
+                        Id = x.Id,
+                        NewsId = x.NewsId,
+                        UserId = x.UserId,
+                        Username = x.User.FirstName + x.User.LastName,
+                        UserAvatar = x.User.Picture,
+                        Content = x.Content,
+                        ParentId = x.ParentId,
+                        CreatedDate = x.CreatedDate,
+                        ModifiedDate = x.ModifiedDate,
+
+                    }).ToList();
+                }
+                result.ListComment = comments;
+            }
             response.Data = result;
             return response;
         }
         catch (Exception ex) 
         { 
+            response.Message = ex.Message;
+            return response;
+        }
+    }
+    public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize)
+    {
+        ResponseBase response = new ResponseBase();
+        try
+        {
+            var result = new CommentVideoResponseModel();
+            var user = _userRepository.GetById(userId);
+            if (user == null)
+            {
+                result.UserName = "";
+                result.UserAvatar = "";
+            }
+            else
+            {
+                result.UserName = user.FirstName + user.LastName;
+                result.UserAvatar = user.Picture;
+            }
+            result.UserId = userId;
+            var comments = new List<CommentVideoViewModel>();
+            var news = _videoRepository.GetById(videoId);
+            if (news == null)
+            {
+                response.Message = "Video not existing";
+                return response;
+            }
+            var check = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
+            if (check == 0)
+            {
+                result.ListComment = comments;
+            }
+            else
+            {
+                comments = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Published == true && x.Deleted == false)
+                            .Include(x => x.User).OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize).Select(x => new CommentVideoViewModel
+                            {
+                                Comment = new CommentVideoModel
+                                {
+                                    Id = x.Id,
+                                    VideoId = x.VideoId,
+                                    UserId = x.UserId,
+                                    Username = x.User.FirstName + x.User.LastName,
+                                    UserAvatar = x.User.Picture,
+                                    Content = x.Content,
+                                    ParentId = x.ParentId,
+                                    CreatedDate = x.CreatedDate,
+                                    ModifiedDate = x.ModifiedDate,
+                                },
+                                ReplyComments = new()
+                            }).ToList();
+                if (!comments.Any())
+                {
+                    return response;
+                }
+                var listParentId = comments.Select(x => x.Comment.Id).ToList();
+                var listReply = _commentVideoRepo.FindAll(x => listParentId.Contains(x.ParentId)).Include(x => x.User).ToList();
+
+                foreach (var item in comments)
+                {
+                    var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
+                    if (!listReply.Any())
+                        continue;
+                    item.ReplyComments = rep.Select(x => new CommentVideoModel
+                    {
+                        Id = x.Id,
+                        VideoId = x.VideoId,
+                        UserId = x.UserId,
+                        Username = x.User.FirstName + x.User.LastName,
+                        UserAvatar = x.User.Picture,
+                        Content = x.Content,
+                        ParentId = x.ParentId,
+                        CreatedDate = x.CreatedDate,
+                        ModifiedDate = x.ModifiedDate,
+
+                    }).ToList();
+                }
+
+                result.ListComment = comments;
+            }
+            response.Data = result;
+            return response;
+        }
+        catch (Exception ex)
+        {
             response.Message = ex.Message;
             return response;
         }
