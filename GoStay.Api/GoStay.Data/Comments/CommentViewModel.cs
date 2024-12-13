@@ -12,6 +12,8 @@ namespace GoStay.DataDto.Comments
         public int UserId { get; set; }
         public string UserName { get; set; }=string.Empty;
         public string UserAvatar { get; set; } = string.Empty;
+        public int TotalQuantity { get; set; }
+        public int CurentQuantity { get; set; }
     }
     public class CommentNewsViewModel
     {
@@ -39,6 +41,8 @@ namespace GoStay.DataDto.Comments
         public string UserName { get; set; } = string.Empty;
         public string UserAvatar { get; set; } = string.Empty;
         public int PageIndex { get; set; }
+        public int TotalQuantity { get; set; }
+        public int CurentQuantity { get; set; }
     }
     public class CommentVideoViewModel
     {

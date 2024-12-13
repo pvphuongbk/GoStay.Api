@@ -176,8 +176,8 @@ public class CommentService : ICommentService
                 response.Message = "News not existing";
                 return response;
             }
-            var check = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
-            if (check == 0)
+            var totalQuantity = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
+            if (totalQuantity == 0)
             {
                 result.ListComment = comments;
 
@@ -228,6 +228,8 @@ public class CommentService : ICommentService
                     }).ToList();
                 }
                 result.ListComment = comments;
+                result.TotalQuantity = totalQuantity;
+                result.CurentQuantity = pageIndex * pageSize;
             }
             response.Data = result;
             return response;
@@ -263,8 +265,8 @@ public class CommentService : ICommentService
                 response.Message = "Video not existing";
                 return response;
             }
-            var check = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
-            if (check == 0)
+            var totalQuantity = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
+            if (totalQuantity == 0)
             {
                 result.ListComment = comments;
             }
@@ -315,6 +317,8 @@ public class CommentService : ICommentService
                 }
 
                 result.ListComment = comments;
+                result.TotalQuantity = totalQuantity;
+                result.CurentQuantity = pageIndex * pageSize;
             }
             response.Data = result;
             return response;
