@@ -165,7 +165,7 @@ public class CommentService : ICommentService
             }
             else
             {
-                result.UserName = user.FirstName + user.LastName;
+                result.UserName = user.UserName;
                 result.UserAvatar = user.Picture;
             }
             result.UserId = userId;
@@ -192,7 +192,7 @@ public class CommentService : ICommentService
                                     Id = x.Id,
                                     NewsId = x.NewsId,
                                     UserId = x.UserId,
-                                    Username = x.User.FirstName + x.User.LastName,
+                                    Username = x.User.UserName,
                                     UserAvatar = x.User.Picture,
                                     Content = x.Content,
                                     ParentId = x.ParentId,
@@ -211,14 +211,16 @@ public class CommentService : ICommentService
                 foreach (var item in comments)
                 {
                     var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
-                    if (!listReply.Any())
+                    var totalquantity = rep.Count();
+                    if (totalquantity == 0)
                         continue;
-                    item.ReplyComments = rep.Select(x => new CommentNewsModel
+
+                    item.ReplyComments.ReplyComments = rep.Take(5).Select(x => new CommentNewsModel
                     {
                         Id = x.Id,
                         NewsId = x.NewsId,
                         UserId = x.UserId,
-                        Username = x.User.FirstName + x.User.LastName,
+                        Username = x.User.UserName,
                         UserAvatar = x.User.Picture,
                         Content = x.Content,
                         ParentId = x.ParentId,
@@ -226,6 +228,9 @@ public class CommentService : ICommentService
                         ModifiedDate = x.ModifiedDate,
 
                     }).ToList();
+                    item.ReplyComments.ParentCommentId = item.Comment.Id;
+                    item.ReplyComments.TotalQuantityRep = totalquantity;
+                    item.ReplyComments.CurentQuantityRep = 5;
                 }
                 result.ListComment = comments;
                 result.TotalQuantity = totalQuantity;
@@ -236,6 +241,54 @@ public class CommentService : ICommentService
         }
         catch (Exception ex) 
         { 
+            response.Message = ex.Message;
+            return response;
+        }
+    }
+    public ResponseBase GetCommentReplyNews(int parentCommentId, int pageIndex, int pageSize)
+    {
+        ResponseBase response = new ResponseBase();
+        try
+        {
+            var result = new CommentReplyNewsModel()
+            {
+                ParentCommentId = parentCommentId,
+                TotalQuantityRep = 0,
+                CurentQuantityRep = 0,
+            };
+
+            var quantity = _commentNewsRepo.FindAll(x => x.ParentId == parentCommentId).Count();
+            if (quantity == 0) 
+            {
+                response.Data = result;
+                return response;
+            }
+
+            var listReply = _commentNewsRepo.FindAll(x => x.ParentId==parentCommentId)
+                                                .Include(x => x.User)
+                                                .OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize)
+                                                .ToList();
+            var data = listReply.Select(x => new CommentNewsModel
+            {
+                Id = x.Id,
+                NewsId = x.NewsId,
+                UserId = x.UserId,
+                Username = x.User.UserName,
+                UserAvatar = x.User.Picture,
+                Content = x.Content,
+                ParentId = x.ParentId,
+                CreatedDate = x.CreatedDate,
+                ModifiedDate = x.ModifiedDate,
+
+            }).ToList();
+            result.TotalQuantityRep = quantity;
+            result.CurentQuantityRep = pageIndex * pageSize;
+            result.ReplyComments = data;
+            response.Data = result;
+            return response;
+        }
+        catch (Exception ex)
+        {
             response.Message = ex.Message;
             return response;
         }
@@ -254,7 +307,7 @@ public class CommentService : ICommentService
             }
             else
             {
-                result.UserName = user.FirstName + user.LastName;
+                result.UserName = user.UserName;
                 result.UserAvatar = user.Picture;
             }
             result.UserId = userId;
@@ -280,7 +333,7 @@ public class CommentService : ICommentService
                                     Id = x.Id,
                                     VideoId = x.VideoId,
                                     UserId = x.UserId,
-                                    Username = x.User.FirstName + x.User.LastName,
+                                    Username = x.User.UserName,
                                     UserAvatar = x.User.Picture,
                                     Content = x.Content,
                                     ParentId = x.ParentId,
@@ -299,14 +352,16 @@ public class CommentService : ICommentService
                 foreach (var item in comments)
                 {
                     var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
-                    if (!listReply.Any())
+                    var totalquantity = rep.Count();
+                    if (totalquantity == 0)
                         continue;
-                    item.ReplyComments = rep.Select(x => new CommentVideoModel
+
+                    item.ReplyComments.ReplyComments = rep.Take(5).Select(x => new CommentVideoModel
                     {
                         Id = x.Id,
                         VideoId = x.VideoId,
                         UserId = x.UserId,
-                        Username = x.User.FirstName + x.User.LastName,
+                        Username = x.User.UserName,
                         UserAvatar = x.User.Picture,
                         Content = x.Content,
                         ParentId = x.ParentId,
@@ -314,12 +369,63 @@ public class CommentService : ICommentService
                         ModifiedDate = x.ModifiedDate,
 
                     }).ToList();
+                    item.ReplyComments.ParentCommentId = item.Comment.Id;
+                    item.ReplyComments.TotalQuantityRep = totalquantity;
+                    item.ReplyComments.CurentQuantityRep = 5;
                 }
 
                 result.ListComment = comments;
                 result.TotalQuantity = totalQuantity;
                 result.CurentQuantity = pageIndex * pageSize;
             }
+            response.Data = result;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Message = ex.Message;
+            return response;
+        }
+    }
+    public ResponseBase GetCommentReplyVideo(int parentCommentId, int pageIndex, int pageSize)
+    {
+        ResponseBase response = new ResponseBase();
+        try
+        {
+            var result = new CommentReplyVideoModel()
+            {
+                ParentCommentId = parentCommentId,
+                TotalQuantityRep = 0,
+                CurentQuantityRep = 0,
+            };
+
+            var quantity = _commentVideoRepo.FindAll(x => x.ParentId == parentCommentId).Count();
+            if (quantity == 0)
+            {
+                response.Data = result;
+                return response;
+            }
+
+            var listReply = _commentVideoRepo.FindAll(x => x.ParentId == parentCommentId)
+                                                .Include(x => x.User)
+                                                .OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize)
+                                                .ToList();
+            var data = listReply.Select(x => new CommentVideoModel
+            {
+                Id = x.Id,
+                VideoId = x.VideoId,
+                UserId = x.UserId,
+                Username = x.User.UserName,
+                UserAvatar = x.User.Picture,
+                Content = x.Content,
+                ParentId = x.ParentId,
+                CreatedDate = x.CreatedDate,
+                ModifiedDate = x.ModifiedDate,
+
+            }).ToList();
+            result.TotalQuantityRep = quantity;
+            result.CurentQuantityRep = pageIndex * pageSize;
+            result.ReplyComments = data;
             response.Data = result;
             return response;
         }

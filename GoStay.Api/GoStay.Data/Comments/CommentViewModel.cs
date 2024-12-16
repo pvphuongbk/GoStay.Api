@@ -18,7 +18,7 @@ namespace GoStay.DataDto.Comments
     public class CommentNewsViewModel
     {
         public CommentNewsModel Comment { get; set; } = new();
-        public List<CommentNewsModel> ReplyComments { get; set; } = new();
+        public CommentReplyNewsModel ReplyComments { get; set; } = new();
     }
     public class CommentNewsModel
     {
@@ -32,6 +32,14 @@ namespace GoStay.DataDto.Comments
         public int ParentId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
+    }
+    public class CommentReplyNewsModel
+    {
+        public int ParentCommentId { get; set; }
+
+        public List<CommentNewsModel> ReplyComments { get; set; } = new();
+        public int TotalQuantityRep { get; set; }
+        public int CurentQuantityRep { get; set; }
     }
     public class CommentVideoResponseModel
     {
@@ -47,7 +55,7 @@ namespace GoStay.DataDto.Comments
     public class CommentVideoViewModel
     {
         public CommentVideoModel Comment { get; set; } = new();
-        public List<CommentVideoModel> ReplyComments { get; set; } = new();
+        public CommentReplyVideoModel ReplyComments { get; set; } = new();
     }
     public class CommentVideoModel
     {
@@ -60,5 +68,13 @@ namespace GoStay.DataDto.Comments
         public int ParentId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
+    }
+    public class CommentReplyVideoModel
+    {
+        public int ParentCommentId { get; set; }
+
+        public List<CommentVideoModel> ReplyComments { get; set; } = new();
+        public int TotalQuantityRep { get; set; }
+        public int CurentQuantityRep { get; set; }
     }
 }

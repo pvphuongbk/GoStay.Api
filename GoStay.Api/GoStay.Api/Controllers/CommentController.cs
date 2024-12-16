@@ -45,5 +45,17 @@ namespace GoStay.Api.Controllers
             var items = _commentService.GetCommentVideo(userId, videoId, pageIndex, pageSize);
             return items;
         }
+        [HttpGet("list-comment-reply-news")]
+        public ResponseBase GetCommentReplyNews(int parentCommentId, int pageIndex, int pageSize)
+        {
+            var items = _commentService.GetCommentReplyNews(parentCommentId, pageIndex, pageSize);
+            return items;
+        }
+        [HttpGet("list-comment-reply-video")]
+        public ResponseBase GetCommentReplyVideo(int parentCommentId, int pageIndex, int pageSize)
+        {
+            var items = _commentService.GetCommentReplyVideo(parentCommentId, pageIndex, pageSize);
+            return items;
+        }
     }
 }
