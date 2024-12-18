@@ -33,16 +33,16 @@ namespace GoStay.Api.Controllers
             var items = _commentService.UpsertCommentVideo(request);
             return items;
         }
-        [HttpGet("list-comment-news")]
-        public ResponseBase GetCommentNews(int userId, int newsId, int pageIndex, int pageSize)
+        [HttpPost("list-comment-news")]
+        public ResponseBase GetCommentNews(GetCommentNewsRequestModel request)
         {
-            var items = _commentService.GetCommentNews(userId,newsId,pageIndex,pageSize);
+            var items = _commentService.GetCommentNews(request.UserId, request.NewsId, request.PageIndex, request.PageSize, request.ListChildRequest);
             return items;
         }
-        [HttpGet("list-comment-video")]
-        public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize)
+        [HttpPost("list-comment-video")]
+        public ResponseBase GetCommentVideo(GetCommentVideoRequestModel request)
         {
-            var items = _commentService.GetCommentVideo(userId, videoId, pageIndex, pageSize);
+            var items = _commentService.GetCommentVideo(request.UserId, request.VideoId, request.PageIndex, request.PageSize, request.ListChildRequest);
             return items;
         }
         [HttpGet("list-comment-reply-news")]

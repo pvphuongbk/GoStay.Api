@@ -151,7 +151,7 @@ public class CommentService : ICommentService
             return response;
         }
     }
-    public ResponseBase GetCommentNews(int userId,int newsId,int pageIndex, int pageSize)
+    public ResponseBase GetCommentNews(int userId,int newsId,int pageIndex, int pageSize, List<CommentChildRequestModel>? listChildRequest)
     {
         ResponseBase response = new ResponseBase();
         try
@@ -210,12 +210,13 @@ public class CommentService : ICommentService
 
                 foreach (var item in comments)
                 {
-                    var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
+                    var rep = listReply.Where(x => x.ParentId == item.Comment.Id).OrderByDescending(x => x.CreatedDate);
                     var totalquantity = rep.Count();
                     if (totalquantity == 0)
                         continue;
-
-                    item.ReplyComments.ReplyComments = rep.Take(5).Select(x => new CommentNewsModel
+                    var childRequest = listChildRequest?.SingleOrDefault(x => x.ParentId == item.Comment.Id);
+                    var childQuantity = (childRequest != null ? childRequest.PageIndex : 1) * (childRequest != null ? childRequest.PageSize : 5);
+                    item.ReplyComments.ReplyComments = rep.Take(childQuantity).Select(x => new CommentNewsModel
                     {
                         Id = x.Id,
                         NewsId = x.NewsId,
@@ -293,7 +294,7 @@ public class CommentService : ICommentService
             return response;
         }
     }
-    public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize)
+    public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize, List<CommentChildRequestModel>? listChildRequest)
     {
         ResponseBase response = new ResponseBase();
         try
@@ -351,12 +352,13 @@ public class CommentService : ICommentService
 
                 foreach (var item in comments)
                 {
-                    var rep = listReply.Where(x => x.ParentId == item.Comment.Id);
+                    var rep = listReply.Where(x => x.ParentId == item.Comment.Id).OrderByDescending(x => x.CreatedDate);
                     var totalquantity = rep.Count();
                     if (totalquantity == 0)
                         continue;
-
-                    item.ReplyComments.ReplyComments = rep.Take(5).Select(x => new CommentVideoModel
+                    var childRequest = listChildRequest?.SingleOrDefault(x => x.ParentId == item.Comment.Id);
+                    var childQuantity = (childRequest!=null ? childRequest.PageIndex : 1) * (childRequest!=null ? childRequest.PageSize : 5);
+                    item.ReplyComments.ReplyComments = rep.Take(childQuantity).Select(x => new CommentVideoModel
                     {
                         Id = x.Id,
                         VideoId = x.VideoId,
