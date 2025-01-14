@@ -127,6 +127,33 @@ public class CommentService : ICommentService
             return response;
         }
     }
+    public ResponseBase DraftCommentNews(int id)
+    {
+        var response = new ResponseBase();
+        try
+        {
+            var comment = _commentNewsRepo.GetById(id);
+            if (comment == null)
+            {
+                response.Code = 400;
+                response.Message = "Không có comment này";
+                return response;
+            }
+            comment.Deleted = true;
+            _commonUoW.BeginTransaction();
+            _commentNewsRepo.Update(comment);
+            _commonUoW.Commit();
+            response.Code = 200;
+            response.Data = "Success";
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Code = 400;
+            response.Message = ex.Message;
+            return response;
+        }
+    }
     public ResponseBase PublishCommentNews(int id)
     {
         var response = new ResponseBase();
@@ -332,7 +359,7 @@ public class CommentService : ICommentService
 
             var listNewsIds = listNews.Select(x=>x.Id).ToList();
 
-            var quantityComment =await _commentNewsRepo.CountWhere(x => listNewsIds.Contains(x.NewsId)&& (publish.HasValue?x.Published==publish:true));
+            var quantityComment =await _commentNewsRepo.CountWhere(x => listNewsIds.Contains(x.NewsId)&& (publish.HasValue?x.Published==publish:true)&& x.Deleted==false);
 
             if((pageIndex-1)*pageSize > quantityComment)
             {
@@ -340,7 +367,7 @@ public class CommentService : ICommentService
                 return response;
             }
             data.Quantity=quantityComment;
-            var comments = _commentNewsRepo.FindAll(x => listNewsIds.Contains(x.NewsId) && (publish.HasValue ? x.Published == publish : true))
+            var comments = _commentNewsRepo.FindAll(x => listNewsIds.Contains(x.NewsId) && (publish.HasValue ? x.Published == publish : true) && x.Deleted == false)
                                             .OrderByDescending(x=>x.ModifiedDate)
                                             .Skip((pageIndex-1)*pageSize).Take(pageSize)
                                             .Select(x=> new CommentNewsDetail
@@ -451,6 +478,34 @@ public class CommentService : ICommentService
             return response;
         }
     }
+    public ResponseBase DraftCommentVideo(int id)
+    {
+        var response = new ResponseBase();
+        try
+        {
+            var comment = _commentVideoRepo.GetById(id);
+            if (comment == null)
+            {
+                response.Code = 400;
+                response.Message = "Không có comment này";
+                return response;
+            }
+            comment.Deleted=true;
+            _commonUoW.BeginTransaction();
+            _commentVideoRepo.Update(comment);
+            _commonUoW.Commit();
+            response.Code = 200;
+            response.Data = "Success";
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Code = 400;
+            response.Message = ex.Message;
+            return response;
+        }
+    }
     public ResponseBase PublishCommentVideo(int id)
     {
         var response = new ResponseBase();
@@ -463,7 +518,7 @@ public class CommentService : ICommentService
                 response.Message = "Không có comment này";
                 return response;
             }
-            comment.Published = comment.Published;
+            comment.Published = !comment.Published;
             _commonUoW.BeginTransaction();
             _commentVideoRepo.Update(comment);
             _commonUoW.Commit();
@@ -644,7 +699,7 @@ public class CommentService : ICommentService
 
             var listVideoIds = listVideo.Select(x => x.Id).ToList();
 
-            var quantityComment = await _commentVideoRepo.CountWhere(x => listVideoIds.Contains(x.VideoId) && (publish.HasValue ? x.Published == publish : true));
+            var quantityComment = await _commentVideoRepo.CountWhere(x => listVideoIds.Contains(x.VideoId) && (publish.HasValue ? x.Published == publish : true) && x.Deleted == false);
 
             if ((pageIndex - 1) * pageSize > quantityComment)
             {
@@ -652,7 +707,7 @@ public class CommentService : ICommentService
                 return response;
             }
             data.Quantity = quantityComment;
-            var comments = _commentVideoRepo.FindAll(x => listVideoIds.Contains(x.VideoId) && (publish.HasValue ? x.Published == publish : true))
+            var comments = _commentVideoRepo.FindAll(x => listVideoIds.Contains(x.VideoId) && (publish.HasValue ? x.Published == publish : true) && x.Deleted == false)
                                             .OrderByDescending(x => x.ModifiedDate)
                                             .Skip((pageIndex - 1) * pageSize).Take(pageSize)
                                             .Select(x => new CommentVideoDetail

@@ -20,6 +20,10 @@ public interface ICommentService
     public ResponseBase DeleteCommentVideo(int id);
     public ResponseBase PublishCommentVideo(int id);
     public ResponseBase DeleteCommentNews(int id);
+    public ResponseBase DraftCommentNews(int id);
+    public ResponseBase DraftCommentVideo(int id);
+
+
     public ResponseBase PublishCommentNews(int id);
     Task<ResponseBase> GetCommentNewsForApproval(string? newsTitle, bool? publish, int? categoryId, int? topicId, int pageIndex, int pageSize);
 }

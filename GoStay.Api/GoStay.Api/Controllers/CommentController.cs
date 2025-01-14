@@ -82,6 +82,18 @@ namespace GoStay.Api.Controllers
             var items = _commentService.DeleteCommentNews(id);
             return items;
         }
+        [HttpDelete("draft-comment-video")]
+        public ResponseBase DraftCommentVideo(int id)
+        {
+            var items = _commentService.DeleteCommentVideo(id);
+            return items;
+        }
+        [HttpDelete("draft-comment-news")]
+        public ResponseBase DraftCommentNews(int id)
+        {
+            var items = _commentService.DeleteCommentNews(id);
+            return items;
+        }
         [HttpGet("publish-comment-news")]
         public ResponseBase PublishCommentNews(int id)
         {
