@@ -32,6 +32,6 @@ namespace GoStay.Services.Newss
         public ResponseBase GetNewsCategoryTotal(int IdDomain);
         public ResponseBase GetListCategoryByParentId(int IdDomain, int ParentId);
 
-
+        public ResponseBase GetNearHotel(int videoId);
     }
 }

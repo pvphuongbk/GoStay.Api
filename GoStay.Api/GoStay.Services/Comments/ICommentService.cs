@@ -16,7 +16,11 @@ public interface ICommentService
     public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize, List<CommentChildRequestModel>? listChildRequest);
     public ResponseBase GetCommentReplyNews(int parentCommentId, int pageIndex, int pageSize);
     public ResponseBase GetCommentReplyVideo(int parentCommentId, int pageIndex, int pageSize);
-
-
+    Task<ResponseBase> GetCommentVideoForApproval(string? videoTitle, bool? publish, int? categoryId, int pageIndex, int pageSize);
+    public ResponseBase DeleteCommentVideo(int id);
+    public ResponseBase PublishCommentVideo(int id);
+    public ResponseBase DeleteCommentNews(int id);
+    public ResponseBase PublishCommentNews(int id);
+    Task<ResponseBase> GetCommentNewsForApproval(string? newsTitle, bool? publish, int? categoryId, int? topicId, int pageIndex, int pageSize);
 }
 

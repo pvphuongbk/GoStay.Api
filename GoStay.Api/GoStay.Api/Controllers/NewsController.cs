@@ -202,5 +202,13 @@ namespace GoStay.Api.Controllers
             var item = _newsServices.DeleteVideoNews(Id);
             return item;
         }
+
+        [HttpGet("hotel-near")]
+        [Authorize]
+        public ResponseBase GetNearHotel(int videoId)
+        {
+            var item = _newsServices.GetNearHotel(videoId);
+            return item;
+        }
     }
 }

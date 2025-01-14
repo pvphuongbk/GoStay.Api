@@ -77,4 +77,53 @@ namespace GoStay.DataDto.Comments
         public int TotalQuantityRep { get; set; }
         public int CurentQuantityRep { get; set; }
     }
+
+    public class CommentNewsForApproval
+    {
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+        public int Quantity {  get; set; }
+        public List<CommentNewsData> ListData { get; set; } = new();
+    }
+    public class CommentNewsData
+    {
+        public int NewsId { get; set; }
+        public string NewsTitle {  get; set; }=string.Empty;
+        public List<CommentNewsDetail> ListComment {  get; set; } = new();
+    }
+    public class CommentNewsDetail
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int NewsId { get; set; }
+        public string Content { get; set; } = null!;
+        public int ParentId { get; set; }
+        public bool Publish {  get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+    }
+    public class CommentVideoForApproval
+    {
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+        public int Quantity { get; set; }
+        public List<CommentVideoData> ListData { get; set; } = new();
+    }
+    public class CommentVideoData
+    {
+        public int VideoId { get; set; }
+        public string VideoTitle { get; set; } = string.Empty;
+        public List<CommentVideoDetail> ListComment { get; set; } = new();
+    }
+    public class CommentVideoDetail
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int VideoId { get; set; }
+        public string Content { get; set; } = null!;
+        public int ParentId { get; set; }
+        public bool Publish { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+    }
 }
