@@ -395,7 +395,8 @@ namespace GoStay.Services.Newss
                     Picture = x.Pictures.Select(y => y.Url).ToList(),
                     Distance = hotels.FirstOrDefault(z=>z.Id==x.Id).Distance,
                 }).ToList();
-                response.Data = data;
+                var final = data.OrderBy(x => x.Distance).ToList();
+                response.Data = final;
                 return response;
 
             }
