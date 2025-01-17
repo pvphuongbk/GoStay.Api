@@ -408,23 +408,46 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public double Distance(double lonA, double latA, double lonB, double latB)
+        //public double Distance(double lonA, double latA, double lonB, double latB)
+        //{
+        //    var radlat1 = Math.PI * latA / 180;
+        //    var radlat2 = Math.PI * latB / 180;
+        //    var radlon1 = Math.PI * lonA / 180;
+        //    var radlon2 = Math.PI * lonB / 180;
+        //    var theta = lonA - lonB;
+        //    var radtheta = Math.PI * theta / 180;
+        //    var dist = Math.Sin(radlat1) * Math.Sin(radlat2) + Math.Cos(radlat1) * Math.Cos(radlat2) * Math.Cos(radtheta);
+        //    dist = Math.Acos(dist);
+        //    dist = dist * 180 / Math.PI;
+        //    dist = dist * 60 * 1.1515;
+
+        //    dist = dist * 1.609344;
+        //    var distance = Math.Round(1.3 * dist * 100) * 10;
+
+        //    return distance;
+        //}
+        static double Distance(double lon1, double lat1, double lon2, double lat2)
         {
-            var radlat1 = Math.PI * latA / 180;
-            var radlat2 = Math.PI * latB / 180;
-            var radlon1 = Math.PI * lonA / 180;
-            var radlon2 = Math.PI * lonB / 180;
-            var theta = lonA - lonB;
-            var radtheta = Math.PI * theta / 180;
-            var dist = Math.Sin(radlat1) * Math.Sin(radlat2) + Math.Cos(radlat1) * Math.Cos(radlat2) * Math.Cos(radtheta);
-            dist = Math.Acos(dist);
-            dist = dist * 180 / Math.PI;
-            dist = dist * 60 * 1.1515;
+            const double R = 6371; // Bán kính Trái Đất (km)
+            double dLat = ToRadians(lat2 - lat1);
+            double dLon = ToRadians(lon2 - lon1);
 
-            dist = dist * 1.609344;
-            var distance = Math.Round(1.3 * dist * 100) * 10;
+            // Chuyển đổi sang radian
+            lat1 = ToRadians(lat1);
+            lat2 = ToRadians(lat2);
 
-            return distance;
+            // Công thức Haversine
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(lat1) * Math.Cos(lat2) *
+                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c; // Khoảng cách (km)
+        }
+
+        static double ToRadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
         }
     }
 }
