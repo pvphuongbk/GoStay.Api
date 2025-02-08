@@ -20,14 +20,14 @@ namespace GoStay.Services.Newss
         public ResponseBase EditContentNews(string content, int NewsId);
         public ResponseBase EditPictureTitleNews(string url, int NewsId);
         public ResponseBase GetListNewsHomePage();
-        public ResponseBase GetListTopNewsByCategory(int? IdCategory,int? IdTopic);
+        public ResponseBase GetListTopNewsByCategory(int? IdCategory, int? IdTopic);
         public ResponseBase EditClickNews(int NewsId);
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter);
         public ResponseBase AddVideoNews(VideoModel news);
         public ResponseBase EditVideoNews(EditVideoNewsDto news);
         public ResponseBase DeleteVideoNews(int Id);
         public ResponseBase GetVideoNews(int Id);
-        public ResponseBase GetDataSupportNews();
+        public ResponseBase GetDataSupportNews(int IdDoMain);
         public ResponseBase GetNewsTopicTotal(int IdDomain);
         public ResponseBase GetNewsCategoryTotal(int IdDomain);
         public ResponseBase GetListCategoryByParentId(int IdDomain, int ParentId);

@@ -67,7 +67,7 @@ namespace GoStay.Api.Controllers
         }
         [HttpGet("tab-home")]
         [Authorize]
-        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantity, string dateStart, string dateEnd,int idcategory, int idtopic)
+        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantity, string dateStart, string dateEnd, int idcategory, int idtopic)
         {
             var start = DateTime.ParseExact(dateStart, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var end = DateTime.ParseExact(dateEnd, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -129,9 +129,9 @@ namespace GoStay.Api.Controllers
 
         [HttpGet("data-support")]
         [Authorize]
-        public ResponseBase GetDataSupportNews()
+        public ResponseBase GetDataSupportNews(int IdDoMain)
         {
-            var items = _newsServices.GetDataSupportNews();
+            var items = _newsServices.GetDataSupportNews(IdDoMain);
             return items;
         }
 
@@ -171,12 +171,12 @@ namespace GoStay.Api.Controllers
         [Authorize]
         public ResponseBase EditPictureTitleNews(EditNewsPictureTitleParam param)
         {
-            var item = _newsServices.EditPictureTitleNews(param.Url,param.NewsId);
+            var item = _newsServices.EditPictureTitleNews(param.Url, param.NewsId);
             return item;
         }
         [HttpPut("delete-news")]
         [Authorize]
-        public ResponseBase DeleteNews([FromBody]int Id)
+        public ResponseBase DeleteNews([FromBody] int Id)
         {
             var item = _newsServices.DeleteNews(Id);
             return item;

@@ -189,7 +189,7 @@ namespace GoStay.Services.Newss
                     Language = news.Lang.Language1,
                     UserName = news.IdUserNavigation.UserName,
                     Click = news.Click,
-                    Lon = news.Lon.ToString().Replace(".",","),
+                    Lon = news.Lon.ToString().Replace(".", ","),
                     Lat = news.Lat.ToString().Replace(".", ",")
                 };
                 var quatityComment = _commentVideoRepo.FindAll(x => x.VideoId == news.Id && x.Published == true && x.Deleted == false).Count();
@@ -211,14 +211,14 @@ namespace GoStay.Services.Newss
 
         }
 
-        public ResponseBase GetDataSupportNews()
+        public ResponseBase GetDataSupportNews(int IdDoMain)
         {
             ResponseBase responseBase = new ResponseBase();
             try
             {
-                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == 2).ToList();
+                var cate = _newsCategoryRepository.FindAll(x => x.Iddomain == IdDoMain).ToList();
                 var lan = _languageRepository.FindAll().ToList();
-                var topic = _topicRepository.FindAll(x => x.Iddomain == 2).ToList();
+                var topic = _topicRepository.FindAll(x => x.Iddomain == IdDoMain).ToList();
                 DataSupportNews data = new DataSupportNews()
                 {
                     ListCategory = cate,
@@ -341,14 +341,14 @@ namespace GoStay.Services.Newss
                 var data = new List<HotelNearVideoDto>();
 
                 var video = _videoRepository.GetById(videoId);
-                if(video==null)
+                if (video==null)
                 {
                     response.Code = 400;
                     response.Message = "Không có video này";
                     response.Data = data;
                     return response;
                 }
-                if(!video.Lon.HasValue|| !video.Lat.HasValue)
+                if (!video.Lon.HasValue|| !video.Lat.HasValue)
                 {
                     response.Code = 400;
                     response.Message = "Không có tọa độ";
@@ -358,7 +358,7 @@ namespace GoStay.Services.Newss
                 var lon = video.Lon.Value;
                 var lat = video.Lat.Value;
                 var hotels = _hotelRepo.FindAll(x => x.Deleted != 1 && (x.LonMap.HasValue && x.LatMap.HasValue))
-                            .Select(x=> new HotelNearDto
+                            .Select(x => new HotelNearDto
                             {
                                 Id = x.Id,
                                 Lon = x.LonMap.Value,
@@ -367,10 +367,10 @@ namespace GoStay.Services.Newss
                             }).ToList();
                 hotels.ForEach(x =>
                 {
-                    x.Distance = Distance((double)lon, (double)lat, x.Lon , x.Lat );
+                    x.Distance = Distance((double)lon, (double)lat, x.Lon, x.Lat);
                 });
-                hotels = hotels.OrderBy(x=>x.Distance).Take(10).ToList();
-                var listId = hotels.Select(x=>x.Id);
+                hotels = hotels.OrderBy(x => x.Distance).Take(10).ToList();
+                var listId = hotels.Select(x => x.Id);
                 var listhotel = _hotelRepo.FindAll(x => listId.Contains(x.Id))
                                             .Include(x => x.HotelRooms.OrderBy(y => y.PriceValue).Take(1))
                                             .Include(x => x.Pictures.Take(3))
@@ -393,7 +393,7 @@ namespace GoStay.Services.Newss
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower(),
                     Picture = x.Pictures.Select(y => y.Url).ToList(),
-                    Distance = hotels.FirstOrDefault(z=>z.Id==x.Id).Distance,
+                    Distance = hotels.FirstOrDefault(z => z.Id==x.Id).Distance,
                 }).ToList();
                 var final = data.OrderBy(x => x.Distance).ToList();
                 response.Data = final;
