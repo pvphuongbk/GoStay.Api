@@ -35,6 +35,6 @@ namespace GoStay.Services.Orders
         public ResponseBase UpdateOrder(OrderDto order,int IdOrder);
         public ResponseBase GetBookedDateRoom(int IdRoom);
         public ResponseBase RejectOrder(int IdOrder, int IdUser);
-
+        public ResponseBase UpdateBookedDateHotel(int idOrder);
     }
 }

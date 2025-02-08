@@ -49,7 +49,35 @@ namespace GoStay.Services.Orders
             _orderFunction = orderFunction;
             _schedulerRoomPrice = schedulerRoomPrice;
         }
-
+        public ResponseBase UpdateBookedDateHotel(int idOrder)
+        {
+            ResponseBase responseBase = new ResponseBase();
+            try
+            {
+                var order = _OrderRepository.GetById(idOrder);
+                if(order.IdHotel==null)
+                {
+                    responseBase.Code = ErrorCodeMessage.NotFound.Key;
+                    responseBase.Data = ErrorCodeMessage.NotFound.Value;
+                    return responseBase;
+                }
+                var hotel = _hotelRepository.GetById(order.IdHotel);
+                hotel.LastOrderTime = DateTime.Now;
+                _commonUoW.BeginTransaction();
+                _hotelRepository.Update(hotel);
+                _commonUoW.Commit();
+                responseBase.Data = "true";
+                return responseBase;
+            }
+            catch (Exception e)
+            {
+                _commonUoW.RollBack();
+                responseBase.Code = ErrorCodeMessage.Exception.Key;
+                responseBase.Message = e.Message;
+                responseBase.Data = "false";
+                return responseBase;
+            }
+        }
         public ResponseBase CreateOrder(OrderDto order)
         {
             ResponseBase responseBase = new ResponseBase();
@@ -1115,7 +1143,12 @@ namespace GoStay.Services.Orders
             var hotel = _hotelRepository.GetById(roomOrderDetail.Idhotel);
             hotelRoomOrderDto.HotelName = hotel.Name;
             hotelRoomOrderDto.RoomName = roomOrderDetail.Name;
-
+            hotelRoomOrderDto.SlugHotel = hotel.Name.RemoveUnicode().RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
+                                            .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
+                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
+                                            .Replace("(", string.Empty).Replace(")", string.Empty)
+                                            .Replace("*", string.Empty).Replace("%", string.Empty)
+                                            .Replace("&", "-").Replace("@", string.Empty).ToLower();
             hotelRoomOrderDto.Address = hotel.Address;
             hotelRoomOrderDto.Rating = hotel.Rating;
             hotelRoomOrderDto.ReviewScore = (int?)hotel.ReviewScore;

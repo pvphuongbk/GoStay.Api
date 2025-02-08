@@ -7,6 +7,7 @@ namespace GoStay.DataAccess.Entities
     {
         public News()
         {
+            CommentNews = new HashSet<CommentNews>();
             NewsTopics = new HashSet<NewsTopic>();
             Pictures = new HashSet<Picture>();
         }
@@ -32,6 +33,7 @@ namespace GoStay.DataAccess.Entities
         public virtual User IdUserNavigation { get; set; } = null!;
         public virtual Domain? IddomainNavigation { get; set; }
         public virtual Language Lang { get; set; } = null!;
+        public virtual ICollection<CommentNews> CommentNews { get; set; }
         public virtual ICollection<NewsTopic> NewsTopics { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
     }

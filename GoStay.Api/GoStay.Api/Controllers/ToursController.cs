@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoStay.Api.Attributes;
 using GoStay.Common.Extention;
 using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
@@ -10,6 +11,7 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class ToursController : ControllerBase
     {

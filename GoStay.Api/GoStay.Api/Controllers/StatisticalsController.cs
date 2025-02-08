@@ -1,4 +1,5 @@
-﻿using GoStay.Common.Enums;
+﻿using GoStay.Api.Attributes;
+using GoStay.Common.Enums;
 using GoStay.Common.Extention;
 using GoStay.Data.Base;
 using GoStay.Data.HotelDto;
@@ -14,7 +15,8 @@ using System.Diagnostics;
 namespace GoStay.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+    [Authorize]
+    [Route("[controller]")]
 	public class StatisticalsController : ControllerBase
 	{
 		private readonly IStatisticalService _statisticalService;

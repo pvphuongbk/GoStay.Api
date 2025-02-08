@@ -4,6 +4,7 @@ using GoStay.Data.HotelDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace GoStay.Common.Helpers
 {
@@ -100,5 +101,26 @@ namespace GoStay.Common.Helpers
             return hotelDtos;
         }
 
+		public static List<int> GetRandomFromList(List<int> input, int quantity)
+		{
+			var output = new List<int>();
+			var max = input.Count()-1;
+			for (int i=0;i< max&& output.Count()<quantity; i++)
+			{
+				var index = new Random().Next(0, max);
+				if (!output.Contains(input[index]))
+				{
+					output.Add(input[index]);
+                }	
+            }
+			return output;
+		}
+        public static List<int> OrderRandomList(List<int> input)
+        {
+			var temp1 = input.Select(x => new { Key = x, Value = new Random().Next(0, 100) });
+			var temp2 = temp1.OrderBy(x => x.Value).ToList();
+			var output = temp2.Select(x=>x.Key).ToList();
+            return output;
+        }
     }
 }

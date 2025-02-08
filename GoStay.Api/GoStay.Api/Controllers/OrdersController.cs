@@ -1,4 +1,5 @@
-﻿using GoStay.Common;
+﻿using GoStay.Api.Attributes;
+using GoStay.Common;
 using GoStay.Data.OrderDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.OrderDto;
@@ -10,6 +11,7 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
@@ -161,6 +163,12 @@ namespace GoStay.Api.Controllers
         public ResponseBase GetRoomInOrder(int IdRoom)
         {
             var items = _orderService.GetRoomInOrder(IdRoom);
+            return items;
+        }
+        [HttpGet("update-booked-date")]
+        public ResponseBase UpdateBookedDateHotel(int idOrder)
+        {
+            var items = _orderService.UpdateBookedDateHotel(idOrder);
             return items;
         }
     }

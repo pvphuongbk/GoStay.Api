@@ -50,13 +50,19 @@ var app = builder.Build();
 StaticServiceProvider.Provider = app.Services;
 app.UseDeveloperExceptionPage();
 app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api"));
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwaggerUI(option =>
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
+	option.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api");
+	//option.RoutePrefix = "allapp";
+});
+
+//app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api"));
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+//	app.UseSwagger();
+//	app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 

@@ -10,10 +10,12 @@ using GoStay.Services;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using GoStay.Data.OrderDto;
+using GoStay.Api.Attributes;
 
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class HotelController : ControllerBase
     {

@@ -1,4 +1,5 @@
-﻿using GoStay.Data.OrderDto;
+﻿using GoStay.Api.Attributes;
+using GoStay.Data.OrderDto;
 using GoStay.Data.Ticket;
 using GoStay.DataDto.OrderDto;
 using GoStay.Services.Orders;
@@ -9,6 +10,7 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class OrdersTicketController : ControllerBase
     {

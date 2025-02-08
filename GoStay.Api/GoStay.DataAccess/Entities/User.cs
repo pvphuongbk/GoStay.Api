@@ -7,6 +7,8 @@ namespace GoStay.DataAccess.Entities
     {
         public User()
         {
+            CommentNews = new HashSet<CommentNews>();
+            CommentVideos = new HashSet<CommentVideo>();
             HotelRatings = new HashSet<HotelRating>();
             News = new HashSet<News>();
             OrderTickets = new HashSet<OrderTicket>();
@@ -36,6 +38,8 @@ namespace GoStay.DataAccess.Entities
         public string? UserVerify { get; set; }
         public int? ManagerId { get; set; }
 
+        public virtual ICollection<CommentNews> CommentNews { get; set; }
+        public virtual ICollection<CommentVideo> CommentVideos { get; set; }
         public virtual ICollection<HotelRating> HotelRatings { get; set; }
         public virtual ICollection<News> News { get; set; }
         public virtual ICollection<OrderTicket> OrderTickets { get; set; }

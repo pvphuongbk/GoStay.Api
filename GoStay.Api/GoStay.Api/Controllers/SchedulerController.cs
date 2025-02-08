@@ -1,4 +1,5 @@
-﻿using GoStay.Data.TourDto;
+﻿using GoStay.Api.Attributes;
+using GoStay.Data.TourDto;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.Scheduler;
 using GoStay.Services.Statisticals;
@@ -9,6 +10,7 @@ using ResponseBase = GoStay.Data.Base.ResponseBase;
 namespace GoStay.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class SchedulerController : ControllerBase
     {
