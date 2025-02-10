@@ -30,6 +30,7 @@ namespace GoStay.DataDto.Comments
         public string UserAvatar {  get; set; }=string.Empty;
         public string Content { get; set; } = null!;
         public int ParentId { get; set; }
+        public bool Published { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
     }
@@ -66,6 +67,7 @@ namespace GoStay.DataDto.Comments
         public string UserAvatar { get; set; } = string.Empty;
         public string Content { get; set; } = null!;
         public int ParentId { get; set; }
+        public bool Published { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
     }

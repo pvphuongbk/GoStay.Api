@@ -46,15 +46,15 @@ namespace GoStay.Api.Controllers
             return items;
         }
         [HttpGet("list-comment-reply-news")]
-        public ResponseBase GetCommentReplyNews(int parentCommentId, int pageIndex, int pageSize)
+        public ResponseBase GetCommentReplyNews(int userId ,int parentCommentId, int pageIndex, int pageSize)
         {
-            var items = _commentService.GetCommentReplyNews(parentCommentId, pageIndex, pageSize);
+            var items = _commentService.GetCommentReplyNews(userId,parentCommentId, pageIndex, pageSize);
             return items;
         }
         [HttpGet("list-comment-reply-video")]
-        public ResponseBase GetCommentReplyVideo(int parentCommentId, int pageIndex, int pageSize)
+        public ResponseBase GetCommentReplyVideo(int userId, int parentCommentId, int pageIndex, int pageSize)
         {
-            var items = _commentService.GetCommentReplyVideo(parentCommentId, pageIndex, pageSize);
+            var items = _commentService.GetCommentReplyVideo(userId, parentCommentId, pageIndex, pageSize);
             return items;
         }
 

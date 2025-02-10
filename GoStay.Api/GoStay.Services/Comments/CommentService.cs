@@ -86,7 +86,7 @@ public class CommentService : ICommentService
             comment.Content = request.Content;
             comment.ParentId = request.ParentId;
             comment.ModifiedDate = DateTime.Now;
-            comment.Published = false;
+            comment.Published = true;
             comment.Deleted = false;
 
             _commonUoW.BeginTransaction();
@@ -207,7 +207,8 @@ public class CommentService : ICommentService
                 response.Message = "News not existing";
                 return response;
             }
-            var totalQuantity = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
+            var totalQuantity = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Deleted == false
+                                                        && ((x.UserId!=userId && x.Published == true)||(x.UserId == userId) )).Count();
             if (totalQuantity == 0)
             {
                 result.ListComment = comments;
@@ -215,7 +216,8 @@ public class CommentService : ICommentService
             }
             else
             {
-                comments = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Published == true && x.Deleted == false)
+                comments = _commentNewsRepo.FindAll(x => x.NewsId == newsId && x.ParentId == 0 && x.Deleted == false
+                                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId)))
                             .Include(x => x.User).OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize).Select(x => new CommentNewsViewModel
                             {
                                 Comment = new CommentNewsModel
@@ -229,6 +231,7 @@ public class CommentService : ICommentService
                                     ParentId = x.ParentId,
                                     CreatedDate = x.CreatedDate,
                                     ModifiedDate = x.ModifiedDate,
+                                    Published = x.Published,
                                 },
                                 ReplyComments = new()
                             }).ToList();
@@ -237,7 +240,8 @@ public class CommentService : ICommentService
                     return response;
                 }
                 var listParentId = comments.Select(x => x.Comment.Id).ToList();
-                var listReply = _commentNewsRepo.FindAll(x => listParentId.Contains(x.ParentId) && x.Published == true && x.Deleted == false).Include(x => x.User).ToList();
+                var listReply = _commentNewsRepo.FindAll(x => listParentId.Contains(x.ParentId) && x.Deleted == false
+                                                    && ((x.UserId != userId && x.Published == true) || (x.UserId == userId))).Include(x => x.User).ToList();
 
                 foreach (var item in comments)
                 {
@@ -258,7 +262,7 @@ public class CommentService : ICommentService
                         ParentId = x.ParentId,
                         CreatedDate = x.CreatedDate,
                         ModifiedDate = x.ModifiedDate,
-
+                        Published = x.Published,
                     }).ToList();
                     item.ReplyComments.ParentCommentId = item.Comment.Id;
                     item.ReplyComments.TotalQuantityRep = totalquantity;
@@ -277,7 +281,7 @@ public class CommentService : ICommentService
             return response;
         }
     }
-    public ResponseBase GetCommentReplyNews(int parentCommentId, int pageIndex, int pageSize)
+    public ResponseBase GetCommentReplyNews(int userId, int parentCommentId, int pageIndex, int pageSize)
     {
         ResponseBase response = new ResponseBase();
         try
@@ -289,14 +293,16 @@ public class CommentService : ICommentService
                 CurentQuantityRep = 0,
             };
 
-            var quantity = _commentNewsRepo.FindAll(x => x.ParentId == parentCommentId && x.Published == true && x.Deleted == false).Count();
+            var quantity = _commentNewsRepo.FindAll(x => x.ParentId == parentCommentId && x.Deleted == false 
+                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId)) ).Count();
             if (quantity == 0)
             {
                 response.Data = result;
                 return response;
             }
 
-            var listReply = _commentNewsRepo.FindAll(x => x.ParentId == parentCommentId && x.Published == true && x.Deleted == false)
+            var listReply = _commentNewsRepo.FindAll(x => x.ParentId == parentCommentId && x.Deleted == false
+                                                    && ((x.UserId != userId && x.Published == true) || (x.UserId == userId)))
                                                 .Include(x => x.User)
                                                 .OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize)
                                                 .ToList();
@@ -311,7 +317,7 @@ public class CommentService : ICommentService
                 ParentId = x.ParentId,
                 CreatedDate = x.CreatedDate,
                 ModifiedDate = x.ModifiedDate,
-
+                Published = x.Published
             }).ToList();
             result.TotalQuantityRep = quantity;
             result.CurentQuantityRep = pageIndex * pageSize;
@@ -436,7 +442,7 @@ public class CommentService : ICommentService
             comment.Content = request.Content;
             comment.ParentId = request.ParentId;
             comment.ModifiedDate = DateTime.Now;
-            comment.Published = false;
+            comment.Published = true;
             comment.Deleted = false;
 
             _commonUoW.BeginTransaction();
@@ -559,14 +565,16 @@ public class CommentService : ICommentService
                 response.Message = "Video not existing";
                 return response;
             }
-            var totalQuantity = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Published == true && x.Deleted == false).Count();
+            var totalQuantity = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Deleted == false
+                                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId))).Count();
             if (totalQuantity == 0)
             {
                 result.ListComment = comments;
             }
             else
             {
-                comments = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Published == true && x.Deleted == false)
+                comments = _commentVideoRepo.FindAll(x => x.VideoId == videoId && x.ParentId == 0 && x.Deleted == false
+                                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId)))
                             .Include(x => x.User).OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize).Select(x => new CommentVideoViewModel
                             {
                                 Comment = new CommentVideoModel
@@ -580,6 +588,7 @@ public class CommentService : ICommentService
                                     ParentId = x.ParentId,
                                     CreatedDate = x.CreatedDate,
                                     ModifiedDate = x.ModifiedDate,
+                                    Published = x.Published,
                                 },
                                 ReplyComments = new()
                             }).ToList();
@@ -588,7 +597,8 @@ public class CommentService : ICommentService
                     return response;
                 }
                 var listParentId = comments.Select(x => x.Comment.Id).ToList();
-                var listReply = _commentVideoRepo.FindAll(x => listParentId.Contains(x.ParentId) && x.Published == true && x.Deleted == false).Include(x => x.User).ToList();
+                var listReply = _commentVideoRepo.FindAll(x => listParentId.Contains(x.ParentId) && x.Deleted == false
+                                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId))).Include(x => x.User).ToList();
 
                 foreach (var item in comments)
                 {
@@ -609,7 +619,7 @@ public class CommentService : ICommentService
                         ParentId = x.ParentId,
                         CreatedDate = x.CreatedDate,
                         ModifiedDate = x.ModifiedDate,
-
+                        Published = x.Published,
                     }).ToList();
                     item.ReplyComments.ParentCommentId = item.Comment.Id;
                     item.ReplyComments.TotalQuantityRep = totalquantity;
@@ -629,7 +639,7 @@ public class CommentService : ICommentService
             return response;
         }
     }
-    public ResponseBase GetCommentReplyVideo(int parentCommentId, int pageIndex, int pageSize)
+    public ResponseBase GetCommentReplyVideo(int userId, int parentCommentId, int pageIndex, int pageSize)
     {
         ResponseBase response = new ResponseBase();
         try
@@ -641,14 +651,16 @@ public class CommentService : ICommentService
                 CurentQuantityRep = 0,
             };
 
-            var quantity = _commentVideoRepo.FindAll(x => x.ParentId == parentCommentId && x.Published == true && x.Deleted == false).Count();
+            var quantity = _commentVideoRepo.FindAll(x => x.ParentId == parentCommentId && x.Deleted == false
+                                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId))).Count();
             if (quantity == 0)
             {
                 response.Data = result;
                 return response;
             }
 
-            var listReply = _commentVideoRepo.FindAll(x => x.ParentId == parentCommentId && x.Published == true && x.Deleted == false)
+            var listReply = _commentVideoRepo.FindAll(x => x.ParentId == parentCommentId && x.Deleted == false
+                                                        && ((x.UserId != userId && x.Published == true) || (x.UserId == userId)))
                                                 .Include(x => x.User)
                                                 .OrderByDescending(x => x.CreatedDate).Take(pageIndex * pageSize)
                                                 .ToList();
@@ -663,7 +675,7 @@ public class CommentService : ICommentService
                 ParentId = x.ParentId,
                 CreatedDate = x.CreatedDate,
                 ModifiedDate = x.ModifiedDate,
-
+                Published = x.Published,
             }).ToList();
             result.TotalQuantityRep = quantity;
             result.CurentQuantityRep = pageIndex * pageSize;
