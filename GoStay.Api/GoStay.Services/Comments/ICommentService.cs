@@ -14,8 +14,8 @@ public interface ICommentService
     public ResponseBase UpsertCommentVideo(CommentVideoUpsertRequestModel request);
     public ResponseBase GetCommentNews(int userId, int newsId, int pageIndex, int pageSize, List<CommentChildRequestModel>? listChildRequest);
     public ResponseBase GetCommentVideo(int userId, int videoId, int pageIndex, int pageSize, List<CommentChildRequestModel>? listChildRequest);
-    public ResponseBase GetCommentReplyNews(int parentCommentId, int pageIndex, int pageSize);
-    public ResponseBase GetCommentReplyVideo(int parentCommentId, int pageIndex, int pageSize);
+    public ResponseBase GetCommentReplyNews(int userId, int parentCommentId, int pageIndex, int pageSize);
+    public ResponseBase GetCommentReplyVideo(int userId, int parentCommentId, int pageIndex, int pageSize);
     Task<ResponseBase> GetCommentVideoForApproval(string? videoTitle, bool? publish, int? categoryId, int pageIndex, int pageSize);
     public ResponseBase DeleteCommentVideo(int id);
     public ResponseBase PublishCommentVideo(int id);
