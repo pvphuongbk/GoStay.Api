@@ -616,10 +616,15 @@ namespace GoStay.Services.Newss
                 newsDetail.Tag = news.Tag;
                 newsDetail.UserName = news.IdUserNavigation.UserName;
                 newsDetail.Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar();
-                var quatityComment = _commentNewsRepo.FindAll(x=>x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
+                var quatityComment = _commentNewsRepo.FindAll(x => x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
                 newsDetail.QuatityComment = quatityComment;
                 var newserelate = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
-                var c = newserelate.OrderByDescending(x => x.DateCreate).Take(5);
+
+                var newcategory = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
+
+                var d = newcategory.OrderByDescending(x => x.DateCreate).Take(10);
+                var c = newserelate.OrderByDescending(x => x.DateCreate).Take(10);
+
                 if (c != null && c.Any())
                 {
                     newsDetail.NewRelates = c.Select(x => new NewRelateDto
@@ -630,6 +635,34 @@ namespace GoStay.Services.Newss
 
                         PictureTitle = x.PictureTitle,
                         DateCreate = x.DateCreate,
+                        UserData = new UserDataDto()
+                        {
+                            UserId = x.IdUser,
+                            FirstName = x.IdUserNavigation.FirstName,
+                            LastName = x.IdUserNavigation.LastName,
+                            UserName = x.IdUserNavigation.UserName
+                        },
+                    }).ToList();
+                }
+
+                if (d != null && d.Any())
+                {
+                    newsDetail.NewCategory = d.Select(x => new NewByIdCategoryDto
+                    {
+
+                        Id = x.Id,
+                        Title = x.Title,
+                        PictureTitle = x.PictureTitle,
+                        DateCreate = x.DateCreate,
+                        Description = x.Description,
+                        Content = x.Content,
+                        IdDomain = x.Iddomain,
+                        IdCategory = x.IdCategory,
+                        LangId = x.LangId,
+                        Tag = x.Tag,
+                        Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar(),
+                        Topics = x.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
+
                         UserData = new UserDataDto()
                         {
                             UserId = x.IdUser,

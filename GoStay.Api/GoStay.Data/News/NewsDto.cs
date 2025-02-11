@@ -38,6 +38,7 @@ namespace GoStay.DataDto.News
         public string? UserName { get; set; }
         public DateTime DateCreate { get; set; }
         public List<NewRelateDto>? NewRelates { get; set; }
+        public List<NewByIdCategoryDto>? NewCategory { get; set; }
         public int QuatityComment {  get; set; }
     }
     public class GetListNewsParam
@@ -233,4 +234,30 @@ namespace GoStay.DataDto.News
         public DateTime? DateCreate { get; set; }
         public UserDataDto? UserData { get; set; }
     }
+
+
+    public class NewByIdCategoryDto
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public string? PictureTitle { get; set; }
+        public DateTime? DateCreate { get; set; }
+        public int? IdCategory { get; set; }
+        public int? IdUser { get; set; }
+        public int? IdDomain { get; set; }
+        public byte? Status { get; set; }
+        public string? Content { get; set; }
+        public string Category { get; set; }
+        public string? Description { get; set; }
+        public int? LangId { get; set; }
+        public string? Language { get; set; }
+        public List<int>? IdTopics { get; set; }
+        public List<string>? Topics { get; set; }
+        public string Slug { get; set; }
+        public string? Tag { get; set; }
+        public UserDataDto? UserData { get; set; }
+       
+    }
+
+
 }
