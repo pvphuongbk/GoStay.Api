@@ -618,7 +618,7 @@ namespace GoStay.Services.Newss
                 newsDetail.Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar();
                 var quatityComment = _commentNewsRepo.FindAll(x => x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
                 newsDetail.QuatityComment = quatityComment;
-                var newserelate = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
+                var newserelate = _newsRepository.FindAll(x => x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
 
                 var newcategory = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
 
