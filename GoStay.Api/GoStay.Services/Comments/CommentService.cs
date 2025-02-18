@@ -86,7 +86,7 @@ public class CommentService : ICommentService
             comment.Content = request.Content;
             comment.ParentId = request.ParentId;
             comment.ModifiedDate = DateTime.Now;
-            comment.Published = true;
+            comment.Published = false;
             comment.Deleted = false;
 
             _commonUoW.BeginTransaction();
@@ -442,7 +442,7 @@ public class CommentService : ICommentService
             comment.Content = request.Content;
             comment.ParentId = request.ParentId;
             comment.ModifiedDate = DateTime.Now;
-            comment.Published = true;
+            comment.Published = false;
             comment.Deleted = false;
 
             _commonUoW.BeginTransaction();
