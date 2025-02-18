@@ -249,7 +249,7 @@ namespace GoStay.Services.Newss
                 }
                 var listNews = _newsRepository.FindAll(x => x.Deleted != 1
                                                         && ((param.UserId > 0) ? x.IdUser == param.UserId : x.Id > 0)
-                                                        && ((param.Status > 0) ? x.Status == param.Status : x.Status > 0)
+                                                        && ((param.Status > 0) ? x.Status == param.Status : x.Status > 2)
                                                         && ((param.IdCategory > 0) ? x.IdCategory == param.IdCategory : x.IdCategory > 0)
                                                         && ((param.IdTopic > 0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id > 0)
                                                         && ((param.IdDomain > 0) ? x.Iddomain == param.IdDomain : x.Iddomain == AppConfigs.IdDomain)
@@ -618,9 +618,9 @@ namespace GoStay.Services.Newss
                 newsDetail.Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar();
                 var quatityComment = _commentNewsRepo.FindAll(x => x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
                 newsDetail.QuatityComment = quatityComment;
-                var newserelate = _newsRepository.FindAll(x => x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
+                var newserelate = _newsRepository.FindAll(x => x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id && x.Status == 3).Include(x => x.IdUserNavigation).ToList();
 
-                var newcategory = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Deleted == 0 && x.Id != Id).Include(x => x.IdUserNavigation).ToList();
+                var newcategory = _newsRepository.FindAll(x => x.IdCategory == news.IdCategory && x.Deleted == 0 && x.Id != Id && x.Status == 3).Include(x => x.IdUserNavigation).ToList();
 
                 var d = newcategory.OrderByDescending(x => x.DateCreate).Take(10);
                 var c = newserelate.OrderByDescending(x => x.DateCreate).Take(10);
