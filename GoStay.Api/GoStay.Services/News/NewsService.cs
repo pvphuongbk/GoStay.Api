@@ -247,16 +247,38 @@ namespace GoStay.Services.Newss
                 {
                     param.UserId = 0;
                 }
-                var listNews = _newsRepository.FindAll(x => x.Deleted != 1
-                                                        && ((param.UserId > 0) ? x.IdUser == param.UserId : x.Id > 0)
-                                                        && ((param.Status > 0) ? x.Status == param.Status : x.Status > 2)
-                                                        && ((param.IdCategory > 0) ? x.IdCategory == param.IdCategory : x.IdCategory > 0)
-                                                        && ((param.IdTopic > 0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id > 0)
-                                                        && ((param.IdDomain > 0) ? x.Iddomain == param.IdDomain : x.Iddomain == AppConfigs.IdDomain)
-                                                        && ((param.TextSearch != null) ? x.Keysearch.Contains(param.TextSearch) : x.Id > 0))
-                                                .Include(x => x.IdCategoryNavigation)
-                                                .Include(x => x.NewsTopics).ThenInclude(x => x.IdNewsTopicNavigation)
-                                                .Include(x => x.IdUserNavigation).OrderBy(x => x.Status).ThenByDescending(x => x.DateEdit).AsNoTracking();
+                //var listNews = _newsRepository.FindAll(x => x.Deleted != 1
+                //                                        && ((param.UserId > 0) ? x.IdUser == param.UserId : x.Id > 0)
+                //                                        && ((param.Status > 0) ? x.Status == param.Status : x.Status > 2)
+                //                                        && ((param.IdCategory > 0) ? x.IdCategory == param.IdCategory : x.IdCategory > 0)
+                //                                        && ((param.IdTopic > 0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains((int)param.IdTopic) : x.Id > 0)
+                //                                        && ((param.IdDomain > 0) ? x.Iddomain == param.IdDomain : x.Iddomain == AppConfigs.IdDomain)
+                //                                        && ((param.TextSearch != null) ? x.Keysearch.Contains(param.TextSearch) : x.Id > 0))
+                //                                .Include(x => x.IdCategoryNavigation)
+                //                                .Include(x => x.NewsTopics).ThenInclude(x => x.IdNewsTopicNavigation)
+                //                                .Include(x => x.IdUserNavigation).OrderBy(x => x.Status).ThenByDescending(x => x.DateEdit).AsNoTracking();
+
+
+                var query = _newsRepository.FindAll(x => x.Deleted != 1
+                                    && ((param.UserId > 0) ? x.IdUser == param.UserId : x.Id > 0)
+                                    && ((param.IdCategory > 0) ? x.IdCategory == param.IdCategory : x.IdCategory > 0)
+                                    && ((param.IdTopic > 0) ? x.NewsTopics.Any(y => y.IdNewsTopic == param.IdTopic) : x.Id > 0)
+                                    && ((param.IdDomain > 0) ? x.Iddomain == param.IdDomain : x.Iddomain == AppConfigs.IdDomain)
+                                    && ((param.TextSearch != null) ? x.Keysearch.Contains(param.TextSearch) : x.Id > 0))
+                            .Include(x => x.IdCategoryNavigation)
+                            .Include(x => x.NewsTopics).ThenInclude(x => x.IdNewsTopicNavigation)
+                            .Include(x => x.IdUserNavigation)
+                            .OrderBy(x => x.Status)
+                            .ThenByDescending(x => x.DateEdit)
+                            .AsNoTracking();
+
+                // Điều kiện Status thay đổi tùy theo Style
+                query = (param.Style == 1) ? query.Where(x => (param.Status > 0) ? x.Status == param.Status : x.Status > 2)
+                                            : query.Where(x => (param.Status > 0) ? x.Status == param.Status : x.Status > 0);
+
+                var listNews = query.ToList();
+
+
                 var count = listNews.Count();
                 var pageSize = param.PageSize;
                 var pageIndex = param.PageIndex;
