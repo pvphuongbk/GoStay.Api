@@ -39,7 +39,7 @@ namespace GoStay.DataDto.News
         public DateTime DateCreate { get; set; }
         public List<NewRelateDto>? NewRelates { get; set; }
         public List<NewByIdCategoryDto>? NewCategory { get; set; }
-        public int QuatityComment {  get; set; }
+        public int QuatityComment { get; set; }
     }
     public class GetListNewsParam
     {
@@ -54,6 +54,7 @@ namespace GoStay.DataDto.News
         public string? TextSearch { get; set; }
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
+        public int? Style { get; set; }
     }
     public class NewSearchOutDto
     {
@@ -256,7 +257,7 @@ namespace GoStay.DataDto.News
         public string Slug { get; set; }
         public string? Tag { get; set; }
         public UserDataDto? UserData { get; set; }
-       
+
     }
 
 
