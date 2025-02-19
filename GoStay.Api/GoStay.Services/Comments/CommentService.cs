@@ -106,6 +106,7 @@ public class CommentService : ICommentService
         var response = new ResponseBase();
         try
         {
+            var listDelete = new List<CommentNews>();
             var comment = _commentNewsRepo.GetById(id);
             if(comment == null)
             {
@@ -113,8 +114,17 @@ public class CommentService : ICommentService
                 response.Message = "Không có comment này";
                 return response;
             }
+            listDelete.Add(comment);
+            if (comment.ParentId == 0) 
+            {
+                var cmtChild = _commentNewsRepo.FindAll(x=>x.ParentId == comment.Id);
+                if (cmtChild != null && cmtChild.Any()) 
+                {
+                    listDelete.AddRange(cmtChild);
+                }
+            }
             _commonUoW.BeginTransaction();
-            _commentNewsRepo.Remove(comment);
+            _commentNewsRepo.RemoveMultiple(listDelete);
             _commonUoW.Commit();
             response.Code = 200;
             response.Data = "Success";
@@ -462,6 +472,7 @@ public class CommentService : ICommentService
         var response = new ResponseBase();
         try
         {
+            var listDelete = new List<CommentVideo>();
             var comment = _commentVideoRepo.GetById(id);
             if (comment == null)
             {
@@ -469,12 +480,20 @@ public class CommentService : ICommentService
                 response.Message = "Không có comment này";
                 return response;
             }
+            listDelete.Add(comment);
+            if (comment.ParentId == 0)
+            {
+                var cmtChild = _commentVideoRepo.FindAll(x => x.ParentId == comment.Id);
+                if (cmtChild != null && cmtChild.Any())
+                {
+                    listDelete.AddRange(cmtChild);
+                }
+            }
             _commonUoW.BeginTransaction();
-            _commentVideoRepo.Remove(comment);
+            _commentVideoRepo.RemoveMultiple(listDelete);
             _commonUoW.Commit();
             response.Code = 200;
             response.Data = "Success";
-
             return response;
         }
         catch (Exception ex)
