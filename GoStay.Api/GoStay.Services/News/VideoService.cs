@@ -101,6 +101,8 @@ namespace GoStay.Services.Newss
                     newsEntity.PictureTitle = news.PictureTitle;
                     newsEntity.Name = news.Name;
                     newsEntity.KeySearch = newsEntity.Title.RemoveUnicode().Replace(" ", string.Empty).ToLower();
+                    newsEntity.Lon = news.Lon.HasValue? news.Lon:null;
+                    newsEntity.Lat = news.Lat.HasValue ? news.Lat : null;
 
                 }
                 newsEntity.Status = 1;

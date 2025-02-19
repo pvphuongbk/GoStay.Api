@@ -154,6 +154,8 @@ namespace GoStay.DataDto.News
         public int? IdUser { get; set; }
         public string? PictureTitle { get; set; }
         public string? Name { get; set; }
+        public decimal? Lon { get; set; }
+        public decimal? Lat { get; set; }
     }
     public class VideoNewsDetailDto
     {
