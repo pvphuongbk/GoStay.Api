@@ -35,11 +35,25 @@ namespace GoStay.Services.Newss
                 filter.TextSearch = filter.TextSearch.RemoveUnicode();
                 filter.TextSearch = filter.TextSearch.Replace(" ", string.Empty).ToLower();
 
+                var listCategories = _newsCategoryRepository.FindAll(x => x.Iddomain == 1).Select(x => x.Id).ToList();
                 var list = NewsRepository.SearchListVideoNews(filter);
                 list.ForEach(x => x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
+                var data = new Dictionary<int, List<VideoNewsDto>>();
+                
+                data.Add(0, list);
+                foreach (var item in listCategories)
+                {
+                    filter.IdCategory = item;
+                    var dataCategory = NewsRepository.SearchListVideoNews(filter);
+                    dataCategory.ForEach(x => x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
+                    data.Add(item, dataCategory);
+                }    
+
+
+                
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
-                response.Data = list;
+                response.Data = data;
                 return response;
 
             }
@@ -350,7 +364,7 @@ namespace GoStay.Services.Newss
                     response.Data = data;
                     return response;
                 }
-                if (!video.Lon.HasValue|| !video.Lat.HasValue)
+                if (!video.Lon.HasValue|| !video.Lat.HasValue|| video.Lon<=0||video.Lat<=0)
                 {
                     response.Code = 400;
                     response.Message = "Không có tọa độ";
@@ -409,26 +423,7 @@ namespace GoStay.Services.Newss
                 response.Message = e.Message;
                 return response;
             }
-
         }
-        //public double Distance(double lonA, double latA, double lonB, double latB)
-        //{
-        //    var radlat1 = Math.PI * latA / 180;
-        //    var radlat2 = Math.PI * latB / 180;
-        //    var radlon1 = Math.PI * lonA / 180;
-        //    var radlon2 = Math.PI * lonB / 180;
-        //    var theta = lonA - lonB;
-        //    var radtheta = Math.PI * theta / 180;
-        //    var dist = Math.Sin(radlat1) * Math.Sin(radlat2) + Math.Cos(radlat1) * Math.Cos(radlat2) * Math.Cos(radtheta);
-        //    dist = Math.Acos(dist);
-        //    dist = dist * 180 / Math.PI;
-        //    dist = dist * 60 * 1.1515;
-
-        //    dist = dist * 1.609344;
-        //    var distance = Math.Round(1.3 * dist * 100) * 10;
-
-        //    return distance;
-        //}
         static double Distance(double lon1, double lat1, double lon2, double lat2)
         {
             const double R = 6371; // Bán kính Trái Đất (km)
