@@ -8,6 +8,7 @@ using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.News;
+using GoStay.DataDto.Video;
 using GoStay.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
@@ -21,7 +22,113 @@ namespace GoStay.Services.Newss
 {
     public partial class NewsService
     {
+        public ResponseBase GetDefaultVideo(int idUser)
+        {
+            var result = new ResponseBase() { Code = 200 };
+            try
+            {
+                var video = _videoRepository.FindAll(x => x.IdUser == idUser&&x.Status==0).FirstOrDefault();
+                if (video == null) 
+                {
+                    video = new VideoNews()
+                    {
+                        Video = string.Empty,
+                        IdCategory = 1,
+                        Title = string.Empty,
+                        DateCreate = DateTime.Now,
+                        DateEdit = DateTime.Now,
+                        IdUser = idUser,
+                        Deleted = 0,
+                        PictureTitle = string.Empty,
+                        LangId = 1,
+                        Status = 0,
+                        Name = string.Empty,
+                        KeySearch = string.Empty,
+                        Descriptions = string.Empty,
+                        Click = 0,
+                        Lon = 0,
+                        Lat = 0,
+                    };
+                    _commonUoW.BeginTransaction();
+                    _videoRepository.Insert(video);
+                    _commonUoW.Commit();
+                }
+                var data = _mapper.Map<VideoNews, CreateVideoModel>(video);
+                result.Data = data;
+                return result;
+            }
+            catch (Exception ex) 
+            {
+                result.Code = ex.HResult;
+                result.Message = ex.Message;
+                return result;
+            }
+        }
+        public ResponseBase GetVideoById(int id)
+        {
+            var result = new ResponseBase() { Code = 200 };
+            try
+            {
+                var video = _videoRepository.GetById(id);
+                if (video == null)
+                {
+                    result.Data = null;
+                    result.Code = 400;
+                    result.Message = "không có video này";
+                }
+                var data = _mapper.Map<VideoNews, CreateVideoModel>(video);
+                result.Data = data;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Code = ex.HResult;
+                result.Message = ex.Message;
+                return result;
+            }
+        }
+        public ResponseBase UpsertVideo(CreateVideoModel video)
+        {
+            var result = new ResponseBase() { Code = 200 ,Data = false};
+            try
+            {
+                var entity = _videoRepository.GetById(video.Id);
+                
+                if (entity == null)
+                {
+                    result.Code = 400;
+                    result.Message = "Không có video này";
+                    return result;
+                }
+                entity.Name = video.Name;
+                if(!string.IsNullOrEmpty(video.Video))
+                    entity.Video = video.Video;
+                entity.IdCategory = video.IdCategory;
+                entity.Title = video.Title;
+                entity.DateEdit = DateTime.Now;
+                if (!string.IsNullOrEmpty(video.PictureTitle))
+                    entity.PictureTitle = video.PictureTitle;
+                entity.LangId = video.LangId;
+                entity.Status = 1;
+                entity.Descriptions = video.Descriptions;
+                entity.Lon = video.Lon;
+                entity.Lat = video.Lat;
 
+                entity.KeySearch = entity.Title.RemoveUnicode().Replace(" ",string.Empty).Trim().ToLower();
+                _commonUoW.BeginTransaction();
+                _videoRepository.Update(entity);
+                _commonUoW.Commit();
+                result.Data = true;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Code = ex.HResult;
+                result.Message = ex.Message;
+                result.Data = false;
+                return result;
+            }
+        }
         public ResponseBase GetListVideoNews(GetListVideoNewsParam filter)
         {
 

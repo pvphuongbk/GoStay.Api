@@ -7,6 +7,7 @@ using GoStay.DataDto.News;
 using GoStay.DataAccess.Entities;
 using System.Globalization;
 using GoStay.Api.Attributes;
+using GoStay.DataDto.Video;
 
 namespace GoStay.Api.Controllers
 {
@@ -208,6 +209,27 @@ namespace GoStay.Api.Controllers
         public ResponseBase GetNearHotel(int videoId)
         {
             var item = _newsServices.GetNearHotel(videoId);
+            return item;
+        }
+        [HttpGet("default-video")]
+        //[Authorize]
+        public ResponseBase GetDefaultVideo(int idUser)
+        {
+            var item = _newsServices.GetDefaultVideo(idUser);
+            return item;
+        }
+        [HttpGet("video-by-id")]
+        //[Authorize]
+        public ResponseBase GetVideoById(int id)
+        {
+            var item = _newsServices.GetVideoById(id);
+            return item;
+        }
+        [HttpPost("upsert-video")]
+        //[Authorize]
+        public ResponseBase UpsertVideo(CreateVideoModel request)
+        {
+            var item = _newsServices.UpsertVideo(request);
             return item;
         }
     }

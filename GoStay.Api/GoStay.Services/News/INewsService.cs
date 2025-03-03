@@ -1,6 +1,7 @@
 ﻿using GoStay.Data.Base;
 using GoStay.DataAccess.Entities;
 using GoStay.DataDto.News;
+using GoStay.DataDto.Video;
 
 namespace GoStay.Services.Newss
 {
@@ -33,5 +34,10 @@ namespace GoStay.Services.Newss
         public ResponseBase GetListCategoryByParentId(int IdDomain, int ParentId);
 
         public ResponseBase GetNearHotel(int videoId);
+        public ResponseBase UpsertVideo(CreateVideoModel video);
+        public ResponseBase GetDefaultVideo(int idUser);
+        public ResponseBase GetVideoById(int id);
+
+
     }
 }

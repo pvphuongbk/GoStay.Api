@@ -13,6 +13,7 @@ using GoStay.DataDto.Hotel;
 using GoStay.DataDto.HotelDto;
 using GoStay.DataDto.News;
 using GoStay.DataDto.RatingDto;
+using GoStay.DataDto.Video;
 using PartnerGostay.Models;
 
 namespace GoStay.Api.Configurations
@@ -100,6 +101,9 @@ namespace GoStay.Api.Configurations
             CreateMap<Tour, TourAdminDto>().ReverseMap();
             CreateMap<TourDto, Tour>().ReverseMap();
             CreateMap<TourAddDto, Tour>().ReverseMap();
+
+            CreateMap<VideoNews, CreateVideoModel>().ReverseMap();
+            CreateMap<CreateVideoModel, VideoNews>().ReverseMap();
 
 
 
