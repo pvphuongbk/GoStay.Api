@@ -118,7 +118,8 @@ namespace GoStay.Services.Newss
                 _commonUoW.BeginTransaction();
                 _videoRepository.Update(entity);
                 _commonUoW.Commit();
-                result.Data = true;
+
+                result.Data = video;
                 return result;
             }
             catch (Exception ex)
@@ -126,6 +127,7 @@ namespace GoStay.Services.Newss
                 result.Code = ex.HResult;
                 result.Message = ex.Message;
                 result.Data = false;
+                result.Ok = false;
                 return result;
             }
         }

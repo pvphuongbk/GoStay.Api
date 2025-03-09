@@ -7,7 +7,7 @@
 			Message = ErrorCodeMessage.Success.Value;
 			Code = ErrorCodeMessage.Success.Key;
 		}
-
+		public bool Ok { get; set; } = true;
 		public int Code { get; set; }
 		public string Message { get; set; }
 		public int Count { get; set; }
