@@ -137,6 +137,8 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
+                var idCategory = filter.IdCategory??0;
+                var pageIndex = filter.PageIndex;
                 if (filter.TextSearch == null)
                 {
                     filter.TextSearch = "";
@@ -145,14 +147,17 @@ namespace GoStay.Services.Newss
                 filter.TextSearch = filter.TextSearch.Replace(" ", string.Empty).ToLower();
 
                 var listCategories = _newsCategoryRepository.FindAll(x => x.Iddomain == 1).Select(x => x.Id).ToList();
-                var list = NewsRepository.SearchListVideoNews(filter);
-                list.ForEach(x => x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
+                listCategories.Add(0);
+                listCategories = listCategories.OrderBy(x=>x).ToList();
+                //var list = NewsRepository.SearchListVideoNews(filter);
+                //list.ForEach(x => x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
                 var data = new Dictionary<int, List<VideoNewsDto>>();
                 
-                data.Add(0, list);
+                //data.Add(0, list);
                 foreach (var item in listCategories)
                 {
-                    filter.IdCategory = item;
+                    filter.IdCategory = item == 0 ? null:item ;
+                    filter.PageIndex = item == idCategory ? pageIndex : 1;
                     var dataCategory = NewsRepository.SearchListVideoNews(filter);
                     dataCategory.ForEach(x => x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
                     data.Add(item, dataCategory);

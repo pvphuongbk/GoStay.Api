@@ -105,6 +105,11 @@ namespace GoStay.DataDto.News
         public string Url { get; set; }
         public int NewsId { get; set; }
     }
+    public class KeyListVideo
+    {
+        public int IdCategory { get; set; }
+        public int PageIndex { get; set; }
+    } 
     public class VideoNewsDto
     {
         public int Id { get; set; }
