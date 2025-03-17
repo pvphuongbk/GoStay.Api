@@ -10,8 +10,10 @@ using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.News;
 using GoStay.DataDto.Video;
 using GoStay.Repository.Repositories;
+using GoStay.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
@@ -159,12 +161,10 @@ namespace GoStay.Services.Newss
                     filter.IdCategory = item == 0 ? null:item ;
                     filter.PageIndex = item == idCategory ? pageIndex : 1;
                     var dataCategory = NewsRepository.SearchListVideoNews(filter);
-                    dataCategory.ForEach(x => x.Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar());
+                    dataCategory.ForEach(x => x.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)));
                     data.Add(item, dataCategory);
-                }    
+                }
 
-
-                
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = data;
