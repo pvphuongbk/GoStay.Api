@@ -9,6 +9,7 @@ using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.News;
 using GoStay.Repository.Repositories;
+using GoStay.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.IdentityModel.Tokens;
@@ -206,12 +207,7 @@ namespace GoStay.Services.Newss
                     Content = news.Content,
                     Status = news.Status,
                     Category = categories.SingleOrDefault(x => x.Id == news.IdCategory),
-                    Slug = news.Title.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
-                                            .Replace("/", "-").Replace("--", string.Empty)
-                                            .Replace("\"", string.Empty).Replace("\'", string.Empty)
-                                            .Replace("(", string.Empty).Replace(")", string.Empty)
-                                            .Replace("*", string.Empty).Replace("%", string.Empty)
-                                            .Replace("&", "-").Replace("@", string.Empty).ToLower()
+                    Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(news.Title))
                 };
 
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -325,7 +321,7 @@ namespace GoStay.Services.Newss
                         CategoryChi = x.IdCategoryNavigation.CategoryChi,
                         CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     },
-                    Slug = x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()
+                    Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title))
                 }).Skip(pageSize * (pageIndex - 1)).Take(pageSize).OrderByDescending(x => x.DateEdit).ToList();
 
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -351,7 +347,7 @@ namespace GoStay.Services.Newss
             {
 
                 var listNews = NewsRepository.SearchListNews(param);
-                listNews.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
+                listNews.ForEach(x => x.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)));
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
                 response.Data = listNews;
@@ -507,7 +503,7 @@ namespace GoStay.Services.Newss
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
                     Click = x.Click ?? 0,
-                    Slug = (!x.Title.IsNullOrEmpty()) ? x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar() : ""
+                    Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title??string.Empty))
                 });
 
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
@@ -557,7 +553,7 @@ namespace GoStay.Services.Newss
                 foreach (var Id in categories)
                 {
                     var data = NewsRepository.SearchListNews(new GetListNewsParam { IdCategory = Id, IdDomain = 1, PageIndex = 1, PageSize = 10 });
-                    data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
+                    data.ForEach(x => x.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)));
                     dicNews.Add(Id, data);
                 }
                 response.Code = ErrorCodeMessage.Success.Key;
@@ -582,7 +578,7 @@ namespace GoStay.Services.Newss
             try
             {
                 var data = NewsRepository.GetListTopNews(IdCategory, IdTopic);
-                data.ForEach(x => x.Slug = (x.Title.RemoveUnicode().ToLower().ReplaceSpecialChar()));
+                data.ForEach(x => x.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)));
 
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
@@ -637,7 +633,7 @@ namespace GoStay.Services.Newss
                 newsDetail.Topics = news.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList();
                 newsDetail.Tag = news.Tag;
                 newsDetail.UserName = news.IdUserNavigation.UserName;
-                newsDetail.Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar();
+                newsDetail.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(news.Title));
                 var quatityComment = _commentNewsRepo.FindAll(x => x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
                 newsDetail.QuatityComment = quatityComment;
                 var newserelate = _newsRepository.FindAll(x => x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id && x.Status == 3).Include(x => x.IdUserNavigation).ToList();
@@ -682,7 +678,7 @@ namespace GoStay.Services.Newss
                         IdCategory = x.IdCategory,
                         LangId = x.LangId,
                         Tag = x.Tag,
-                        Slug = news.Title.RemoveUnicode().ToLower().ReplaceSpecialChar(),
+                        Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
                         Topics = x.NewsTopics.Select(x => x.IdNewsTopicNavigation.Topic).ToList(),
 
                         UserData = new UserDataDto()
