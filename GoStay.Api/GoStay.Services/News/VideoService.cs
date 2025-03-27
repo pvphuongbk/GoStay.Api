@@ -514,15 +514,15 @@ namespace GoStay.Services.Newss
                     Province = x.IdTinhThanhNavigation.TenTt ?? string.Empty,
                     District = x.IdQuanNavigation.Tenquan ?? string.Empty,
                     LastOrderTime = x.LastOrderTime,
-                    Price = x.HotelRooms.FirstOrDefault().PriceValue,
-                    Discount = x.HotelRooms.FirstOrDefault().Discount ?? 0,
+                    Price = x.HotelRooms.FirstOrDefault()?.PriceValue??0,
+                    Discount = x.HotelRooms.FirstOrDefault()?.Discount ?? 0,
                     Slug = x.Name.RemoveUnicode().Replace(" ", "-").Replace(",", string.Empty)
                                             .Replace("/", "-").Replace("--", string.Empty).Replace(".", "-")
                                             .Replace("\"", string.Empty).Replace("\'", string.Empty)
                                             .Replace("(", string.Empty).Replace(")", string.Empty)
                                             .Replace("*", string.Empty).Replace("%", string.Empty)
                                             .Replace("&", "-").Replace("@", string.Empty).ToLower(),
-                    Picture = x.Pictures.Select(y => y.Url).ToList(),
+                    Picture = x.Pictures?.Select(y => y.Url)?.ToList()??new List<string>(),
                     Distance = hotels.FirstOrDefault(z => z.Id==x.Id).Distance,
                 }).ToList();
                 var final = data.OrderBy(x => x.Distance).ToList();
