@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace GoStay.Common.Extention
 {
@@ -50,6 +52,23 @@ namespace GoStay.Common.Extention
                 text = text.Replace(arr1[i].ToUpper(), arr2[i].ToUpper());
             }
             return text;
+        }
+        public static string RemoveUnicode2(this string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            string normalizedString = text.Normalize(NormalizationForm.FormD);
+
+            var stringBuilder = new StringBuilder();
+            foreach (var c in normalizedString)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
         public static string ReplaceSpecialChar(this string text)
         {

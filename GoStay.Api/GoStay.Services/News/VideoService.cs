@@ -538,6 +538,7 @@ namespace GoStay.Services.Newss
                 return response;
             }
         }
+        
         static double Distance(double lon1, double lat1, double lon2, double lat2)
         {
             const double R = 6371; // Bán kính Trái Đất (km)

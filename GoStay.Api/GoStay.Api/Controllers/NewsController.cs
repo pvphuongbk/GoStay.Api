@@ -232,5 +232,12 @@ namespace GoStay.Api.Controllers
             var item = _newsServices.UpsertVideo(request);
             return item;
         }
+        [HttpGet("tag-topic")]
+        //[Authorize]
+        public ResponseBase GetTagNews()
+        {
+            var item = _newsServices.GetTagNews();
+            return item;
+        }
     }
 }

@@ -37,6 +37,7 @@ namespace GoStay.Services.Newss
         public ResponseBase UpsertVideo(CreateVideoModel video);
         public ResponseBase GetDefaultVideo(int idUser);
         public ResponseBase GetVideoById(int id);
+        public ResponseBase GetTagNews();
 
 
     }

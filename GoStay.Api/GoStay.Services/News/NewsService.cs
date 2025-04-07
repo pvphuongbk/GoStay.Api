@@ -13,6 +13,7 @@ using GoStay.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
 using ErrorCodeMessage = GoStay.Data.Base.ErrorCodeMessage;
 using ResponseBase = GoStay.Data.Base.ResponseBase;
@@ -503,7 +504,7 @@ namespace GoStay.Services.Newss
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
                     Click = x.Click ?? 0,
-                    Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title??string.Empty))
+                    Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title ?? string.Empty))
                 });
 
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
@@ -634,7 +635,7 @@ namespace GoStay.Services.Newss
                 newsDetail.Tag = news.Tag;
                 newsDetail.UserName = news.IdUserNavigation.UserName;
                 newsDetail.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(news.Title));
-                var quatityComment = _commentNewsRepo.FindAll(x => x.NewsId==news.Id&&x.Published==true&&x.Deleted==false).Count();
+                var quatityComment = _commentNewsRepo.FindAll(x => x.NewsId == news.Id && x.Published == true && x.Deleted == false).Count();
                 newsDetail.QuatityComment = quatityComment;
                 var newserelate = _newsRepository.FindAll(x => x.Iddomain == 3 && x.Deleted == 0 && x.Id != Id && x.Status == 3).Include(x => x.IdUserNavigation).ToList();
 
@@ -964,6 +965,28 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase GetTagNews()
+        {
+            var result = new ResponseBase();
+            try
+            {
+                var listTopic = _topicRepository.FindAll(x => x.Iddomain == 1).Select(x => new TopicNewsDto
+                {
+                    Id = x.Id,
+                    Topic = x.Topic,
+                    Iddomain = x.Iddomain,
+                    Tag = x.Topic.Trim().RemoveUnicode2().ToLower().Replace(" ", "-")
+                });
 
+                result.Data = listTopic;
+                return result;
+            }
+            catch (Exception e)
+            {
+                result.Code = e.HResult;
+                result.Message = e.Message;
+                return result;
+            }
+        }
     }
 }
