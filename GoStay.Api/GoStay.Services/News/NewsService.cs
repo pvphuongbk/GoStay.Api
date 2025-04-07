@@ -509,7 +509,7 @@ namespace GoStay.Services.Newss
 
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
-                data.HotNews = temp.Where(x => x.DateCreate >= dateStart && x.DateCreate <= dateEnd).OrderByDescending(x => x.Click).Take(hotQuantlty).ToList();
+                data.HotNews = temp.Where(x => x.DateCreate >= dateStart && x.DateCreate <= dateEnd).OrderByDescending(x => x.DateCreate).Take(hotQuantlty).ToList();
 
                 data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews

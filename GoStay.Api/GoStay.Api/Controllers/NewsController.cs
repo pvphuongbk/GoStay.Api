@@ -53,7 +53,7 @@ namespace GoStay.Api.Controllers
             return item;
         }
         [HttpPost("list")]
-        [Authorize]
+        //[Authorize]
         public ResponseBase GetListNews(GetListNewsParam param)
         {
             var items = _newsServices.GetListNews(param);
