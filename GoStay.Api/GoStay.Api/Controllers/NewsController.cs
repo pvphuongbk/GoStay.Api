@@ -239,5 +239,12 @@ namespace GoStay.Api.Controllers
             var item = _newsServices.GetTagNews();
             return item;
         }
+        [HttpGet("tag-categories")]
+        //[Authorize]
+        public ResponseBase GetCategoryNews()
+        {
+            var item = _newsServices.GetCategoryNews();
+            return item;
+        }
     }
 }

@@ -15,4 +15,11 @@ namespace GoStay.DataDto.News
         public string Tag { get; set; }=string.Empty;
     
     }
+    public partial class NewsCategoryDto
+    {
+        public int Id { get; set; }
+        public string Category { get; set; } = null!;
+        public string? Slug { get; set; }
+        public int Total { get; set; }
+    }
 }

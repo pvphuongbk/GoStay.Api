@@ -988,5 +988,28 @@ namespace GoStay.Services.Newss
                 return result;
             }
         }
+        public ResponseBase GetCategoryNews()
+        {
+            var result = new ResponseBase();
+            try
+            {
+                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1).Select(x => x.IdCategory).ToList();
+                var listTopic = _newsCategoryRepository.FindAll(x => x.Iddomain == 1).Select(x => new NewsCategoryDto
+                {
+                    Id = x.Id,
+                    Category = x.Category,
+                    Slug = x.Category.Trim().RemoveUnicode2().ToLower().Replace(" ", "-"),
+                    Total = listNews.Count(z=>z ==x.Id)
+                });
+                result.Data = listTopic;
+                return result;
+            }
+            catch (Exception e)
+            {
+                result.Code = e.HResult;
+                result.Message = e.Message;
+                return result;
+            }
+        }
     }
 }
