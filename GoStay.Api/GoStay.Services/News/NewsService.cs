@@ -994,14 +994,14 @@ namespace GoStay.Services.Newss
             try
             {
                 var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1).Select(x => x.IdCategory).ToList();
-                var listTopic = _newsCategoryRepository.FindAll(x => x.Iddomain == 1).Select(x => new NewsCategoryDto
+                var categories = _newsCategoryRepository.FindAll(x => x.Iddomain == 1).Select(x => new NewsCategoryDto
                 {
                     Id = x.Id,
                     Category = x.Category,
                     Slug = x.Category.Trim().RemoveUnicode2().ToLower().Replace(" ", "-"),
-                    Total = listNews.Count(z=>z ==x.Id)
-                });
-                result.Data = listTopic;
+                }).ToList();
+                categories.ForEach(x=>x.Total = listNews.Count(z=>z==x.Id));
+                result.Data = categories;
                 return result;
             }
             catch (Exception e)
