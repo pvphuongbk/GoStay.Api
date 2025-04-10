@@ -39,6 +39,7 @@ namespace GoStay.Services.Newss
         public ResponseBase GetVideoById(int id);
         public ResponseBase GetTagNews();
         public ResponseBase GetCategoryNews();
+        public ResponseBase GetNewsByTopicAndCategory(int idCategory, int idTopic, int pageIndex, int pageSize);
 
 
     }

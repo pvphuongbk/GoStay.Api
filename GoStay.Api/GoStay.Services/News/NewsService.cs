@@ -469,7 +469,8 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantlty, DateTime dateStart, DateTime dateEnd, int idcategory, int idtopic)
+        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantlty, DateTime dateStart,
+            DateTime dateEnd, int idcategory, int idtopic)
         {
 
             ResponseBase response = new ResponseBase();
@@ -481,15 +482,22 @@ namespace GoStay.Services.Newss
             };
             try
             {
+                var listId = new List<int>();
+                if (idtopic > 0)
+                {
+                    listId = _newsTopicRepository.FindAll(x => x.IdNewsTopic == idtopic).Select(x => x.IdNews).ToList();
+                }
                 var allnews = _newsRepository.FindAll(x => x.Status == (int)NewsStatus.Accepted && x.Deleted != 1
-                                                         && x.Iddomain == AppConfigs.IdDomain
-                                                         && ((idcategory > 0) ? x.IdCategory == idcategory : x.Id > 0)
-                                                         && ((idtopic > 0) ? x.NewsTopics.Select(y => y.IdNewsTopic).Contains(idtopic) : x.Id > 0))
-                                             .Include(x => x.IdCategoryNavigation)
-                                             .Include(x => x.IdUserNavigation)
-                                             .Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
-                                             .AsNoTracking();
-                var temp = allnews.Select(x => new NewsHomeData
+                                                         && x.Iddomain == AppConfigs.IdDomain);
+
+                                                         //&& ((idcategory > 0) ? x.IdCategory == idcategory : true)
+                                                         //&& ((idtopic > 0) ? listId.Contains(x.Id) : true))
+                                             //.Include(x => x.IdCategoryNavigation)
+                                             //.Include(x => x.IdUserNavigation)
+                                             //.Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
+                                             //.AsNoTracking()
+                                             ;
+                var list = allnews.Select(x => new NewsHomeData
                 {
                     Id = x.Id,
                     Status = x.Status,
@@ -506,10 +514,12 @@ namespace GoStay.Services.Newss
                     Click = x.Click ?? 0,
                     Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title ?? string.Empty))
                 });
-
+                
+                data.HotNews = list.OrderByDescending(x => x.DateCreate).Take(hotQuantlty).ToList();
+                var temp = list.Where(x => ((idcategory > 0) ? x.IdCategory == idcategory : true)
+                                        && ((idtopic > 0) ? listId.Contains(x.Id) : true));
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
-                data.HotNews = temp.Where(x => x.DateCreate >= dateStart && x.DateCreate <= dateEnd).OrderByDescending(x => x.DateCreate).Take(hotQuantlty).ToList();
 
                 data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews
@@ -1000,7 +1010,7 @@ namespace GoStay.Services.Newss
                     Category = x.Category,
                     Slug = x.Category.Trim().RemoveUnicode2().ToLower().Replace(" ", "-"),
                 }).ToList();
-                categories.ForEach(x=>x.Total = listNews.Count(z=>z==x.Id));
+                categories.ForEach(x => x.Total = listNews.Count(z => z == x.Id));
                 result.Data = categories;
                 return result;
             }
@@ -1008,6 +1018,50 @@ namespace GoStay.Services.Newss
             {
                 result.Code = e.HResult;
                 result.Message = e.Message;
+                return result;
+            }
+        }
+        public ResponseBase GetNewsByTopicAndCategory(int idCategory, int idTopic, int pageIndex, int pageSize)
+        {
+            var result = new ResponseBase();
+            try
+            {
+                var listId = new List<int>();
+                if (idTopic > 0)
+                {
+                    listId = _newsTopicRepository.FindAll(x => x.IdNewsTopic == idTopic).Select(x => x.IdNews).ToList();
+                }
+                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1
+                                                         && (idCategory > 0 ? x.IdCategory == idCategory : true)
+                                                         && (idTopic > 0 ? listId.Contains(x.Id) : true)).Skip((pageIndex - 1) * pageSize).Take(pageSize);
+                if (listNews != null && listNews.Any())
+                {
+                    //var data = listNews.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+                    result.Data = listNews.Select(x => new NewsHomeData
+                    {
+                        Id = x.Id,
+                        Status = x.Status,
+                        Title = x.Title,
+                        DateCreate = x.DateCreate,
+                        IdCategory = x.IdCategory,
+                        IdTopics = x.NewsTopics.Select(z => z.IdNewsTopic).ToList(),
+                        PictureTitle = x.PictureTitle,
+                        Description = x.Description,
+                        Category = x.IdCategoryNavigation.Category,
+                        CategoryEng = x.IdCategoryNavigation.CategoryEng,
+                        CategoryChi = x.IdCategoryNavigation.CategoryChi,
+                        UserName = x.IdUserNavigation.UserName,
+                        Click = x.Click ?? 0,
+                        Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title))
+                    });
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Code = ex.HResult;
+                result.Message = ex.Message;
                 return result;
             }
         }
