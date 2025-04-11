@@ -490,13 +490,13 @@ namespace GoStay.Services.Newss
                 var allnews = _newsRepository.FindAll(x => x.Status == (int)NewsStatus.Accepted && x.Deleted != 1
                                                          && x.Iddomain == AppConfigs.IdDomain);
 
-                                                         //&& ((idcategory > 0) ? x.IdCategory == idcategory : true)
-                                                         //&& ((idtopic > 0) ? listId.Contains(x.Id) : true))
-                                             //.Include(x => x.IdCategoryNavigation)
-                                             //.Include(x => x.IdUserNavigation)
-                                             //.Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
-                                             //.AsNoTracking()
-                                             ;
+                //&& ((idcategory > 0) ? x.IdCategory == idcategory : true)
+                //&& ((idtopic > 0) ? listId.Contains(x.Id) : true))
+                //.Include(x => x.IdCategoryNavigation)
+                //.Include(x => x.IdUserNavigation)
+                //.Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
+                //.AsNoTracking()
+                ;
                 var list = allnews.Select(x => new NewsHomeData
                 {
                     Id = x.Id,
@@ -514,13 +514,14 @@ namespace GoStay.Services.Newss
                     Click = x.Click ?? 0,
                     Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title ?? string.Empty))
                 });
-                
+
                 data.HotNews = list.OrderByDescending(x => x.DateCreate).Take(hotQuantlty).ToList();
                 var temp = list.Where(x => ((idcategory > 0) ? x.IdCategory == idcategory : true)
                                         && ((idtopic > 0) ? listId.Contains(x.Id) : true));
+                var total = temp.Count();
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
-
+                data.LatestNews.ForEach(x => x.Total = total);
                 data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews
                                     {
@@ -1031,13 +1032,17 @@ namespace GoStay.Services.Newss
                 {
                     listId = _newsTopicRepository.FindAll(x => x.IdNewsTopic == idTopic).Select(x => x.IdNews).ToList();
                 }
-                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1
+                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1 && x.Status == (int)NewsStatus.Accepted
                                                          && (idCategory > 0 ? x.IdCategory == idCategory : true)
-                                                         && (idTopic > 0 ? listId.Contains(x.Id) : true)).Skip((pageIndex - 1) * pageSize).Take(pageSize);
+                                                         && (idTopic > 0 ? listId.Contains(x.Id) : true))
+                                                        .OrderByDescending(x => x.DateCreate);
+                
+                                                        
                 if (listNews != null && listNews.Any())
                 {
+                    var total = listNews.Count();
                     //var data = listNews.Skip((pageIndex - 1) * pageSize).Take(pageSize);
-                    result.Data = listNews.Select(x => new NewsHomeData
+                    result.Data = listNews.Skip((pageIndex - 1) * pageSize).Take(pageSize).Select(x => new NewsHomeData
                     {
                         Id = x.Id,
                         Status = x.Status,
@@ -1052,7 +1057,8 @@ namespace GoStay.Services.Newss
                         CategoryChi = x.IdCategoryNavigation.CategoryChi,
                         UserName = x.IdUserNavigation.UserName,
                         Click = x.Click ?? 0,
-                        Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title))
+                        Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
+                        Total = total
                     });
                 }
 

@@ -11,7 +11,7 @@ namespace GoStay.Services.Newss
         public ResponseBase GetListNews2(GetListNewsParam param);
         public ResponseBase SubmitNews(NewsDataDto news);
         public ResponseBase UpdateStatusNews(UpdateStatusNewsParam param);
-        public ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantlty, DateTime dateStart, DateTime dateEnd, int idcategory, int idtopic);
+        ResponseBase GetNewsForHomePage(int latestQuantity, int categoryQuantity, int hotQuantlty, DateTime dateStart, DateTime dateEnd, int idcategory, int idtopic);
 
         public ResponseBase AddNews(NewsDto news);
         public ResponseBase EditNews(NewsDto news);
