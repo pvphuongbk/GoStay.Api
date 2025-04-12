@@ -28,6 +28,7 @@ namespace GoStay.DataDto.News
         public string CategoryChi { get; set; }
         public string UserName { get; set; }
         public int Click { get; set; }
+        public int CommentCount { get; set; }
         public string Slug { get; set; }
         public int Total { get; set; }
     }

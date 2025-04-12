@@ -511,6 +511,7 @@ namespace GoStay.Services.Newss
                     CategoryChi = x.IdCategoryNavigation.CategoryChi,
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
+                    CommentCount = x.CommentNews.Count,
                     Click = x.Click ?? 0,
                     Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title ?? string.Empty))
                 });
