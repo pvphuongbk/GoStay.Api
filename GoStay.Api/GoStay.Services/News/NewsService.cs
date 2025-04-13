@@ -872,7 +872,7 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
-                var newsEntity = _newsRepository.FindAll().OrderBy(x => x.DateCreate).Take(max)
+                var data = _newsRepository.FindAll().OrderBy(x => x.DateCreate).Take(max)
                     .Select(x => new NewSearchOutDto
                     {
                         Id = x.Id,
@@ -892,10 +892,10 @@ namespace GoStay.Services.Newss
 
                     })
                     .ToList();
-
+                data.ForEach(x => x.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)));
                 response.Code = ErrorCodeMessage.Success.Key;
                 response.Message = ErrorCodeMessage.Success.Value;
-                response.Data = newsEntity;
+                response.Data = data;
                 return response;
 
             }
