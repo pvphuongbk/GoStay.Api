@@ -872,7 +872,7 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
-                var data = _newsRepository.FindAll().OrderBy(x => x.DateCreate).Take(max)
+                var data = _newsRepository.FindAll().OrderByDescending(x => x.DateCreate).Take(max)
                     .Select(x => new NewSearchOutDto
                     {
                         Id = x.Id,
