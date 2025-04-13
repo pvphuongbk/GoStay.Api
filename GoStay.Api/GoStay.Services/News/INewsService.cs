@@ -19,6 +19,7 @@ namespace GoStay.Services.Newss
         public ResponseBase GetListNews(GetListNewsParam param);
         public ResponseBase GetNews(int Id);
         public ResponseBase EditContentNews(string content, int NewsId);
+        public ResponseBase TopicDetailNew(int max);
         public ResponseBase EditPictureTitleNews(string url, int NewsId);
         public ResponseBase GetListNewsHomePage();
         public ResponseBase GetListTopNewsByCategory(int? IdCategory, int? IdTopic);

@@ -167,7 +167,14 @@ namespace GoStay.Api.Controllers
             var item = _newsServices.EditContentNews(param.Content, param.NewsId);
             return item;
         }
-
+        [HttpGet("topic-detail-news")]
+        [Authorize]
+        public ResponseBase TopicDetailNew(int max)
+        {
+            var item = _newsServices.TopicDetailNew(max);
+            return item;
+        }
+        
         [HttpPut("edit-picturetitle-news")]
         [Authorize]
         public ResponseBase EditPictureTitleNews(EditNewsPictureTitleParam param)

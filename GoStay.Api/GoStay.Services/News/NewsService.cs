@@ -867,6 +867,46 @@ namespace GoStay.Services.Newss
             }
 
         }
+        public ResponseBase TopicDetailNew(int max)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var newsEntity = _newsRepository.FindAll().OrderBy(x => x.DateCreate).Take(max)
+                    .Select(x => new NewSearchOutDto
+                    {
+                        Id = x.Id,
+                        Status = x.Status,
+                        Title = x.Title,
+                        Content = x.Content == null ? null : x.Content,
+                        DateCreate = x.DateCreate,
+                        IdCategory = x.IdCategory,
+                        PictureTitle = x.PictureTitle,
+                        Description = x.Description,
+                        LangId = x.LangId,
+                        Tag = x.Tag == null ? null : x.Tag,
+                        Click = x.Click == null ? 0 : (int)x.Click,
+                        Category = x.IdCategoryNavigation.Category,
+                        UserName = x.IdUserNavigation.UserName == null ? null : x.IdUserNavigation.UserName,
+                        Language = x.Lang.Language1
+
+                    })
+                    .ToList();
+
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = newsEntity;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
         public ResponseBase EditPictureTitleNews(string url, int NewsId)
         {
 
