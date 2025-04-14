@@ -1099,7 +1099,8 @@ namespace GoStay.Services.Newss
                         UserName = x.IdUserNavigation.UserName,
                         Click = x.Click ?? 0,
                         Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
-                        Total = total
+                        Total = total,
+                        CommentCount = x.CommentNews.Count()
                     });
                 }
 
