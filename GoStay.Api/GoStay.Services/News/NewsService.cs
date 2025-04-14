@@ -1045,7 +1045,7 @@ namespace GoStay.Services.Newss
             var result = new ResponseBase();
             try
             {
-                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1).Select(x => x.IdCategory).ToList();
+                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1 && x.Status == (int)NewsStatus.Accepted).Select(x => x.IdCategory).ToList();
                 var categories = _newsCategoryRepository.FindAll(x => x.Iddomain == 1).Select(x => new NewsCategoryDto
                 {
                     Id = x.Id,
