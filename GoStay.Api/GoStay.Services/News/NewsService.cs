@@ -524,7 +524,7 @@ namespace GoStay.Services.Newss
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
                 data.LatestNews.ForEach(x => x.Total = total);
-                data.LatestNews.ForEach(x => x.PageNum = 1);
+                data.LatestNews.ForEach(x => x.PageNum = (latestQuantity/10));
                 data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews
                                     {
