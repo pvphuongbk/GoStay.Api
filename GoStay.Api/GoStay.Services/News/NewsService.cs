@@ -1103,7 +1103,7 @@ namespace GoStay.Services.Newss
                         Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
                         Total = total,
                         CommentCount = x.CommentNews.Count(),
-                        PageNum = pageIndex,
+                        PageNum = pageSize/10,
                     });
                 }
 
