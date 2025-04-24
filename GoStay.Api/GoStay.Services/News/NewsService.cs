@@ -514,6 +514,7 @@ namespace GoStay.Services.Newss
                     CommentCount = x.CommentNews.Count,
                     Click = x.Click ?? 0,
                     Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title ?? string.Empty))
+
                 });
 
                 data.HotNews = list.OrderByDescending(x => x.DateCreate).Take(hotQuantlty).ToList();
@@ -523,6 +524,7 @@ namespace GoStay.Services.Newss
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
                 data.LatestNews.ForEach(x => x.Total = total);
+                data.LatestNews.ForEach(x => x.PageNum = 1);
                 data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews
                                     {
@@ -1100,7 +1102,8 @@ namespace GoStay.Services.Newss
                         Click = x.Click ?? 0,
                         Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
                         Total = total,
-                        CommentCount = x.CommentNews.Count()
+                        CommentCount = x.CommentNews.Count(),
+                        PageNum = pageIndex,
                     });
                 }
 

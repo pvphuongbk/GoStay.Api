@@ -31,6 +31,7 @@ namespace GoStay.DataDto.News
         public int CommentCount { get; set; }
         public string Slug { get; set; }
         public int Total { get; set; }
+        public int PageNum { get; set; }
     }
     public class CategoryNews
     {
