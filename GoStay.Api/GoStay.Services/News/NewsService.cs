@@ -84,7 +84,7 @@ namespace GoStay.Services.Newss
                     Topic = x.Topic,
                 }).ToList();
                 data.Topics = topics;
-                var tempRecord = _newsRepository.FindAll(x => x.IdUser == idUser && x.Status == 0).AsNoTracking();
+                var tempRecord = _newsRepository.FindAll(x => x.IdUser == idUser && x.Status == 0 && x.Iddomain == AppConfigs.IdDomain).AsNoTracking();
 
                 if (tempRecord.Any())
                 {
@@ -875,6 +875,46 @@ namespace GoStay.Services.Newss
             try
             {
                 var data = _newsRepository.FindAll().OrderByDescending(x => x.DateCreate).Take(max)
+                    .Select(x => new NewSearchOutDto
+                    {
+                        Id = x.Id,
+                        Status = x.Status,
+                        Title = x.Title,
+                        Content = x.Content == null ? null : x.Content,
+                        DateCreate = x.DateCreate,
+                        IdCategory = x.IdCategory,
+                        PictureTitle = x.PictureTitle,
+                        Description = x.Description,
+                        LangId = x.LangId,
+                        Tag = x.Tag == null ? null : x.Tag,
+                        Click = x.Click == null ? 0 : (int)x.Click,
+                        Category = x.IdCategoryNavigation.Category,
+                        UserName = x.IdUserNavigation.UserName == null ? null : x.IdUserNavigation.UserName,
+                        Language = x.Lang.Language1
+
+                    })
+                    .ToList();
+                data.ForEach(x => x.Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)));
+                response.Code = ErrorCodeMessage.Success.Key;
+                response.Message = ErrorCodeMessage.Success.Value;
+                response.Data = data;
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                response.Code = ErrorCodeMessage.Exception.Key;
+                response.Message = e.Message;
+                return response;
+            }
+
+        }
+        public ResponseBase TopicDetailNew(int max, int domain)
+        {
+            ResponseBase response = new ResponseBase();
+            try
+            {
+                var data = _newsRepository.FindAll(x => x.Iddomain == domain).OrderByDescending(x => x.DateCreate).Take(max)
                     .Select(x => new NewSearchOutDto
                     {
                         Id = x.Id,
