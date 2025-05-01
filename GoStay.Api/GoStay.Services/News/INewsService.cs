@@ -17,7 +17,7 @@ namespace GoStay.Services.Newss
         public ResponseBase EditNews(NewsDto news);
         public ResponseBase DeleteNews(int Id);
         public ResponseBase GetListNews(GetListNewsParam param);
-        public ResponseBase GetNews(int Id);
+        public ResponseBase GetNews(int Id, int? domain = null);
         public ResponseBase EditContentNews(string content, int NewsId);
         public ResponseBase TopicDetailNew(int max);
         public ResponseBase TopicDetailNew(int max, int domain);

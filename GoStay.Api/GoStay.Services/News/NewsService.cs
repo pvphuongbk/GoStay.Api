@@ -610,13 +610,13 @@ namespace GoStay.Services.Newss
             }
 
         }
-        public ResponseBase GetNews(int Id)
+        public ResponseBase GetNews(int Id, int? domain)
         {
 
             ResponseBase response = new ResponseBase();
             try
             {
-                var news = _newsRepository.FindAll(x => x.Id == Id)
+                var news = _newsRepository.FindAll(x => x.Id == Id && (domain == null || x.Iddomain == domain))
                             .Include(x => x.IdCategoryNavigation)
                             .Include(x => x.IdUserNavigation)
                             .Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
