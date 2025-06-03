@@ -42,7 +42,6 @@ namespace GoStay.Services.Newss
         public ResponseBase GetTagNews();
         public ResponseBase GetCategoryNews();
         public ResponseBase GetNewsByTopicAndCategory(int idCategory, int idTopic, int pageIndex, int pageSize);
-
-
+        public ResponseBase<List<NewsHomeData>> GetNewsByKeyword(string keyword, int pageIndex, int pageSize);
     }
 }

@@ -272,5 +272,12 @@ namespace GoStay.Api.Controllers
             var item = _newsServices.GetNewsByTopicAndCategory(idCategory, idTopic, pageIndex, pageSize);
             return item;
         }
+        [HttpGet("news-keyword")]
+        //[Authorize]
+        public IActionResult GetNewsByKeyword(string keyword, int pageIndex, int pageSize)
+        {
+            var item = _newsServices.GetNewsByKeyword(keyword, pageIndex, pageSize);
+            return Ok(item);
+        }
     }
 }

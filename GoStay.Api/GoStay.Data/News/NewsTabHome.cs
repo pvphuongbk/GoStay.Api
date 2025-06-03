@@ -18,6 +18,9 @@ namespace GoStay.DataDto.News
         public int Id { get; set; }
         public int Status { get; set; }
         public string Title { get; set; }
+        public int IndexOfKey { get; set; }
+        public List<TitlePartial> TitlePartial { get; set; }
+
         public DateTime DateCreate { get; set; }
         public int IdCategory { get; set; }
         public List<int>? IdTopics { get; set; }
@@ -32,6 +35,12 @@ namespace GoStay.DataDto.News
         public string Slug { get; set; }
         public int Total { get; set; }
         public int PageNum { get; set; }
+    }
+    public class TitlePartial
+    {
+        public int Index { get; set; }
+        public string Value { get; set; }=string.Empty;
+        public bool IsBold { get; set; }
     }
     public class CategoryNews
     {

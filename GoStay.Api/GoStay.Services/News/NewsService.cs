@@ -387,7 +387,7 @@ namespace GoStay.Services.Newss
                 newsEntity.IdCategory = (int)news.IdCategory;
                 newsEntity.Title = news.Title;
                 newsEntity.Description = news.Description;
-                newsEntity.Keysearch = news.Title.RemoveUnicode().Replace(" ", string.Empty).ToLower();
+                newsEntity.Keysearch = news.Title.RemoveUnicode2().Replace(" ", string.Empty).ToLower();
                 newsEntity.DateEdit = DateTime.UtcNow;
                 newsEntity.LangId = (int)news.LangId;
                 newsEntity.Iddomain = AppConfigs.IdDomain;
@@ -511,7 +511,7 @@ namespace GoStay.Services.Newss
                     CategoryChi = x.IdCategoryNavigation.CategoryChi,
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
                     UserName = x.IdUserNavigation.UserName,
-                    CommentCount = x.CommentNews.Count,
+                    CommentCount = x.CommentNews.Where(x => x.Published == true).Count(),
                     Click = x.Click ?? 0,
                     Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title ?? string.Empty))
 
@@ -1142,9 +1142,82 @@ namespace GoStay.Services.Newss
                         Click = x.Click ?? 0,
                         Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
                         Total = total,
-                        CommentCount = x.CommentNews.Count(),
+                        CommentCount = x.CommentNews.Where(x=>x.Published==true).Count(),
                         PageNum = pageSize/10,
                     });
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Code = ex.HResult;
+                result.Message = ex.Message;
+                return result;
+            }
+        }
+        public ResponseBase<List<NewsHomeData>> GetNewsByKeyword(string keyword, int pageIndex, int pageSize)
+        {
+            var result = new ResponseBase<List<NewsHomeData>>()
+            {
+                Data = new List<NewsHomeData>()
+            };
+            try
+            {
+                var listId = new List<int>();
+                keyword = keyword.Trim();
+                var key = keyword.RemoveUnicode2().Replace(" ",string.Empty).Trim();
+                var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1 && x.Status == (int)NewsStatus.Accepted
+                                                         && x.Keysearch.Contains(key))
+                                                        .OrderByDescending(x => x.DateCreate);
+
+
+                if (listNews != null && listNews.Any())
+                {
+                    var total = listNews.Count();
+                    var data = listNews.Skip((pageIndex - 1) * pageSize).Take(pageSize).Select(x => new NewsHomeData
+                    {
+                        Id = x.Id,
+                        Status = x.Status,
+                        Title = x.Title,
+                        DateCreate = x.DateCreate,
+                        IdCategory = x.IdCategory,
+                        IdTopics = x.NewsTopics.Select(z => z.IdNewsTopic).ToList(),
+                        PictureTitle = x.PictureTitle,
+                        Description = x.Description,
+                        Category = x.IdCategoryNavigation.Category,
+                        CategoryEng = x.IdCategoryNavigation.CategoryEng,
+                        CategoryChi = x.IdCategoryNavigation.CategoryChi,
+                        UserName = x.IdUserNavigation.UserName,
+                        Click = x.Click ?? 0,
+                        Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
+                        Total = total,
+                        CommentCount = x.CommentNews.Where(x => x.Published == true).Count(),
+                        PageNum = pageSize / 10,
+                    }).ToList();
+                    data.ForEach(x => x.IndexOfKey = x.Title.ToLower().IndexOf(keyword));
+                    data.ForEach(x => x.TitlePartial = new List<TitlePartial>
+                    {
+                        new TitlePartial
+                        {
+                            Index=0,
+                            Value = x.Title.Substring(0,x.IndexOfKey),
+                            IsBold = false,
+                        },
+                        new TitlePartial
+                        {
+                            Index=1,
+                            Value = x.Title.Substring(x.IndexOfKey,keyword.Length),
+                            IsBold = true,
+                        },
+                        new TitlePartial
+                        {
+                            Index=2,
+                            Value = x.Title.Substring(x.IndexOfKey+keyword.Length),
+                            IsBold = false,
+                        }
+                    });
+                    result.Data = data;
                 }
 
                 return result;
