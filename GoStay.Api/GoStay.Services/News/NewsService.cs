@@ -1166,7 +1166,7 @@ namespace GoStay.Services.Newss
             {
                 var listId = new List<int>();
                 keyword = keyword.Trim();
-                var key = keyword.RemoveUnicode2().Replace(" ",string.Empty).Trim();
+                var key = keyword.RemoveUnicode().Replace(" ",string.Empty).Trim();
                 var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1 && x.Status == (int)NewsStatus.Accepted
                                                          && x.Keysearch.Contains(key))
                                                         .OrderByDescending(x => x.DateCreate);
@@ -1195,28 +1195,44 @@ namespace GoStay.Services.Newss
                         CommentCount = x.CommentNews.Where(x => x.Published == true).Count(),
                         PageNum = pageSize / 10,
                     }).ToList();
-                    data.ForEach(x => x.IndexOfKey = x.Title.ToLower().IndexOf(keyword));
-                    data.ForEach(x => x.TitlePartial = new List<TitlePartial>
+                    var keyIndex = keyword.RemoveUnicode().ToLower();
+                    foreach (var item in data)
                     {
-                        new TitlePartial
+                        item.TitleNoCode = item.Title.ToLower().RemoveUnicode();
+                        item.IndexOfKey = item.TitleNoCode.ToLower().IndexOf(keyIndex);
+                        if (item.IndexOfKey < 0)
                         {
-                            Index=0,
-                            Value = x.Title.Substring(0,x.IndexOfKey),
-                            IsBold = false,
-                        },
-                        new TitlePartial
-                        {
-                            Index=1,
-                            Value = x.Title.Substring(x.IndexOfKey,keyword.Length),
-                            IsBold = true,
-                        },
-                        new TitlePartial
-                        {
-                            Index=2,
-                            Value = x.Title.Substring(x.IndexOfKey+keyword.Length),
-                            IsBold = false,
+                            var keyIndex2 = keyIndex.Replace(" ", string.Empty);
+                            item.IndexOfKey = item.TitleNoCode.ToLower().IndexOf(keyIndex2);
                         }
-                    });
+
+                        if (item.IndexOfKey >= 0)
+                        {
+                            item.TitlePartial = new List<TitlePartial>
+                            {
+                                new TitlePartial
+                                {
+                                    Index = 0,
+                                    Value = item.Title.Substring(0, item.IndexOfKey),
+                                    IsBold = false,
+                                },
+                                new TitlePartial
+                                {
+                                    Index = 1,
+                                    Value = item.Title.Substring(item.IndexOfKey, keyword.Length),
+                                    IsBold = true,
+                                },
+                                new TitlePartial
+                                {
+                                    Index = 2,
+                                    Value = item.Title.Substring(item.IndexOfKey + keyword.Length),
+                                    IsBold = false,
+                                }
+                            };
+                        }
+                        else
+                            item.TitlePartial = new List<TitlePartial>();
+                    }
                     result.Data = data;
                 }
 

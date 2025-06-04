@@ -18,6 +18,7 @@ namespace GoStay.DataDto.News
         public int Id { get; set; }
         public int Status { get; set; }
         public string Title { get; set; }
+        public string TitleNoCode { get; set; }
         public int IndexOfKey { get; set; }
         public List<TitlePartial> TitlePartial { get; set; }
 
