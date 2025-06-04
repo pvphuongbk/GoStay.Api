@@ -1196,6 +1196,7 @@ namespace GoStay.Services.Newss
                         PageNum = pageSize / 10,
                     }).ToList();
                     var keyIndex = keyword.RemoveUnicode().ToLower();
+                    List<NewsHomeData> lst = new List<NewsHomeData>();
                     foreach (var item in data)
                     {
                         item.TitleNoCode = item.Title.ToLower().RemoveUnicode();
@@ -1229,11 +1230,13 @@ namespace GoStay.Services.Newss
                                     IsBold = false,
                                 }
                             };
+
+                            lst.Add(item);
                         }
                         else
                             item.TitlePartial = new List<TitlePartial>();
                     }
-                    result.Data = data;
+                    result.Data = lst;
                 }
 
                 return result;
